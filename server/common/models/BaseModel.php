@@ -10,10 +10,6 @@ use yii\db\Expression;
 
 class BaseModel extends ActiveRecord {
     
-    const status_add = 1;//下单
-    const status_pay_sucess = 1;//支付成功
-    const status_pay_fail = 1;//支付失败
-    
     public function behaviors()
     {
         return [
