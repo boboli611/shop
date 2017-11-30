@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+   
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
@@ -14,7 +15,8 @@ return [
     'modules' => [
 	"admin" => [
         	"class" => "mdm\admin\Module",
-    	],	
+    	],
+        'redactor' => 'yii\redactor\RedactorModule',
 	
     ],
     "aliases" => [
@@ -52,7 +54,11 @@ return [
             'rules' => [
             ],
         ],
+<<<<<<< HEAD
          * */
+=======
+         
+>>>>>>> 2de1984676d95e3a540ddb385d06936e39c76181
 	 "authManager" => [
                 "class" => 'yii\rbac\DbManager',
                 "defaultRoles" => ["guest"],
@@ -68,5 +74,6 @@ return [
         	'*'
     	]
     ],
+    
     'params' => $params,
 ];
