@@ -35,6 +35,7 @@ class ProductController extends Controller
      */
     public function actionIndex()
     {
+
         $searchModel = new CommProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
