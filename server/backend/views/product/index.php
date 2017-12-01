@@ -10,7 +10,7 @@ use yii\grid\GridView;
 $this->title = '商品列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="comm-product-index">
+<div class="comm-product-index" style="width: 80%">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -26,15 +26,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'desc:ntext',
-            'cover',
+            [
+                'attribute' => 'cover',
+                'value'=>
+                function($model){
+                    return $model->cover== substr($model->cover, 0, 20);
+                },
+            ],
             'price',
             'sell',
             'count',
             'status',
-            'update_time',
-            'create_time',
+            'updated_at',
+            'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
 </div>

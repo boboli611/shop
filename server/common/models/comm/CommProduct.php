@@ -17,7 +17,7 @@ use Yii;
  * @property string $update_time
  * @property string $create_time
  */
-class CommProduct extends \yii\db\ActiveRecord
+class CommProduct extends \common\models\BaseModel
 {
     /**
      * @inheritdoc
@@ -35,9 +35,9 @@ class CommProduct extends \yii\db\ActiveRecord
         return [
             [['desc'], 'string'],
             [['price', 'sell', 'count', 'status'], 'integer'],
-            [['update_time', 'create_time'], 'safe'],
+            [['updated_at', 'created_at'], 'safe'],
             [['title'], 'string', 'max' => 128],
-            [['cover'], 'string', 'max' => 255],
+            [['cover'], 'string'],
         ];
     }
 
@@ -55,8 +55,14 @@ class CommProduct extends \yii\db\ActiveRecord
             'sell' => '销量',
             'count' => '库存',
             'status' => '下架',
-            'update_time' => '修改时间',
-            'create_time' => '创建时间',
+            'updated_at' => '修改时间',
+            'created_at' => '创建时间',
         ];
+    }
+    
+    public function load($data, $formName = null){
+
+        $data['CommProduct']['cover'] = json_encode($data['cover_path']);
+        return parent::load($data);
     }
 }

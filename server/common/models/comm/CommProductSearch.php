@@ -19,7 +19,7 @@ class CommProductSearch extends CommProduct
     {
         return [
             [['id', 'price', 'sell', 'count'], 'integer'],
-            [['title', 'desc', 'cover', 'update_time', 'create_time'], 'safe'],
+            [['title', 'desc', 'cover', 'updated_at', 'created_at'], 'safe'],
         ];
     }
 
@@ -63,8 +63,8 @@ class CommProductSearch extends CommProduct
             'price' => $this->price,
             'sell' => $this->sell,
             'count' => $this->count,
-            'update_time' => $this->update_time,
-            'create_time' => $this->create_time,
+            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])

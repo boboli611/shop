@@ -11,11 +11,10 @@ use yii\web\UploadedFile;
 use yii\web\Response;
 
 class FileController extends Controller {
-    
+
     public $enableCsrfValidation = false;
-    
-    public function behaviors()
-    {
+
+    public function behaviors() {
         return [
             [
                 'class' => 'yii\filters\ContentNegotiator',
@@ -26,11 +25,62 @@ class FileController extends Controller {
         ];
     }
 
-    public function actionUploadImg() {
-
+    /**
+     * 编辑器上传图片
+     */
+    public function actionUploadRedactor() {
 
         $img = UploadedFile::getInstanceByName('file');
-        var_dump($img);
+        if (!$img->tempName) {
+            $this->asJson(\common\widgets\Response::error("上传失败"));
+        }
+        /** @var \yiier\AliyunOSS\OSS $oss */
+        $oss = \Yii::$app->get('oss');
+        $day = date("Ymd");
+        $fileName = md5($img->name . time()) . '.' . end(explode('.', $img->name));
+        $fh = \Yii::$app->params['uploadPath'] . "/image/{$day}/{$fileName}";
+        $ret = $oss->upload($fh, $img->tempName); // 会自动创建文件夹
+        if (!$ret) {
+            $this->asJson(\common\widgets\Response::error("上传失败"));
+        }
+
+        $data["filelink"] = $ret["info"]["url"];
+        $data["id"] = "1234";
+        $this->asJson($data);
+    }
+
+    public function actionInputUpload() {
+
+        $file = current($_FILES);
+        $tmp_name = current($file['tmp_name']);
+        $name = current($file['name']);
+        // $p1 $p2是我们处理完图片之后需要返回的信息，其参数意义可参考上面的讲解
+        $p1 = $p2 = [];
+        // 如果没有商品图或者商品id非真，返回空
+        if (!$tmp_name || !$name) {
+            //$this->asJson(\common\widgets\Response::error("没有参数"));
+            echo "参数错误";
+            return;
+        }
+        
+        $oss = \Yii::$app->get('oss');
+        $day = date("Ymd");
+        $fileName = md5($name . time()) . '.' . end(explode('.', $name));
+        $fh = \Yii::$app->params['uploadPath'] . "/image/{$day}/{$fileName}";
+        $ret = $oss->upload($fh, $tmp_name); // 会自动创建文件夹
+        if (!$ret) {
+            //$this->asJson(\common\widgets\Response::error("上传失败"));
+            echo "上传失败";
+            return;
+        }
+        $p1 = $ret["info"]["url"];
+        // 返回上传成功后的商品图信息
+        echo json_encode([
+            'initialPreview' => $p1,
+            //'initialPreviewConfig' => $p2,
+            'append' => true,
+        ]);
+        return;
     }
 
     public function actionAdd() {

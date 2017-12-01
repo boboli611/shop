@@ -14,7 +14,12 @@ return [
         "admin" => [
             "class" => "mdm\admin\Module",
         ],
-        'redactor' => 'yii\redactor\RedactorModule',
+        'redactor' => [
+            'class' => 'yii\redactor\RedactorModule',
+            'uploadDir' => './upload', // 比如这里可以填写 ./uploads
+            'uploadUrl' => 'http://admin.ttyouhiu.com/upload',
+            'imageAllowExtensions' => ['jpg', 'png', 'gif']
+        ],
     ],
     "aliases" => [
         "@mdm/admin" => "@vendor/mdmsoft/yii2-admin",
@@ -58,13 +63,13 @@ return [
             'class' => 'backend\components\Aliyunoss',
         ],
         'oss' => [
-            'class' => 'yiier\AliyunOSS\OSS',
+            'class' => 'backend\components\Oss',
             'accessKeyId' => 'LTAI3nyc5ASNhaih', // 阿里云OSS AccessKeyID
             'accessKeySecret' => 'y8Takqd1V46pH0ubaQGhWvzr98TH3f', // 阿里云OSS AccessKeySecret
             'bucket' => 'lipz', // 阿里云的bucket空间
-            'lanDomain' => 'lipz.oss-cn-hangzhou-internal.aliyuncs.com', // OSS内网地址
-            'wanDomain' => 'lipz.oss-cn-hangzhou.aliyuncs.com', //OSS外网地址
-            'isInternal' => true // 上传文件是否使用内网，免流量费（选填，默认 false 是外网）
+            'lanDomain' => 'oss-cn-hangzhou.aliyuncs.com', // OSS内网地址  
+            'wanDomain' => 'oss-cn-hangzhou.aliyuncs.com', //OSS外网地址
+            'isInternal' => true, // 上传文件是否使用内网，免流量费（选填，默认 false 是外网）
         ],
     ],
     'as access' => [

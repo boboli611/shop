@@ -28,8 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'sell',
             'count',
             'status',
-            'update_time',
-            'create_time',
+            'updated_at',
+            'created_at',
         ],
     ]) ?>
 

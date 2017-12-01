@@ -65,8 +65,8 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $model = new CommProduct();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //var_dump(Yii::$app->request->post());exit;
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
