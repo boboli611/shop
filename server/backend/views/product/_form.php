@@ -29,13 +29,16 @@ use yii\helpers\Url;
     <?php //echo $form->field($model, 'cover')->fileInput() ?>
     
     <?php 
-echo $form->field($model, 'cover')->label('图')->widget(FileInput::classname(), [
+$img = json_decode($model->cover, true);
+$img = is_array($img) ?  $img : [];
+
+echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classname(), [
     'options' => ['multiple' => true],
     'pluginOptions' => [
         // 需要预览的文件格式
         'previewFileType' => 'image',
         // 预览的文件
-        'initialPreview' => [],
+        'initialPreview' =>  $img,
         // 需要展示的图片设置，比如图片的宽度等
         //'initialPreviewConfig' => $p2,
         // 是否展示预览图
@@ -81,7 +84,11 @@ echo $form->field($model, 'cover')->label('图')->widget(FileInput::classname(),
 ]);
 ?>
     
-    <?= Html::hiddenInput("cover_path", $model->cover)?>
+    <?php
+        foreach ($img as $val){
+            echo  Html::hiddenInput("cover_path[]", $val);
+        }
+    ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
 

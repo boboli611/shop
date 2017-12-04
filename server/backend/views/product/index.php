@@ -17,31 +17,44 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('新商品', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'title',
             'desc:ntext',
             [
                 'attribute' => 'cover',
-                'value'=>
-                function($model){
-                    return $model->cover== substr($model->cover, 0, 20);
+                'format' => 'raw',
+                'value' =>
+                function($model) {
+                    $list = json_decode($model->cover, true);
+                    $list = is_array($list) ? $list : [];
+                    $str = "";
+                    foreach ($list as $val) {
+                        $str .= Html::a('图片', $val, ["target" => "_blank"]) . " ";
+                    }
+                    return $str;
                 },
             ],
             'price',
             'sell',
             'count',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' =>
+                function($model) {
+                    return $model->status ? "上架" : "下架";
+                }
+            ],
             'updated_at',
             'created_at',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+            ]);
+            ?>
 
 </div>

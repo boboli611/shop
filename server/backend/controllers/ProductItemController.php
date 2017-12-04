@@ -3,16 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\comm\CommProduct;
-use common\models\comm\CommProductSearch;
+use common\models\comm\CommProductItem;
+use common\models\comm\CommProductItemSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProductController implements the CRUD actions for CommProduct model.
+ * ProductItemController implements the CRUD actions for CommProductItem model.
  */
-class ProductController extends Controller
+class ProductItemController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,13 +30,12 @@ class ProductController extends Controller
     }
 
     /**
-     * Lists all CommProduct models.
+     * Lists all CommProductItem models.
      * @return mixed
      */
     public function actionIndex()
     {
-
-        $searchModel = new CommProductSearch();
+        $searchModel = new CommProductItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +45,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Displays a single CommProduct model.
+     * Displays a single CommProductItem model.
      * @param integer $id
      * @return mixed
      */
@@ -58,15 +57,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Creates a new CommProduct model.
+     * Creates a new CommProductItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new CommProduct();
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
-            //var_dump(Yii::$app->request->post());exit;
+        $model = new CommProductItem();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -76,7 +75,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Updates an existing CommProduct model.
+     * Updates an existing CommProductItem model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -84,7 +83,8 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -94,7 +94,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Deletes an existing CommProduct model.
+     * Deletes an existing CommProductItem model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Finds the CommProduct model based on its primary key value.
+     * Finds the CommProductItem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CommProduct the loaded model
+     * @return CommProductItem the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CommProduct::findOne($id)) !== null) {
+        if (($model = CommProductItem::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
