@@ -7,17 +7,17 @@ use yii\widgets\DetailView;
 /* @var $model common\models\comm\CommProductItem */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Comm Product Items', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '预览', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comm-product-item-view">
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('修改', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => '确定删除?',
                 'method' => 'post',
             ],
         ]) ?>

@@ -3,16 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\comm\CommProductItem;
-use common\models\comm\CommProductItemSearch;
+use common\models\user\UserShop;
+use common\models\user\UserShopSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProductItemController implements the CRUD actions for CommProductItem model.
+ * UserShopController implements the CRUD actions for UserShop model.
  */
-class ProductItemController extends Controller
+class UserShopController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Lists all CommProductItem models.
+     * Lists all UserShop models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CommProductItemSearch();
+        $searchModel = new UserShopSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Displays a single CommProductItem model.
+     * Displays a single UserShop model.
      * @param integer $id
      * @return mixed
      */
@@ -57,15 +57,15 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Creates a new CommProductItem model.
+     * Creates a new UserShop model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new CommProductItem();
+        $model = new UserShop();
 
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -75,7 +75,7 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Updates an existing CommProductItem model.
+     * Updates an existing UserShop model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -83,7 +83,8 @@ class ProductItemController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -93,7 +94,7 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Deletes an existing CommProductItem model.
+     * Deletes an existing UserShop model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,15 +107,15 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Finds the CommProductItem model based on its primary key value.
+     * Finds the UserShop model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CommProductItem the loaded model
+     * @return UserShop the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CommProductItem::findOne($id)) !== null) {
+        if (($model = UserShop::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

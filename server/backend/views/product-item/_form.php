@@ -23,7 +23,7 @@ use yii\helpers\Url;
             // 需要预览的文件格式
             'previewFileType' => 'image',
             // 预览的文件
-            'initialPreview' => [],
+            'initialPreview' => [$model->icon],
             // 需要展示的图片设置，比如图片的宽度等
             //'initialPreviewConfig' => $p2,
             // 是否展示预览图
@@ -69,7 +69,7 @@ use yii\helpers\Url;
     ]);
     ?>
 
-    <?php echo Html::hiddenInput("icon_path[]", $model->icon);?>
+    <?php echo Html::hiddenInput("icon_path", $model->icon);?>
 
     <?= $form->field($model, 'sort')->textInput() ?>
 
@@ -89,7 +89,7 @@ use yii\helpers\Url;
 <script>
 
 function addImgHiden(url){
-    $("form").append('<input type="hidden" name="icon_path[]" value="'+url+'">');
+    $("form").append('<input type="hidden" name="icon_path" value="'+url+'">');
 }
 
 </script>

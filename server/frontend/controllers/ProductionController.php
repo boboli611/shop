@@ -39,36 +39,59 @@ class ProductionController extends Controller {
     }
 
     public function actionCreateOrder() {
-        //var_dump(Yii::$app->request->post());exit;
-      
+
         $pid = Yii::$app->request->post("product_id");
-        $num = Yii::$app->request->post("num");
-        if (!$pid || !is_numeric($pid)){
+        $num = abs(Yii::$app->request->post("num"));
+        $addressId = Yii::$app->request->post("adress_id");
+              
+        if (!$pid || !is_numeric($pid) || !is_numeric($addressId) || $num < 1){
             $this->asJson(widgets\Response::error("参数错误"));
+            return;
         }
-        
-        $product = \common\models\CommProduct::getDetail($pid);
+ 
+        $product = \common\models\comm\CommProduct::findOne($pid);
         if (!$product) {
             $this->asJson(widgets\Response::error("商品不存在"));
+            return;
         }
-        
+
         if ($product->count == 0){
              $this->asJson(widgets\Response::error("已售罄"));
+             return;
         }
 
         if ($product->count <= $num){
              $this->asJson(widgets\Response::error("库存不足"));
+             return;
         }
         
-        $model = new \common\models\comm\commOrder();
-        $model->user_id = widgets\User::getUid();
+        if (!$product->status){
+             $this->asJson(widgets\Response::error("已下架"));
+             return;
+        }
+                
+        $userId = widgets\User::getUid();
+        $adress = \common\models\user\UserAddress::findOne($addressId);
+        if ($adress->user_id != $userId){
+            $this->asJson(widgets\Response::error("地址错误"));
+        }
+        
+        $model = new \common\models\comm\CommOrder();
+        $model->user_id = $userId;
         $model->product_id = $pid;
+        $model->num = $num;
         $model->price = $product->price;
         $model->pay_price = $product->price;
-        $model->status = \common\models\comm\commOrder::status_add;
-        
-        $ret = $model->save();
-        var_dump($ret);
-    }
+        $model->adress_id = $addressId;
+        $model->status = \common\models\comm\CommOrder::status_add;
+ 
+        if(!$model->save()){
+            $this->asJson(widgets\Response::error("购买失败"));
+        }
 
+        $out['id'] =  $model->getPrimaryKey();
+        $this->asJson(widgets\Response::sucess($out));
+    }
+    
+   
 }

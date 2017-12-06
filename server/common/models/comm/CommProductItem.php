@@ -51,4 +51,11 @@ class CommProductItem extends \common\models\BaseModel
             'created_at' => '创建时间',
         ];
     }
+    
+    public function load($data, $formName = null){
+
+        $data['CommProductItem']['icon'] = $data['icon_path'];
+
+        return parent::load($data);
+    }
 }

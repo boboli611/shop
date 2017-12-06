@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\comm\CommProductItem */
 
 $this->title = '修改类别: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Comm Product Items', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '修改类别', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

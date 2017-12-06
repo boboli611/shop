@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\comm\CommProductItem */
 
 $this->title = '新增类别';
-$this->params['breadcrumbs'][] = ['label' => 'Comm Product Items', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '新增类别', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comm-product-item-create">

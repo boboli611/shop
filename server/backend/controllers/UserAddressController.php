@@ -3,39 +3,32 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\comm\CommProductItem;
-use common\models\comm\CommProductItemSearch;
+use common\models\user\UserAddress;
+use common\models\user\UserAddressSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProductItemController implements the CRUD actions for CommProductItem model.
+ * UserAddressController implements the CRUD actions for UserAddress model.
  */
-class ProductItemController extends Controller
+class UserAddressController extends Controller
 {
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+       
     }
 
     /**
-     * Lists all CommProductItem models.
+     * Lists all UserAddress models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CommProductItemSearch();
+        $searchModel = new UserAddressSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +38,7 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Displays a single CommProductItem model.
+     * Displays a single UserAddress model.
      * @param integer $id
      * @return mixed
      */
@@ -57,15 +50,16 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Creates a new CommProductItem model.
+     * Creates a new UserAddress model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new CommProductItem();
+        return;
+        $model = new UserAddress();
 
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -75,15 +69,17 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Updates an existing CommProductItem model.
+     * Updates an existing UserAddress model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
+        return;
         $model = $this->findModel($id);
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -93,28 +89,29 @@ class ProductItemController extends Controller
     }
 
     /**
-     * Deletes an existing CommProductItem model.
+     * Deletes an existing UserAddress model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
+        return;
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the CommProductItem model based on its primary key value.
+     * Finds the UserAddress model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return CommProductItem the loaded model
+     * @return UserAddress the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CommProductItem::findOne($id)) !== null) {
+        if (($model = UserAddress::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

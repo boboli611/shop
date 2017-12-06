@@ -65,7 +65,8 @@ class FileController extends Controller {
         
         $oss = \Yii::$app->get('oss');
         $day = date("Ymd");
-        $fileName = md5($name . time()) . '.' . end(explode('.', $name));
+        list(, $suffix) = explode('.', $name);
+        $fileName = md5($name . time()) . '.' . $suffix;
         $fh = \Yii::$app->params['uploadPath'] . "/image/{$day}/{$fileName}";
         $ret = $oss->upload($fh, $tmp_name); // 会自动创建文件夹
         if (!$ret) {

@@ -65,4 +65,8 @@ class CommProduct extends \common\models\BaseModel
         $data['CommProduct']['cover'] = json_encode($data['cover_path']);
         return parent::load($data);
     }
+    
+    public static function findOne($condition) {
+        return parent::findOne($condition);
+    }
 }
