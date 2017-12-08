@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
+ * @property integer $order_id
  * @property integer $product_id
  * @property integer $price
  * @property integer $pay_price
@@ -40,7 +41,7 @@ class CommOrder extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'product_id', 'price', 'pay_price', 'num', 'adress_id', 'status'], 'integer'],
-            [['updated_at', 'created_at'], 'string', 'max' => 32],
+            [['order_id', 'updated_at', 'created_at'], 'string', 'max' => 32],
         ];
     }
 
@@ -52,6 +53,7 @@ class CommOrder extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'order_id' => 'order_id',
             'product_id' => 'Product ID',
             'price' => 'Price',
             'pay_price' => 'Pay Price',
@@ -76,6 +78,19 @@ class CommOrder extends \yii\db\ActiveRecord
     
     public static function findOne($condition) {
         return parent::findOne($condition);
+    }
+    
+    /**
+     * @inheritdoc
+     * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
+     */
+    public static function getByOrderId($orderId) {
+        return self::find()->where(["order_id" => $orderId])->one();
+    }
+    
+    public static function createOrderId($userId){
+        
+        return md5($userId.time().mt_rand(1,50000));
     }
 
 }

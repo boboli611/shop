@@ -76,8 +76,14 @@ class ProductionController extends Controller {
             $this->asJson(widgets\Response::error("地址错误"));
         }
         
+        $openid = \common\models\user\UserWxSession::findOne($userId);
+        if (!$openid){
+            $this->asJson(widgets\Response::error("未登录"));
+        }
+        
         $model = new \common\models\comm\CommOrder();
         $model->user_id = $userId;
+        $model->order_id = \common\models\comm\CommOrder::createOrderId($userId);
         $model->product_id = $pid;
         $model->num = $num;
         $model->price = $product->price;
@@ -88,8 +94,15 @@ class ProductionController extends Controller {
         if(!$model->save()){
             $this->asJson(widgets\Response::error("购买失败"));
         }
+        
+        
+        $order =  \frontend\components\WxpayAPI\Pay::pay($openid['open_id'],$product);
+        if (!$order['prepay_id'] || $order['return_code'] == "FAIL"){
+            $this->asJson(widgets\Response::error("下单失败"));
+        }
 
         $out['id'] =  $model->getPrimaryKey();
+        $ou['prepay_id'] = $order['prepay_id'];
         $this->asJson(widgets\Response::sucess($out));
     }
     

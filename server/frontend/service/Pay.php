@@ -5,9 +5,18 @@ use \yii\db\Exception as Exception;
 
 class Pay {
 
-    public function storage($userId, $orderId, $price) {
+    /**
+     * 订单入库
+     * @param type $userId
+     * @param type $orderId
+     * @param type $price
+     * @return boolean
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function storage($orderId, $price) {
 
-        $order = \common\models\comm\CommOrder::findOne($orderId);
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
          
         if (!$order) {
             throw new Exception("订单不存在", ["order_id" => $orderId]);
@@ -15,10 +24,6 @@ class Pay {
         
         if (!$order->status != \common\models\comm\CommOrder::status_add) {
             throw new Exception("订单已处理", ["order_id" => $orderId]);
-        }
-
-        if ($order->user_id != $userId) {
-            throw new Exception("订单用户和扣款用户不是同一个人", ["order_user" => $order->user_id, "product_user" => $userId, "order_id" => $orderId]);
         }
 
         if ($order->pay_price < $price) {

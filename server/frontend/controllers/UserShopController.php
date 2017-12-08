@@ -36,7 +36,6 @@ class UserShopController extends Controller
      */
     public function actionIndex()
     {
-        
         $userId = \common\widgets\User::getUid();
         $shop = UserShop::getByUid($userId);
  
