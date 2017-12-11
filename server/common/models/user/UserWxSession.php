@@ -32,7 +32,7 @@ class UserWxSession extends \common\models\BaseModel
     {
         return [
             [['expires_in'], 'integer'],
-            [['open_id', 'session_key', 'unionId'], 'string', 'max' => 32],
+            [['open_id', 'session_key', 'unionId', 'token'], 'string', 'max' => 32],
             [['updated_at', 'created_at'], 'string', 'max' => 20],
         ];
     }
@@ -47,6 +47,7 @@ class UserWxSession extends \common\models\BaseModel
             'open_id' => 'Open ID',
             'session_key' => 'Session Key',
             'unionId' => 'unionId',
+            'token' => "token",
             'expires_in' => 'Expires In',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',

@@ -32,13 +32,12 @@ class WxController extends Controller {
         $appid = \yii::$app->params["wx"]['appId'];
         $secret = \yii::$app->params["wx"]['appSecret'];
         $code = $_SERVER['HTTP_X_WX_CODE'];
-        $encryptedData = $_SERVER["X-WX-Encrypted-Data"];
-        $iv = $_SERVER["X-WX-IV"];
-
-
+        $encryptedData = $_SERVER["HTTP_X_WX_ENCRYPTED_DATA"];
+        $iv = $_SERVER["HTTP_X_WX_IV"];
+        //var_dump($code, $encryptedData, $iv,$_SERVER);
+/*
         $appid = 'wx4f4bc4dec97d474b';
         $code = "123";
-
         $encryptedData = "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM
                         QmRzooG2xrDcvSnxIMXFufNstNGTyaGS
                         9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+
@@ -58,7 +57,7 @@ class WxController extends Controller {
                         Db/XcxxmK01EpqOyuxINew==";
 
         $iv = 'r7BXXKkLb8qrSNn05n0qiA==';
-
+*/
         if (!$code || !$encryptedData || !$iv) {
             $this->asJson(widgets\Response::error("登录失败1"));
             return;
@@ -68,18 +67,17 @@ class WxController extends Controller {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=$appid&secret=$secret&js_code=$code&grant_type=$grant_type";
         $result = widgets\Http::Get($url);
         //$result = '{"openid": "OPENID111","session_key": "SESSIONKEY111","expires_in": 2592000}';
-        //$result = json_decode($result, true);
+        $result = json_decode($result, true);
         //var_dump($result);exit;
-        $result = [];
-        $result["session_key"] = 'tiihtNczf5v6AKRyjwEUhQ==';
-        if (!$result || isset($result['errcode'])) {
-            //$this->asJson(widgets\Response::error("登录失败"));
-            //return;
+        //$result = [];
+        //$result["session_key"] = 'tiihtNczf5v6AKRyjwEUhQ==';
+        if (isset($result['errcode'])) {
+            $this->asJson(widgets\Response::error("登录失败2"));
+            return;
         }
 
 
         $pc = new \frontend\components\WxpayAPI\WXBizDataCrypt($appid, $result['session_key']);
-        //$pc = new WXBizDataCrypt($appid, $sessionKey);
         $errCode = $pc->decryptData($encryptedData, $iv, $data);
         $data = json_decode($data, true);
         if ($errCode != 0 || !$data) {
@@ -94,11 +92,11 @@ class WxController extends Controller {
             }
             
             $transaction = \common\models\user\UserWxSession::getDb()->beginTransaction();
-            
             $model->open_id = $data["openId"];
+            $model->token = md5($data["openId"] . time(). rand(1, 1000));
             $model->unionId = $data["unionId"];
             $model->session_key = $result["session_key"];
-            $model->expires_in = $result["expires_in"];
+            $model->expires_in = time() + 3600 * 24 * 10;
             $model->save();
             
             $userModel = \common\models\user\User::findOne($model->user_id);
@@ -123,7 +121,7 @@ class WxController extends Controller {
             throw  $ex;
         }
 
-        $out["session_key"] = $result["session_key"];
+        //$out["session_key"] = $result["session_key"];
         $out["userInfo"] = $userModel->toArray();
 
         $this->asJson(widgets\Response::sucess($out));

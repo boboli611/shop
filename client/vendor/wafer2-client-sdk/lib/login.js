@@ -106,7 +106,7 @@ var login = function login(options) {
                 // 成功地响应会话信息
                 if (data && data.openid != "") {
                     var res = data.data
-                    if (res.userinfo) {
+                    if (res.userInfo) {
                         Session.set(res.skey);
                         options.success(userInfo);
                     } else {
