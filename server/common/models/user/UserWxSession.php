@@ -10,6 +10,7 @@ use Yii;
  * @property integer $user_id
  * @property string $open_id
  * @property string $session_key
+ * @property string unionId
  * @property integer $expires_in
  * @property string $updated_at
  * @property string $created_at
@@ -31,7 +32,7 @@ class UserWxSession extends \common\models\BaseModel
     {
         return [
             [['expires_in'], 'integer'],
-            [['open_id', 'session_key'], 'string', 'max' => 32],
+            [['open_id', 'session_key', 'unionId'], 'string', 'max' => 32],
             [['updated_at', 'created_at'], 'string', 'max' => 20],
         ];
     }
@@ -45,6 +46,7 @@ class UserWxSession extends \common\models\BaseModel
             'user_id' => 'User ID',
             'open_id' => 'Open ID',
             'session_key' => 'Session Key',
+            'unionId' => 'unionId',
             'expires_in' => 'Expires In',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',

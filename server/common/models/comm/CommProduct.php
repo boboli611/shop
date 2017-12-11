@@ -69,4 +69,25 @@ class CommProduct extends \common\models\BaseModel
     public static function findOne($condition) {
         return parent::findOne($condition);
     }
+    
+    /**
+     * @param array $condition
+     * @param string $order
+     * @param int $limit
+     * @return type
+     */
+    public static function getList($condition, $key, $order, $page, $limit = 10){
+        
+        $model = self::find()->where("1");
+        if ($condition){
+            $model->andWhere($condition);
+        }
+        
+        if ($key){
+            $model->andWhere("title like '%{$key}%'");
+        }
+        
+        $ret = $model->orderBy($order)->offset($page)->limit($limit)->all();
+        return $ret;
+    }
 }
