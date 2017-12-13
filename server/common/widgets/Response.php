@@ -11,6 +11,7 @@ class Response extends \yii\bootstrap\Widget
        $out["sucess"] = true;
        $out["msg"] = "";
        $out["data"] = $data;
+       $out["errno"] = 0;
        return $out;
    }
    

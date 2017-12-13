@@ -2,8 +2,8 @@
   "pages":[
     "pages/index/index",
     "pages/catalog/catalog",
+    "pages/goodsList/goodsList",
     "pages/newGoods/newGoods",
-    "pages/hotGoods/hotGoods",
     "pages/ucenter/address/address",
     "pages/ucenter/addressAdd/addressAdd",
     "pages/ucenter/footprint/footprint",

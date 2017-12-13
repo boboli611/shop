@@ -1,66 +1,130 @@
-// pages/auth/register/register.js
+var api = require('../../../config/api.js');
+var app = getApp();
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    username: '',
+    password: '',
+    confirmPassword: '',
+    code: '',
+    loginErrorCount: 0
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-  
-  },
+    // 页面初始化 options为页面跳转所带来的参数
+    // 页面渲染完成
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
+  },
   onReady: function () {
-  
-  },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
+  },
   onShow: function () {
-  
-  },
+    // 页面显示
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
+  },
   onHide: function () {
-  
-  },
+    // 页面隐藏
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
+  },
   onUnload: function () {
-  
-  },
+    // 页面关闭
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
   },
+  startRegister: function () {
+    var that = this;
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
+    if (that.data.password.length < 3 || that.data.username.length < 3) {
+      wx.showModal({
+        title: '错误信息',
+        content: '用户名和密码不得少于3位',
+        showCancel: false
+      });
+      return false;
+    }
+
+    if (that.data.password != that.data.confirmPassword) {
+      wx.showModal({
+        title: '错误信息',
+        content: '确认密码不一致',
+        showCancel: false
+      });
+      return false;
+    }
+
+    wx.request({
+      url: api.ApiRootUrl + 'auth/register',
+      data: {
+        username: that.data.username,
+        password: that.data.password
+      },
+      method: 'POST',
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        if (res.data.code == 200) {
+          that.setData({
+            'loginErrorCount': 0
+          });
+          wx.setStorage({
+            key: "token",
+            data: res.data.data.token,
+            success: function () {
+              wx.switchTab({
+                url: '/pages/ucenter/index/index'
+              });
+            }
+          });
+
+        }
+        console.log(res.data.data.token)
+      }
+    });
   },
+  bindUsernameInput: function (e) {
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+    this.setData({
+      username: e.detail.value
+    });
+  },
+  bindPasswordInput: function (e) {
+
+    this.setData({
+      password: e.detail.value
+    });
+  },
+  bindConfirmPasswordInput: function (e) {
+
+    this.setData({
+      confirmPassword: e.detail.value
+    });
+  },
+  bindCodeInput: function (e) {
+
+    this.setData({
+      code: e.detail.value
+    });
+  },
+  clearInput: function (e) {
+    switch (e.currentTarget.id) {
+      case 'clear-username':
+        this.setData({
+          username: ''
+        });
+        break;
+      case 'clear-password':
+        this.setData({
+          password: ''
+        });
+        break;
+      case 'clear-confirm-password':
+        this.setData({
+          confirmPassword: ''
+        });
+        break;
+      case 'clear-code':
+        this.setData({
+          code: ''
+        });
+        break;
+    }
   }
 })

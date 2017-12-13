@@ -1,18 +1,22 @@
 var config = require('../config')
 
-var NewApiRootUrl = config.host;
+var NewApiRootUrl = config.service.host + "/";
 
 module.exports = {
-    IndexUrl: NewApiRootUrl + 'index/index', //首页数据接口
+    IndexUrl: NewApiRootUrl + 'page/index', //首页数据接口 ---
+    BannerInfo: NewApiRootUrl + 'banner/info',  //获得banner详情 ---
+    GoodsList: NewApiRootUrl + 'production/index',  //获得商品列表---
+    GoodsDetail: NewApiRootUrl + 'production/detail',  //获得商品的详情
+
     CatalogList: NewApiRootUrl + 'catalog/index',  //分类目录全部分类数据接口
     CatalogCurrent: NewApiRootUrl + 'catalog/current',  //分类目录当前分类数据接口
 
     AuthLoginByWeixin: NewApiRootUrl + 'auth/loginByWeixin', //微信登录
 
     GoodsCount: NewApiRootUrl + 'goods/count',  //统计商品总数
-    GoodsList: NewApiRootUrl + 'goods/list',  //获得商品列表
+    
     GoodsCategory: NewApiRootUrl + 'goods/category',  //获得分类数据
-    GoodsDetail: NewApiRootUrl + 'goods/detail',  //获得商品的详情
+    
     GoodsNew: NewApiRootUrl + 'goods/new',  //新品
     GoodsHot: NewApiRootUrl + 'goods/hot',  //热门
     GoodsRelated: NewApiRootUrl + 'goods/related',  //商品详情页的关联商品（大家都在看）

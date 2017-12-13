@@ -56,7 +56,7 @@
   <view class="a-section a-popular" wx:if="{{hotGoods.length > 0}}">
     <view class="h">
       <view>
-        <navigator url="../hotGoods/hotGoods">
+        <navigator url="../goodsList/goodsList">
           <text class="txt">人气推荐</text>
         </navigator>
       </view>

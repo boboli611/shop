@@ -1,66 +1,56 @@
-// pages/auth/reset/reset.js
+var app = getApp();
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    username: '',
+    code: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-  
+    // 页面初始化 options为页面跳转所带来的参数
+    // 页面渲染完成
+    
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady: function () {
-  
-  },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
+  },
   onShow: function () {
-  
-  },
+    // 页面显示
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
+  },
   onHide: function () {
-  
-  },
+    // 页面隐藏
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
+  },
   onUnload: function () {
-  
-  },
+    // 页面关闭
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
+  startLogin: function(){
+    var that = this;
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+  bindUsernameInput: function(e){
+    
+    this.setData({
+      username: e.detail.value
+    });
+  },
+  bindCodeInput: function(e){
+    
+    this.setData({
+      code: e.detail.value
+    });
+  },
+  clearInput: function(e){
+    switch (e.currentTarget.id){
+      case 'clear-username':
+        this.setData({
+          username: ''
+        });
+        break;
+        case 'clear-code':
+        this.setData({
+          code: ''
+        });
+        break;
+    }
   }
 })

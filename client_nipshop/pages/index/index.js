@@ -17,7 +17,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: 'NideShop',
-      desc: 'lipz',
+      desc: '仿网易严选微信小程序商城',
       path: '/pages/index/index'
     }
   },

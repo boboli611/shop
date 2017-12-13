@@ -7,8 +7,8 @@ const app = getApp()
 Page({
   data: {
     newGoods: [],
-    hotGoods: [], 
-    topics: [], 
+    hotGoods: [],
+    topics: [],
     brands: [],
     floorGoods: [],
     banner: [],
@@ -17,7 +17,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: 'NideShop',
-      desc: 'lipz',
+      desc: '仿网易严选微信小程序商城',
       path: '/pages/index/index'
     }
   },
@@ -27,11 +27,11 @@ Page({
     util.request(api.IndexUrl).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          newGoods: res.data.newGoodsList,
-          hotGoods: res.data.hotGoodsList,
-          topics: res.data.topicList,
-          brand: res.data.brandList,
-          floorGoods: res.data.categoryList,
+          newGoods: res.data.newGoods,
+          hotGoods: res.data.hotGoods,
+          topics: res.data.topics,
+          brand: res.data.brand,
+          floorGoods: res.data.floorGoods,
           banner: res.data.banner,
           channel: res.data.channel
         });
