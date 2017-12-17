@@ -12,8 +12,7 @@ Page({
     brands: [],
     floorGoods: [],
     banner: [],
-    channel: [],
-  
+    channel: []
   },
   onShareAppMessage: function () {
     return {

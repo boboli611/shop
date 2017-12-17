@@ -15,6 +15,11 @@ use common\widgets;
  */
 class PageController extends Controller {
     
+    public function actionIndex_bak(){
+        $out['banner'] = "http://img.alicdn.com/imgextra/i6/TB1dUD5XJHO8KJjSZFtYXIhfXXa_M2.SS2_430x430q90.jpg";
+        $out['msg'] = "享受免费配送服务 & 免费退货";
+    }
+    
     public function actionIndex(){
         
         $out['banner'][0]["id"] = 1; 

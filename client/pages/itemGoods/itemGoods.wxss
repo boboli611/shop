@@ -2,16 +2,20 @@
 .search {
   display: block;
   margin: 0px;
+  width: 320px;
 }
 
-.search .col {
+.search {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
   font-size: 17px;
 }
 
 .search input{
   border-bottom: 1px solid rgb(192,192,192);
+  width: 100%;
 }
 .search .right{
   text-align: right;
@@ -20,17 +24,52 @@
 
 
 .search .left {
-  width: 75%;
+  width: 84%;
 }
 .search .right {
-  width: 25%;
+  width: 16%;
+}
+
+.banner{
+  margin-top: 10px;
+}
+.banner image {
+  display: block;
+}
+.banner .txt{
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.bannerList{
+  display: block;
+  margin: 0px;
+  width: 320px;
+  margin-top: 30px;
+}
+
+.bannerList .col {
+  display: flex;
+  font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+  font-size: 17px;
+}
+
+.bannerList .col view{
+  display: block;
+}
+
+.bannerList .col image{
+  width: 100px;
+  height: 150px;
 }
 
 
 .goods {
   display: block;
   margin: 0px;
-  width: 320px;
+  width: 100%;
   margin-top:50px; 
 }
 
@@ -38,6 +77,10 @@
   text-align: center;
   font-size: 12px;
   font-weight: 700;
+}
+
+.goods .one image{
+  width: 100%;
 }
 
 .goods .two {
@@ -48,7 +91,7 @@
 }
 
 .goods .two image{
-  width: 150px;
+  width: 180px;
 }
 
 

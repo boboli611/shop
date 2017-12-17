@@ -1,0 +1,26 @@
+
+<!--index.wxml-->
+<view class="container">
+ <view class='items'>
+    <navigator url="{{item.link}}">
+      <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
+      <view class='txt'><text>风衣</text></view>
+    </navigator>
+ </view>
+
+ <view class='items'>
+    <navigator url="{{item.link}}">
+      <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
+      <view class='txt'><text>风衣</text></view>
+    </navigator>
+ </view>
+
+ <view class='items'>
+    <navigator url="{{item.link}}">
+      <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
+      <view class='txt'><text>风衣</text></view>
+    </navigator>
+ </view>
+
+
+</view>

@@ -1,6 +1,14 @@
 {
   "pages":[
+    
+    "pages/goods/goods",
+    "pages/itemGoods/itemGoods",
+    "pages/items/items",
+    "pages/search/search",
     "pages/index/index",
+    
+
+
     "pages/catalog/catalog",
     "pages/goodsList/goodsList",
     "pages/newGoods/newGoods",
@@ -18,28 +26,20 @@
     "pages/pay/pay",
     "pages/payResult/payResult",
     "pages/ucenter/index/index",
-    "pages/topic/topic",
     "pages/comment/comment",
     "pages/commentPost/commentPost",
     "pages/topicComment/topicComment",
     "pages/brand/brand",
     "pages/brandDetail/brandDetail",
-    "pages/search/search",
+    
     "pages/category/category",
     "pages/cart/cart",
     "pages/shopping/checkout/checkout",
     "pages/shopping/address/address",
     "pages/shopping/addressAdd/addressAdd",
-    "pages/goods/goods",
+    
     "pages/topicDetail/topicDetail"
   ],
-  "window":{
-    "backgroundColor":"#F6F6F6",
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "lipz",
-    "navigationBarTextStyle":"black"
-  },
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#fff",
@@ -60,13 +60,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/topic/topic",
-        "iconPath": "static/images/ic_menu_topic_nor.png",
-        "selectedIconPath": "static/images/ic_menu_topic_pressed.png",
-        "text": "专题"
-      },
-      {
-        "pagePath": "pages/catalog/catalog",
+        "pagePath": "pages/items/items",
         "iconPath": "static/images/ic_menu_sort_nor.png",
         "selectedIconPath": "static/images/ic_menu_sort_pressed.png",
         "text": "分类"
