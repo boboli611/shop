@@ -22,6 +22,30 @@ class PageController extends Controller {
     
     public function actionIndex(){
         
+        $list =  \common\models\comm\CommIndex::getAll();
+        $ids = [];
+        foreach ($list as $v){
+            $ids[] = $v['product_id'];
+        }
+        
+        $ids = implode(",", $ids);
+        /*
+        $products = \common\models\comm\CommProduct::find()->select('comm_product.*,comm_product_item.title as item')
+                ->join('LEFT JOIN','comm_product_item','comm_product.item_id = comm_product_item.id')
+                ->filterWhere(['in','comm_product.id',$ids])
+                ->andFilterWhere(['=', "comm_product.status", 1])
+                ->all();
+               //->createCommand()->getRawSql();
+        */
+        
+        $sql = "SELECT `comm_product`.*, `comm_product_item`.`title` AS `item` FROM `comm_product` "
+                . "LEFT JOIN `comm_product_item` ON comm_product.item_id = comm_product_item.id "
+                . "WHERE (`comm_product`.`id` IN ({$ids})) AND (`comm_product`.`status` = 1)";
+                
+        $products = \common\models\comm\CommProduct::findBySql($sql)->asArray()->all();
+        $this->asJson(widgets\Response::sucess($products));
+return;       
+// var_dump($products);exit;
         $out['banner'][0]["id"] = 1; 
         $out['banner'][0]["link"] = "https://www.baidu.com"; 
         $out['banner'][0]["image_url"] = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3725915652,1920562135&fm=27&gp=0.jpg"; 

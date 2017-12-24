@@ -30,6 +30,7 @@ class CommProductItem extends \common\models\BaseModel
     public function rules()
     {
         return [
+            [['sort','title','icon'], 'required'],
             [['sort'], 'integer'],
             [['title'], 'string', 'max' => 32],
             [['icon'], 'string', 'max' => 255],
@@ -57,5 +58,15 @@ class CommProductItem extends \common\models\BaseModel
         $data['CommProductItem']['icon'] = $data['icon_path'];
 
         return parent::load($data);
+    }
+    
+    public function getList(){
+        $list = self::find()->all();
+        $out = [];
+        foreach($list as $v){
+            $out[$v['id']] = $v['title'];
+        }
+        
+        return $out;
     }
 }

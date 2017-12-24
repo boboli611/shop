@@ -36,6 +36,7 @@ class ProductController extends Controller
     public function actionIndex()
     {
 
+        
         $searchModel = new CommProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -64,9 +65,9 @@ class ProductController extends Controller
      */
     public function actionCreate()
     {
+       
         $model = new CommProduct();
         if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
-            //var_dump(Yii::$app->request->post());exit;
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -85,7 +86,7 @@ class ProductController extends Controller
     {
         $model = $this->findModel($id);
         if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

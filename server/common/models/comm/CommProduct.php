@@ -13,6 +13,7 @@ use Yii;
  * @property string $cover
  * @property integer $price
  * @property integer $sell
+ * @property integer $item_id
  * @property integer $count
  * @property string $update_time
  * @property string $create_time
@@ -34,7 +35,7 @@ class CommProduct extends \common\models\BaseModel
     {
         return [
             [['desc'], 'string'],
-            [['price', 'sell', 'count', 'status'], 'integer'],
+            [['price', 'sell', 'count', 'status', 'item_id'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
             [['title'], 'string', 'max' => 128],
             [['cover'], 'string'],
@@ -54,6 +55,7 @@ class CommProduct extends \common\models\BaseModel
             'price' => '价格',
             'sell' => '销量',
             'count' => '库存',
+            'item_id' => '类别',
             'status' => '下架',
             'updated_at' => '修改时间',
             'created_at' => '创建时间',

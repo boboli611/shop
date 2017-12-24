@@ -19,7 +19,7 @@ use Yii;
  * @property string $updated_at
  * @property string $created_at
  */
-class CommOrder extends \yii\db\ActiveRecord
+class CommOrder extends \common\models\BaseModel
 {
     
     const status_add = 1;//下单

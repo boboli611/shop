@@ -27,13 +27,8 @@ Page({
     util.request(api.IndexUrl).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          newGoods: res.data.newGoods,
-          hotGoods: res.data.hotGoods,
-          topics: res.data.topics,
-          brand: res.data.brand,
-          floorGoods: res.data.floorGoods,
-          banner: res.data.banner,
-          channel: res.data.channel
+          data: res.data,
+          
         });
       }
     });

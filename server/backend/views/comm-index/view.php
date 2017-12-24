@@ -4,20 +4,20 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\comm\CommProductItem */
+/* @var $model common\models\comm\CommIndex */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => '预览', 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => '详情', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="comm-product-item-view">
+<div class="comm-index-view">
 
     <p>
-        <?= Html::a('首页', ['index', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('修改', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('删除', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => '确定删除?',
+                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -27,9 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'title',
-            'icon',
-            'sort',
+            'product_id',
             'updated_at',
             'created_at',
         ],

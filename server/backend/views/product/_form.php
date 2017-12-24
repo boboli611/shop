@@ -7,6 +7,9 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommProduct */
 /* @var $form yii\widgets\ActiveForm */
+
+$items = (new \common\models\comm\CommProductItem())->getList();
+array_unshift($items,"选择类别");
 ?>
 
 <div class="comm-product-form" style="width: 1000px;">
@@ -33,7 +36,7 @@ $img = json_decode($model->cover, true);
 $img = is_array($img) ?  $img : [];
 
 echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classname(), [
-    'options' => ['multiple' => true],
+    'options' => ['multiple' => false],
     'pluginOptions' => [
         // 需要预览的文件格式
         'previewFileType' => 'image',
@@ -54,7 +57,7 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
         // 最少上传的文件个数限制
         'minFileCount' => 1,
         // 最多上传的文件个数限制
-        'maxFileCount' => 10,
+        'maxFileCount' => 1,
         // 是否显示移除按钮，指input上面的移除按钮，非具体图片上的移除按钮
         'showRemove' => true,
         // 是否显示上传按钮，指input上面的上传按钮，非具体图片上的上传按钮
@@ -98,6 +101,8 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
 
     <?= $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态") ?>  
     
+    <?php echo $form->field($model, 'status')->dropDownList($items, ['style'=>'width:120px', "value" => $model->item_id])->label("类别") ?>  
+    
     <?php //echo  $form->field($model, 'update_time')->textInput() ?>
 
     <?php //echo $form->field($model, 'create_time')->textInput() ?>
@@ -113,7 +118,7 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
 <script>
 
 function addImgHiden(url){
-    $("form").append('<input type="hidden" name="cover_path[]" value="'+url+'">');
+    $("form").append('<input type="hidden" name="cover_path" value="'+url+'">');
 }
 
 </script>
