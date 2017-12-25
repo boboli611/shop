@@ -1,0 +1,12 @@
+<template name="search">
+  <view class="search">
+      <view class="left">
+        <input confirm-type="search" placeholder="" confirm-type="search" bindconfirm="searchHandle" value="{{word}}"/>
+      </view>
+      <view class="right">
+        <text>搜索</text>
+      </view>
+  </view>
+
+
+</template>

@@ -45,6 +45,7 @@ function formatNumber(n) {
  */
 function request(url, data = {}, method = "GET") {
   return new Promise(function (resolve, reject) {
+
     wx.request({
       url: url,
       data: data,
@@ -55,7 +56,6 @@ function request(url, data = {}, method = "GET") {
       },
       success: function (res) {
         console.log("success");
-
         if (res.statusCode == 200) {
 
           if (res.data.errno == 401) {

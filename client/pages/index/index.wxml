@@ -1,6 +1,10 @@
 
 <!--index.wxml-->
 <view class="container">
+
+  <import src="../public/search/search.wxml"/>
+  <template is="search" data="{{word}}"/> 
+
  <view class='banner'>
     <navigator url="{{item.link}}">
       <image mode='widthFix' src="http://img.alicdn.com/imgextra/i6/TB1dUD5XJHO8KJjSZFtYXIhfXXa_M2.SS2_430x430q90.jpg" background-size="cover"></image>
@@ -10,7 +14,7 @@
 
  <view class='items' wx:for="{{data}}" wx:for-item="item">
   <view class='txt'><text>{{item.title}}</text></view>
-    <navigator url="../itemGoods/itemGoods?item_id{{item.item_id}}">
+    <navigator url="../itemGoods/itemGoods?word={{item.item}}">
       <image mode='widthFix' src="{{item.cover}}" background-size="cover"></image>
     </navigator>
  </view>

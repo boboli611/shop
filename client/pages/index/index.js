@@ -6,13 +6,8 @@ const user = require('../../services/user.js');
 const app = getApp()
 Page({
   data: {
-    newGoods: [],
-    hotGoods: [],
-    topics: [],
-    brands: [],
-    floorGoods: [],
-    banner: [],
-    channel: []
+    data: [],
+    searchWord:""
   },
   onShareAppMessage: function () {
     return {
@@ -28,7 +23,6 @@ Page({
       if (res.errno === 0) {
         that.setData({
           data: res.data,
-          
         });
       }
     });
@@ -47,5 +41,13 @@ Page({
   },
   onUnload: function () {
     // 页面关闭
+  },
+
+  searchHandle:function(e){
+    var searchWord = e.detail.value
+    wx.navigateTo({
+      url: '../itemGoods/itemGoods?word=' + searchWord
+    })
+    console.log("loggggg" + searchWord)
   },
 })

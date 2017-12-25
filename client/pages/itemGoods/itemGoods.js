@@ -23,24 +23,28 @@ Page({
     }
   },
 
-  getIndexData: function () {
+  getIndexData: function (options) {
     let that = this;
-    util.request(api.IndexUrl).then(function (res) {
+    var url = api.IndexUrl + "?word=" + options.word
+    util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
           newGoods: res.data.newGoods,
-          hotGoods: res.data.hotGoods,
-          topics: res.data.topics,
-          brand: res.data.brand,
-          floorGoods: res.data.floorGoods,
-          banner: res.data.banner,
-          channel: res.data.channel
+          word: options.word
+        });
+      }else{
+        that.setData({
+          newGoods: res.data.newGoods,
+          word: options.word
         });
       }
     });
   },
   onLoad: function (options) {
-    this.getIndexData();
+    console.log("options \n")
+    console.log(options)
+    this.getIndexData(options);
+   
   },
   onReady: function () {
     // 页面渲染完成
@@ -54,4 +58,11 @@ Page({
   onUnload: function () {
     // 页面关闭
   },
+
+  searchHandle:function(e){
+    var searchWord = e.detail.value
+    var options = "{}"
+    this.onLoad(options)
+  },
+
 })

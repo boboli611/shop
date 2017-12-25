@@ -1,3 +1,10 @@
+
+@import "../public/search/search.wxss";
+
+.banner{
+  margin-top: 10px;
+}
+
 .banner image {
   display: block;
 }

@@ -1,14 +1,8 @@
 <!--index.wxml-->
 <view class="container">
 
-  <view class="search">
-      <view class="left">
-        <input confirm-type="search" placeholder="input" auto-focus/>
-      </view>
-      <view class="right">
-        <text>搜索</text>
-      </view>
-  </view>
+  <import src="../public/search/search.wxml"/>
+  <template is="search" data="{{word}}"/> 
 
   <view class='banner'>
     <navigator url="{{item.link}}">
@@ -36,7 +30,7 @@
         <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i1/TB1j666RVXXXXaGXVXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg'></image>
       </view>
       <view class='text'>
-        <text>新品</text>
+        <text>新品{{word}}</text>
       </view>
       <view class='text'>
         <text>为此长款牛仔裤</text>
