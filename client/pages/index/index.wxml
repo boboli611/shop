@@ -6,14 +6,14 @@
   <template is="search" data="{{word}}"/> 
 
  <view class='banner'>
-    <navigator url="{{item.link}}">
-      <image mode='widthFix' src="http://img.alicdn.com/imgextra/i6/TB1dUD5XJHO8KJjSZFtYXIhfXXa_M2.SS2_430x430q90.jpg" background-size="cover"></image>
+    <navigator url="../itemGoods/itemGoods?word={{data.showcase.item}}">
+      <image mode='widthFix' src="{{data.showcase.cover}}" background-size="cover"></image>
       <view class='txt'><text>享受免费配送服务 & 免费退货</text></view>
     </navigator>
  </view>
 
- <view class='items' wx:for="{{data}}" wx:for-item="item">
-  <view class='txt'><text>{{item.title}}</text></view>
+ <view class='items' wx:for="{{data.list}}" wx:for-item="item">
+  <view class='txt'><text>{{item.item}}</text></view>
     <navigator url="../itemGoods/itemGoods?word={{item.item}}">
       <image mode='widthFix' src="{{item.cover}}" background-size="cover"></image>
     </navigator>

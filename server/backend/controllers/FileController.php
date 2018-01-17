@@ -54,6 +54,7 @@ class FileController extends Controller {
         $file = current($_FILES);
         $tmp_name = current($file['tmp_name']);
         $name = current($file['name']);
+
         // $p1 $p2是我们处理完图片之后需要返回的信息，其参数意义可参考上面的讲解
         $p1 = $p2 = [];
         // 如果没有商品图或者商品id非真，返回空

@@ -1,0 +1,28 @@
+<template name="menu">
+  <view class="menu">
+    <view class='col'>
+      <view class='title'>
+        <text>外套</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>毛衣</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>牛仔裤</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>靴子</text>
+      </view>
+    </view>
+
+  </view>
+</template>

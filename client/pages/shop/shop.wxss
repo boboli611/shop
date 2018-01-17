@@ -1,8 +1,8 @@
 
 .line{
   height: 1px;
-  width: 320px;
-  background: #000000;
+  width: 330px;
+  background: #e8e8e8;
   margin: 10px 0px;
   justify-content:flex-end;
 }
@@ -16,6 +16,11 @@
 .goods .col{
   display: flex;
   flex-direction: row;
+}
+
+.goods .col .close{
+  width: 10px;
+  height: 10px;
 }
 
 .goods image{
@@ -50,17 +55,12 @@
 }
 
 .good-line{
-  margin:10px 0 10px 5px;
-  width:320px;
+  margin:10px 0 10px 80px;
   height: 1px;
   display:flex;
   Flex-direction:row-reverse;
-}
-
-.good-line view{
+  background-color: #e8e8e8;
   width: 240px;
-  height: 1px;
-  background-color: #000000;
 }
 
 .price {
@@ -82,7 +82,7 @@
 
 .buy{
   margin-top: 20px;
-  background: #999999;
+  background: #f3f3f3;
   width: 320px;
   font-size: 12px;
 }
@@ -107,4 +107,30 @@
   display: flex;
   flex-direction: row;
   justify-content:space-between;
+}
+
+.message{
+  width: 300px;
+  font-size: 10px;
+  margin: 15px 0 15px 0; 
+}
+
+.message textarea{
+  height:50px;
+}
+
+.address{
+  width: 300px;
+  font-size: 10px;
+  margin: 15px 0 15px 0; 
+}
+
+.address image{
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+}
+
+.red{
+  color: #ff061d;
 }

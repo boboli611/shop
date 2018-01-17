@@ -61,6 +61,10 @@
   margin-top: 40px;
 }
 
+.goods .product{
+  margin-right: 15px;
+}
+
 .goods .two image{
   width: 180px;
 }

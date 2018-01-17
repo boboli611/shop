@@ -9,6 +9,7 @@ use yii\widgets\DetailView;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Comm Products', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$model->price = $model->price / 100;
 ?>
 <div class="comm-product-view">
 

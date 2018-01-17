@@ -76,6 +76,8 @@ use yii\helpers\Url;
     <?php //$form->field($model, 'updated_at')->textInput(['maxlength' => true]) ?>
 
     <?php //$form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
+    
+    
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '保存' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

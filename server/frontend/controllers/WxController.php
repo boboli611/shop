@@ -23,6 +23,7 @@ class WxController extends Controller {
 
     public function actionLogin() {
 
+        
         /**
          * 
          * X-WX-Code:061l48B81dBNxP1WoCy81CzRA81l48Bo
@@ -121,8 +122,12 @@ class WxController extends Controller {
             throw  $ex;
         }
 
+        $userInfo['username'] = $userModel->username;
+        $userInfo["img"] = $userModel->img;
+        $userInfo["token"] = $model->token;
         //$out["session_key"] = $result["session_key"];
-        $out["userInfo"] = $userModel->toArray();
+        $out["userInfo"] = $userInfo;
+        $out["token"] = $model->token;
 
         $this->asJson(widgets\Response::sucess($out));
     }
@@ -130,35 +135,38 @@ class WxController extends Controller {
     //创建订单
     public function actionCreateOrder() {
 
-        $pid = Yii::$app->request->post("product_id");
-        $num = abs(Yii::$app->request->post("num"));
-        $addressId = Yii::$app->request->post("adress_id");
+        $pid = Yii::$app->request->post("ids");
+        //$num = abs(Yii::$app->request->post("num"));
+        //$addressId = Yii::$app->request->post("adress_id");
               
-        if (!$pid || !is_numeric($pid) || !is_numeric($addressId) || $num < 1){
+        if (!$pid){
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
  
-        $product = \common\models\comm\CommProduct::findOne($pid);
+        $product = \common\models\comm\CommProductionStorage::getByids($pid);
         if (!$product) {
             $this->asJson(widgets\Response::error("商品不存在"));
             return;
         }
 
-        if ($product->count == 0){
+        foreach ($product as $item){
+            if ($item->num == 0){
              $this->asJson(widgets\Response::error("已售罄"));
              return;
-        }
+            }
 
-        if ($product->count <= $num){
-             $this->asJson(widgets\Response::error("库存不足"));
-             return;
+            if ($item->sell >= $item->num){
+                 $this->asJson(widgets\Response::error("库存不足"));
+                 return;
+            }
+
+            if (!$item->status){
+                 $this->asJson(widgets\Response::error("已下架"));
+                 return;
+            }
         }
         
-        if (!$product->status){
-             $this->asJson(widgets\Response::error("已下架"));
-             return;
-        }
                 
         $userId = widgets\User::getUid();
         $adress = \common\models\user\UserAddress::findOne($addressId);

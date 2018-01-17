@@ -1,9 +1,9 @@
 <template name="search">
   <view class="search">
       <view class="left">
-        <input confirm-type="search" placeholder="" confirm-type="search" bindconfirm="searchHandle" value="{{word}}"/>
+        <input confirm-type="search" placeholder="" confirm-type="search" bindconfirm="searchHandle" bindblur="searchWord" value="{{word}}" />
       </view>
-      <view class="right">
+      <view class="right" bindtap='search'>
         <text>搜索</text>
       </view>
   </view>

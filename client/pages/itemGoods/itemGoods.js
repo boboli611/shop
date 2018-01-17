@@ -6,14 +6,7 @@ const user = require('../../services/user.js');
 const app = getApp()
 Page({
   data: {
-    newGoods: [],
-    hotGoods: [],
-    topics: [],
-    brands: [],
-    floorGoods: [],
-    banner: [],
-    channel: [],
-  
+    goods: [],
   },
   onShareAppMessage: function () {
     return {
@@ -25,16 +18,16 @@ Page({
 
   getIndexData: function (options) {
     let that = this;
-    var url = api.IndexUrl + "?word=" + options.word
+    var url = api.GoodsList + "?word=" + options.word
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          newGoods: res.data.newGoods,
+          goods: res.data.list,
           word: options.word
         });
       }else{
         that.setData({
-          newGoods: res.data.newGoods,
+          goods: res.data.list,
           word: options.word
         });
       }
@@ -60,8 +53,9 @@ Page({
   },
 
   searchHandle:function(e){
-    var searchWord = e.detail.value
-    var options = "{}"
+    var searchWord = e.detail.value;
+    var options = {}; 
+    options["word"] = searchWord;
     this.onLoad(options)
   },
 

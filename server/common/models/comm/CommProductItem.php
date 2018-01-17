@@ -69,4 +69,9 @@ class CommProductItem extends \common\models\BaseModel
         
         return $out;
     }
+    
+    public static function getByTitle($title){
+        
+        return  self::find()->where(['title' => $title])->one();
+    }
 }

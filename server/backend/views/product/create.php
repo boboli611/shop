@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommProduct */
 
@@ -13,8 +12,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="comm-product-create">
 
 
-    <?= $this->render('_form', [
+    <?php 
+    $storageList = [$modelStorage,$modelStorage,$modelStorage,$modelStorage];
+    echo $this->render('_form', [
         'model' => $model,
-    ]) ?>
+        'storageList' => $storageList,
+    ])
+    ?>
 
 </div>

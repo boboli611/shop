@@ -7,6 +7,18 @@ module.exports = {
     BannerInfo: NewApiRootUrl + 'banner/info',  //获得banner详情 ---
     GoodsList: NewApiRootUrl + 'production/index',  //获得商品列表---
     GoodsDetail: NewApiRootUrl + 'production/detail',  //获得商品的详情
+    AddChart: NewApiRootUrl + 'production/add-chart',//加入购物车
+    GoodsInfo: NewApiRootUrl + 'production/info',  //获得商品的详情
+    Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
+    AddressSave: NewApiRootUrl + 'address/save',  //保存收货地址
+    AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
+
+
+
+
+
+
+
 
     CatalogList: NewApiRootUrl + 'catalog/index',  //分类目录全部分类数据接口
     CatalogCurrent: NewApiRootUrl + 'catalog/current',  //分类目录当前分类数据接口
@@ -51,9 +63,9 @@ module.exports = {
     SearchHelper: NewApiRootUrl + 'search/helper',  //搜索帮助
     SearchClearHistory: NewApiRootUrl + 'search/clearhistory',  //搜索帮助
 
-    AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
+    
     AddressDetail: NewApiRootUrl + 'address/detail',  //收货地址详情
-    AddressSave: NewApiRootUrl + 'address/save',  //保存收货地址
+    
     AddressDelete: NewApiRootUrl + 'address/delete',  //保存收货地址
 
     RegionList: NewApiRootUrl + 'region/list',  //获取区域列表

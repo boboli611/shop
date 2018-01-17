@@ -7,7 +7,6 @@ Page({
       id:0,
       province_id: 0,
       city_id: 0,
-      district_id: 0,
       address: '',
       full_region: '',
       name: '',
@@ -16,11 +15,6 @@ Page({
     },
     addressId: 0,
     openSelectRegion: false,
-    selectRegionList: [
-      { id: 0, name: '省份', parent_id: 1, type: 1 },
-      { id: 0, name: '城市', parent_id: 1, type: 2 },
-      { id: 0, name: '区县', parent_id: 1, type: 3 }
-    ],
     regionType: 1,
     regionList: [],
     selectRegionDone: false
@@ -74,47 +68,12 @@ Page({
     })
 
   },
-  chooseRegion() {
-    let that = this;
-    this.setData({
-      openSelectRegion: !this.data.openSelectRegion
-    });
-
-    //设置区域选择数据
+  chooseRegion(event) {
     let address = this.data.address;
-    if (address.province_id > 0 && address.city_id > 0 && address.district_id > 0) {
-      let selectRegionList = this.data.selectRegionList;
-      selectRegionList[0].id = address.province_id;
-      selectRegionList[0].name = address.province_name;
-      selectRegionList[0].parent_id = 1;
-
-      selectRegionList[1].id = address.city_id;
-      selectRegionList[1].name = address.city_name;
-      selectRegionList[1].parent_id = address.province_id;
-
-      selectRegionList[2].id = address.district_id;
-      selectRegionList[2].name = address.district_name;
-      selectRegionList[2].parent_id = address.city_id;
-
-      this.setData({
-        selectRegionList: selectRegionList,
-        regionType: 3
-      });
-
-      this.getRegionList(address.city_id);
-    } else {
-      this.setData({
-        selectRegionList: [
-          { id: 0, name: '省份', parent_id: 1, type: 1 },
-          { id: 0, name: '城市', parent_id: 1, type: 2 },
-          { id: 0, name: '区县', parent_id: 1, type: 3 }
-        ],
-        regionType: 1
-      })
-      this.getRegionList(1);
-    }
-
-    this.setRegionDoneStatus();
+    address.full_region = event.detail.value;
+    this.setData({
+      address: address
+    });
 
   },
   onLoad: function (options) {
@@ -175,15 +134,6 @@ Page({
       })
     }
 
-    //重置下级区域为空
-    selectRegionList.map((item, index) => {
-      if (index > regionType - 1) {
-        item.id = 0;
-        item.name = index == 1 ? '城市' : '区县';
-        item.parent_id = 0;
-      }
-      return item;
-    });
 
     this.setData({
       selectRegionList: selectRegionList
@@ -216,7 +166,6 @@ Page({
     let selectRegionList = this.data.selectRegionList;
     address.province_id = selectRegionList[0].id;
     address.city_id = selectRegionList[1].id;
-    address.district_id = selectRegionList[2].id;
     address.province_name = selectRegionList[0].name;
     address.city_name = selectRegionList[1].name;
     address.district_name = selectRegionList[2].name;
@@ -279,7 +228,7 @@ Page({
     }
 
 
-    if (address.district_id == 0) {
+    if (address.full_region == "") {
       util.showErrorToast('请输入省市区');
       return false;
     }
@@ -297,8 +246,8 @@ Page({
       mobile: address.mobile,
       province_id: address.province_id,
       city_id: address.city_id,
-      district_id: address.district_id,
       address: address.address,
+      full_region: address.full_region,
       is_default: address.is_default,
     }, 'POST').then(function (res) {
       if (res.errno === 0) {

@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'id',
             'title',
-            'desc:ntext',
             [
                 'attribute' => 'cover',
                 'format' => 'raw',
@@ -40,7 +39,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $str;
                 },
             ],
-            'price',
+            [
+                'attribute' => 'price',
+                'value' => 
+                function($model) {
+                    return $model->price / 100;
+                }
+            ],
             'sell',
             'count',
             [

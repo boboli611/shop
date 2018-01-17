@@ -1,8 +1,8 @@
 <!--index.wxml-->
 <view class="container">
 
-  <import src="../public/search/search.wxml"/>
-  <template is="search" data="{{word}}"/> 
+  <import src="../public/search/search.wxml" />
+  <template is="search" data="{{word}}" />
 
   <view class='banner'>
     <navigator url="{{item.link}}">
@@ -24,64 +24,71 @@
     </view>
   </view>
 
-  <view class='goods'>
+  <view class='goods' wx:for="{{goods}}" wx:for-item="item">
     <view class='one'>
       <view>
-        <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i1/TB1j666RVXXXXaGXVXXXXXXXXXX_!!0-item_pic.jpg_430x430q90.jpg'></image>
+      <navigator url="../goodsDetail/detail?id={{item.id}}">
+        <image mode="aspectFit" src='{{item.cover}}'></image>
+      </navigator>
       </view>
       <view class='text'>
-        <text>新品{{word}}</text>
+        <text>{{item.tag}}</text>
       </view>
       <view class='text'>
-        <text>为此长款牛仔裤</text>
+        <text>{{item.title}}</text>
       </view>
       <view class='text'>
-        <text>￥399</text>
+        <text>￥{{item.price}}</text>
       </view>
     </view>
     <view class='two'>
-      <view style='margin-right: 15px;'>
-        <view>
-          <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i2/TB1i3T2XMjN8KJjSZFgYXHjbVXa_M2.SS2_180x180.jpg'></image>
+
+      <view  wx:for="{{item.list}}" wx:for-item="product">
+        <view class='product'>
+          <navigator url="../goodsDetail/detail?id={{product.id}}"> 
+            <image mode="aspectFit" src='{{product.cover}}'></image>
+          </navigator>
         </view>
         <view class='text'>
-          <text>新品</text>
+          <text>{{product.tag}}</text>
         </view>
         <view class='text'>
-          <text>为此长款牛仔裤</text>
+          <text>{{product.title}}</text>
         </view>
         <view class='text'>
-          <text>￥399</text>
+          <text>￥{{product.price}}</text>
         </view>
       </view>
-      <view>
-        <view>
-          <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i2/TB1i3T2XMjN8KJjSZFgYXHjbVXa_M2.SS2_180x180.jpg'></image>
-        </view>
-        <view class='text'>
-        <text>新品</text>
-      </view>
-      <view class='text'>
-        <text>为此长款牛仔裤</text>
-      </view>
-      <view class='text'>
-        <text>￥399</text>
-      </view>
+
+
     </view>
   </view>
-</view>
 
 
-<view class="menu">
+  <view class="menu">
     <view class='col'>
-      <view class='title'><text>外套</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>毛衣</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>牛仔裤</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>靴子</text></view>
+      <view class='title'>
+        <text>外套</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>毛衣</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>牛仔裤</text>
+      </view>
+      <view class='color'>
+        <text>/</text>
+      </view>
+      <view class='title'>
+        <text>靴子</text>
+      </view>
     </view>
-  
+
   </view>
 </view>

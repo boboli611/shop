@@ -52,7 +52,7 @@ function request(url, data = {}, method = "GET") {
       method: method,
       header: {
         'Content-Type': 'application/json',
-        'X-Nideshop-Token': wx.getStorageSync('token')
+        'X-lipz-Token': wx.getStorageSync('lipz_token')
       },
       success: function (res) {
         console.log("success");

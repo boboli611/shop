@@ -6,6 +6,7 @@ var userService = require('./services/user.js')
 App({
     onLaunch: function () {
         qcloud.setLoginUrl(config.service.loginUrl)
+        console.log("loginiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
         userService.login()
     }
 })

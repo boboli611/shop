@@ -1,19 +1,22 @@
 {
   "pages":[
-    "pages/index/index",
-    "pages/shop/shop",
-    "pages/goods/goods",
-    "pages/itemGoods/itemGoods",
-    "pages/items/items",
-    "pages/search/search",
+    "pages/ucenter/address/address",
+    "pages/goodsDetail/detail", 
+    "pages/index/index", 
+    "pages/shop/shop", 
     
-    
+    "pages/itemGoods/itemGoods", 
+    "pages/items/items", 
+    "pages/search/search", 
+   
 
+
+    
 
     "pages/catalog/catalog",
     "pages/goodsList/goodsList",
     "pages/newGoods/newGoods",
-    "pages/ucenter/address/address",
+
     "pages/ucenter/addressAdd/addressAdd",
     "pages/ucenter/footprint/footprint",
     "pages/ucenter/order/order",

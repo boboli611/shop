@@ -67,13 +67,63 @@ class ProductController extends Controller
     {
        
         $model = new CommProduct();
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        $modelStorage = new \common\models\comm\CommProductionStorage();
+        //var_dump(Yii::$app->request->post());exit;
+        $status = false;
+        
+        if (!Yii::$app->request->post()){
             return $this->render('create', [
                 'model' => $model,
+                'modelStorage' => $modelStorage,
+                
+            ]);
+            return;
+        }
+        
+        try {
+            
+            $data = Yii::$app->request->post();
+            $transaction = CommProduct::getDb()->beginTransaction();
+            $model->load(Yii::$app->request->post()) ;
+            $result = $model->save();
+            if (!$result){
+                var_dump($model->getErrors());exit;
+                throw new \yii\db\Exception("error save");
+            }
+
+            $storageData = [];
+            foreach ($data['storage_style'] as $k => $val){
+                
+                if (!$data['storage_style'][$k]){
+                    continue;
+                }
+                
+                $modelStorage = new \common\models\comm\CommProductionStorage();
+                $storageData["CommProductionStorage"]['style'] = $data['storage_style'][$k];
+                $storageData["CommProductionStorage"]['size'] = $data['storage_size'][$k];
+                $storageData["CommProductionStorage"]['num'] = $data['storage_num'][$k];
+                $storageData["CommProductionStorage"]['price'] = $data['storage_price'][$k];
+                $storageData["CommProductionStorage"]['product_id'] = $model->getPrimaryKey();
+                 $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
+                
+                $modelStorage->load($storageData);
+                $result = $modelStorage->save();
+                if (!$result){
+                    throw new \yii\db\Exception("error:".$modelStorage->getErrors());
+                }
+                //var_dump($storageData, $modelStorage->getPrimaryKey());exit;
+            }
+            $transaction->commit();
+            return $this->redirect(['view', 'id' => $model->id]);
+        } catch (\Exception $ex) {
+            var_dump($ex->getMessage());exit;
+            return $this->render('create', [
+                'model' => $model,
+                'modelStorage' => $modelStorage,
+                
             ]);
         }
+        
     }
 
     /**
@@ -85,13 +135,65 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'id' => $model->id]);
-        } else {
+        $modelStorage = new \common\models\comm\CommProductionStorage();
+        $modelStorageList = $modelStorage->getAllBPid($id);
+ 
+        if (!Yii::$app->request->post()){
             return $this->render('update', [
                 'model' => $model,
+                'modelStorage' => $modelStorageList,
+            ]);
+            return;
+        }
+        
+        
+        try {
+            
+            $data = Yii::$app->request->post();
+            $transaction = CommProduct::getDb()->beginTransaction();
+            $data["CommProduction"]['price'] = $data['storage_price'][0];
+            
+            $model->load($data) ;
+            $result = $model->save();
+            if (!$result){
+                throw new \yii\db\Exception("错误11");
+            }
+
+            $storageData = [];
+            foreach ($data['storage_style'] as $k => $val){
+                
+                if (!$data['storage_style'][$k]){
+                    continue;
+                }
+                
+                $storageData["CommProductionStorage"]['style'] = $data['storage_style'][$k];
+                $storageData["CommProductionStorage"]['size'] = $data['storage_size'][$k];
+                $storageData["CommProductionStorage"]['num'] = $data['storage_num'][$k];
+                $storageData["CommProductionStorage"]['price'] = $data['storage_price'][$k];
+                $storageData["CommProductionStorage"]['product_id'] = $model->getPrimaryKey();
+                $storageData["CommProductionStorage"]["id"] = $data['storage_id'][$k];
+                $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
+                //var_dump($storageData);exit;
+                $modelStorage = \common\models\comm\CommProductionStorage::findOne($data['storage_id'][$k]);
+                $modelStorage->load($storageData);
+                $result = $modelStorage->save();
+  
+                if (!$result){
+                    throw new \yii\db\Exception("error:".$modelStorage->getErrors());
+                }
+            }
+            
+            $transaction->commit();
+            return $this->redirect(['view', 'id' => $model->id]);
+        } catch (\Exception $ex) {
+            var_dump($ex->getMessage());exit;
+            return $this->render('create', [
+                'model' => $model,
+                'modelStorage' => $modelStorageList,
+                
             ]);
         }
+        
     }
 
     /**

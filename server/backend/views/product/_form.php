@@ -10,6 +10,7 @@ use yii\helpers\Url;
 
 $items = (new \common\models\comm\CommProductItem())->getList();
 array_unshift($items,"选择类别");
+$model->price = $model->price / 100;
 ?>
 
 <div class="comm-product-form" style="width: 1000px;">
@@ -28,20 +29,20 @@ array_unshift($items,"选择类别");
         ],
         
     ]) ?>
-
-    <?php //echo $form->field($model, 'cover')->fileInput() ?>
     
     <?php 
-$img = json_decode($model->cover, true);
-$img = is_array($img) ?  $img : [];
+
+$img = [$model->cover];
 
 echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classname(), [
     'options' => ['multiple' => false],
+    //'id' => "CommProduct-cover",
     'pluginOptions' => [
         // 需要预览的文件格式
         'previewFileType' => 'image',
         // 预览的文件
         'initialPreview' =>  $img,
+        //'value' => $model->cover,
         // 需要展示的图片设置，比如图片的宽度等
         //'initialPreviewConfig' => $p2,
         // 是否展示预览图
@@ -80,33 +81,57 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
     'pluginEvents' => [
         // 上传成功后的回调方法，需要的可查看data后再做具体操作，一般不需要设置
         "fileuploaded" => "function (event, data, id, index) {
-            console.log(data);
            addImgHiden(data.response.initialPreview)
         }",
+
     ],
 ]);
+ 
 ?>
     
-    <?php
-        foreach ($img as $val){
-            echo  Html::hiddenInput("cover_path[]", $val);
-        }
-    ?>
-
-    <?= $form->field($model, 'price')->textInput() ?>
-
-    <?= $form->field($model, 'sell')->textInput() ?>
-
-    <?= $form->field($model, 'count')->textInput() ?>
+    <?= $form->field($model, 'tag')->textInput() ?> 
 
     <?= $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态") ?>  
     
-    <?php echo $form->field($model, 'status')->dropDownList($items, ['style'=>'width:120px', "value" => $model->item_id])->label("类别") ?>  
+    <?php echo $form->field($model, 'item_id')->dropDownList($items, ['style'=>'width:120px', "value" => $model->item_id])->label("类别") ?>  
     
     <?php //echo  $form->field($model, 'update_time')->textInput() ?>
 
     <?php //echo $form->field($model, 'create_time')->textInput() ?>
-
+    
+    <?php foreach ($storageList as $k => $modelStorage){
+        
+            $status = $k === 0 ? null : false;
+        ?>
+    <div class="row">
+          <div class="col-lg-2">
+              <?php echo $form->field($modelStorage, 'style')->textInput(['name' => "storage_style[]"])->label($status) ?>
+          </div>
+          <div class="col-lg-2">
+              <?php echo $form->field($modelStorage, 'size')->textInput(['name' => "storage_size[]"])->label($status) ?>   
+          </div>
+         <div class="col-lg-2">
+              <?php echo $form->field($modelStorage, 'num')->textInput(['name' => "storage_num[]"])->label($status) ?>   
+         </div>
+        <div class="col-lg-2">
+              <?php echo $form->field($modelStorage, 'price')->textInput(['name' => "storage_price[]"])->label($status) ?>   
+         </div>
+        <div class="col-lg-2">
+              <?= $form->field($modelStorage, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $modelStorage->status, 'name' => "storage_status[]"])->label($status) ?>  
+         </div>
+       
+        
+        <?php  echo  Html::hiddenInput("storage_id[{$k}]", $modelStorage->id);?>
+    </div>
+    <?php }?>
+    <div class="">
+         <div class="col-lg-2">
+             <a href="javascript:void(0)" onclick="add()">增加</a>
+         </div>
+    </div>
+    <br />
+     <br />
+      <br />
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '添加' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
@@ -118,7 +143,14 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
 <script>
 
 function addImgHiden(url){
-    $("form").append('<input type="hidden" name="cover_path" value="'+url+'">');
+    $("input[name='CommProduct[cover]").attr("id", "CommProduct-cover");       
+    $("input[name='CommProduct[cover]']").attr("value", url);
+}
+
+function add(){
+    console.log( $(".row:last").clone())
+    //$(".row:last").clone().after("#row:last")
+    $(".row:last").after( $(".row:last").clone())
 }
 
 </script>
