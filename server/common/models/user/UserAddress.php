@@ -9,6 +9,9 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
+ * @property integer $name
+ * @property integer $mobile
+ * @property integer $full_region
  * @property string $address
  * @property integer $status
  * @property string $updated_at
@@ -30,8 +33,8 @@ class UserAddress extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'status'], 'integer'],
-            [['address', 'updated_at', 'created_at'], 'string', 'max' => 255],
+            [['user_id', 'status', 'mobile'], 'integer'],
+            [['name','full_region','address', 'updated_at', 'created_at'], 'string', 'max' => 255],
         ];
     }
 
