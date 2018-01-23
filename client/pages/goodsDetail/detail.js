@@ -123,7 +123,7 @@ Page({
       url: '../shop/shop?type=buy&id=' + this.data.goods.storage_id
     })
   },
-
+  //购物车
   addChart:function(){
 
     let that = this
@@ -141,15 +141,15 @@ Page({
       return 
     }
     that.data.httpstatus = true
-    var url = api.AddChart + "?id=" 
+    var url = api.AddChart + "?id=" + this.data.goods.storage_id
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         util.showSuccess('添加成功!')
         that.setData({
           show: "hidden",
-          selectStyle:"",
-          selectSize:""
         })
+        this.data.goods.storage_id = 0
+        this.buyInit()
       }
       
       that.data.httpstatus = false
@@ -166,12 +166,7 @@ Page({
     this.data.selectPrice = 0
 
     if (!storageList || !storageList[size]){
-      this.setData({
-        selectSize: "",
-        selectStyle:"",
-        buy_button: "gray",
-        chart_button: "gray"
-      })
+      this.buyInit()
       return
     }
 
@@ -185,6 +180,15 @@ Page({
       buy_button: "black",
       chart_button: "white"
     })
-  }
+  },
+  buyInit:function(){
+    this.setData({
+      selectSize: "",
+      selectStyle: "",
+      buy_button: "gray",
+      chart_button: "gray",
+      
+    })
+  },
 
 })

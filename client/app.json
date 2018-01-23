@@ -1,8 +1,10 @@
 {
   "pages":[
+    "pages/goodsDetail/detail",
+    "pages/index/index",
+    
     "pages/ucenter/address/address",
-    "pages/goodsDetail/detail", 
-    "pages/index/index", 
+     
     "pages/shop/shop", 
     
     "pages/itemGoods/itemGoods", 

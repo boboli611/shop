@@ -77,11 +77,11 @@ class CommProductionStorage extends \common\models\BaseModel
     }
     
     public static function getByids($ids){
-        $list =  self::find()->whereIn(["id" => $ids])->all();
+        $list =  self::find()->where(['in', "id" , $ids])->andwhere(['status' => 1])->all();
         foreach ($list as &$val){
             $val->price = $val->price / 100;
         }
-        
+ 
         return $list;
     }
 }

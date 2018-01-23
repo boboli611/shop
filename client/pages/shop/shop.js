@@ -82,13 +82,13 @@ Page({
     })
 
     var url = api.Createorder
-    var param = { "ids": ids }
-    util.request(url, param, "POST").then(function (res) {
+    var param = { "ids": ids,"address_id": this.data.address.id }
+    util.request (url, param, "POST").then(function (res) {
       if (res.errno === 0) {
         that.setData({
           goods: [res.data.info, res.data.info],
           order: res.data.order,
-          address: res.data.address ? res.data.address : "",
+          address_id: res.data.address.id ? res.data.address.id : "",
         });
       }
     });

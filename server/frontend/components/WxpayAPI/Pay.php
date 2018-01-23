@@ -22,8 +22,8 @@ class Pay {
         $input->SetNotify_url(self::$notifyUrl);
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
+        var_dump($input,date("Y-m-d H:i:s"));
         $order = \WxPayApi::unifiedOrder($input);
-        var_dump($order);
         
         return $order;
     }

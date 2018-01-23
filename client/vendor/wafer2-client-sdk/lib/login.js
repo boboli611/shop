@@ -110,6 +110,7 @@ var login = function login(options) {
                         Session.set(res);
                         options.success(userInfo);
                         wx.setStorageSync("lipz_token", res.token)
+                        wx.setStorageSync("userInfo", userInfo)
                         
                     } else {
                         var errorMessage = '登录失败(' + data.error + ')：' + (data.message || '未知错误');

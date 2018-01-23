@@ -53,4 +53,12 @@ class UserAddress extends \common\models\BaseModel
     public static function findOne($condition) {
         return parent::findOne($condition);
     }
+    
+      /**
+     * @return ActiveDataProvider
+     * results in nothing.
+     */
+    public static function getByUserAuto($uid){
+        return self::find()->where(['user_id'=>$uid, 'status' => 1])->one();
+    }
 }

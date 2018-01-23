@@ -9,7 +9,7 @@ class User extends \yii\bootstrap\Widget
    public static function getUid(){
        
       
-       return 1;
+       return 6;
    }
    
 }

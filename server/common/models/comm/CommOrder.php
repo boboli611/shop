@@ -14,7 +14,7 @@ use Yii;
  * @property integer $price
  * @property integer $pay_price
  * @property integer $num
- * @property integer $adress_id
+ * @property integer $adress
  * @property integer $status
  * @property string $updated_at
  * @property string $created_at
@@ -40,8 +40,9 @@ class CommOrder extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'product_id', 'price', 'pay_price', 'num', 'adress_id', 'status'], 'integer'],
+            [['user_id', 'product_id', 'price', 'pay_price', 'num', 'status'], 'integer'],
             [['order_id', 'updated_at', 'created_at'], 'string', 'max' => 32],
+            [['address'], 'string', 'max' => 256],
         ];
     }
 
@@ -58,7 +59,7 @@ class CommOrder extends \common\models\BaseModel
             'price' => 'Price',
             'pay_price' => 'Pay Price',
             'num' => 'Num',
-            'adress_id' => 'Adress ID',
+            'address' => 'Adress ID',
             'status' => 'Status',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',

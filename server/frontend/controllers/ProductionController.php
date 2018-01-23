@@ -113,6 +113,8 @@ class ProductionController extends Controller {
             return;
         }
         
+        $uid = widgets\User::getUid();
+        
         $storage = \common\models\comm\CommProductionStorage::findOne($id);
         if (!$storage){
             $this->asJson(widgets\Response::error("参数错误"));
@@ -125,6 +127,8 @@ class ProductionController extends Controller {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
+        
+        $address = \common\models\user\UserAddress::getByUserAuto($uid);
 
         $info['style'] = $storage->style;
         $info['size'] = $storage->size;
@@ -134,7 +138,8 @@ class ProductionController extends Controller {
         $out["order"]["price"] =  $storage->price;
         $out["order"]["carriage_price"] =  10;
         $out["order"]["discount"] =  50;
-        $out["address"] = "度搜粉红色的佛手动哈佛搜到和佛山";
+        $out["address"]['id'] = $address['id'];
+        $out["address"]['address'] = $address['address'];
         return $this->asJson(widgets\Response::sucess($out));
     }
     

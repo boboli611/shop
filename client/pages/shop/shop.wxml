@@ -48,7 +48,7 @@
   <view class="address" wx:else>
     <navigator url='../ucenter/address/address'>
       <image class='icon' mode='aspectFit' src='../../static/images/lipz/close.png'></image>
-      <text>{{address}}</text>
+      <text>{{address.address}}</text>
     </navigator>
   </view>
   <view class='line'></view>

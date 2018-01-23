@@ -2,14 +2,14 @@ var util = require('../../../utils/util.js');
 var api = require('../../../config/api.js');
 var user = require('../../../services/user.js');
 var app = getApp();
-
+app.globalData = {}
 Page({
   data: {
     userInfo: {}
   },
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
-    console.log(app.globalData)
+    console.log('globalData', app.globalData)
   },
   onReady: function () {
 
@@ -17,8 +17,9 @@ Page({
   onShow: function () {
 
     let userInfo = wx.getStorageSync('userInfo');
-    let token = wx.getStorageSync('token');
-
+    let token = wx.getStorageSync('lipz_token');
+    
+    console.log('userInfo', userInfo)
     // 页面显示
     if (userInfo && token) {
       app.globalData.userInfo = userInfo;

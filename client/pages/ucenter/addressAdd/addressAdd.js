@@ -86,8 +86,6 @@ Page({
       this.getAddressDetail();
     }
 
-    this.getRegionList(1);
-
   },
   onReady: function () {
 
@@ -108,8 +106,6 @@ Page({
     
     let selectRegionItem = selectRegionList[regionTypeIndex];
 
-    this.getRegionList(selectRegionItem.parent_id);
-
     this.setRegionDoneStatus();
 
   },
@@ -127,7 +123,6 @@ Page({
         selectRegionList: selectRegionList,
         regionType: regionType + 1
       })
-      this.getRegionList(regionItem.id);
     } else {
       this.setData({
         selectRegionList: selectRegionList
@@ -186,27 +181,7 @@ Page({
     });
 
   },
-  getRegionList(regionId) {
-    let that = this;
-    let regionType = that.data.regionType;
-    util.request(api.RegionList, { parentId: regionId }).then(function (res) {
-      if (res.errno === 0) {
-        that.setData({
-          regionList: res.data.map(item => {
 
-            //标记已选择的
-            if (regionType == item.type && that.data.selectRegionList[regionType - 1].id == item.id) {
-              item.selected = true;
-            } else {
-              item.selected = false;
-            }
-
-            return item;
-          })
-        });
-      }
-    });
-  },
   cancelAddress(){
     wx.navigateTo({
       url: '/pages/ucenter/address/address',
