@@ -148,8 +148,8 @@ Page({
         that.setData({
           show: "hidden",
         })
-        this.data.goods.storage_id = 0
-        this.buyInit()
+        that.data.goods.storage_id = 0
+        that.buyInit()
       }
       
       that.data.httpstatus = false

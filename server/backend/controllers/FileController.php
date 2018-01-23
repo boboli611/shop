@@ -44,7 +44,8 @@ class FileController extends Controller {
             $this->asJson(\common\widgets\Response::error("上传失败"));
         }
 
-        $data["filelink"] = $ret["info"]["url"];
+        //$data["filelink"] = $p1 = \Yii::$app->params['static_domain'].$fh; 
+        $data["filelink"] = $p1 = $ret["info"]["url"];
         $data["id"] = "1234";
         $this->asJson($data);
     }
@@ -75,7 +76,9 @@ class FileController extends Controller {
             echo "上传失败";
             return;
         }
+        
         $p1 = $ret["info"]["url"];
+        //$p1 = \Yii::$app->params['static_domain'].$fh;  
         // 返回上传成功后的商品图信息
         echo json_encode([
             'initialPreview' => $p1,

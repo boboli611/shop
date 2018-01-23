@@ -12,7 +12,7 @@ module.exports = {
     Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
     AddressSave: NewApiRootUrl + 'address/save',  //保存收货地址
     AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
-
+    OrderList: NewApiRootUrl + 'order/list',  //订单列表
 
 
 
@@ -70,7 +70,7 @@ module.exports = {
 
     RegionList: NewApiRootUrl + 'region/list',  //获取区域列表
 
-    OrderList: NewApiRootUrl + 'order/list',  //订单列表
+    
     OrderDetail: NewApiRootUrl + 'order/detail',  //订单详情
     OrderCancel: NewApiRootUrl + 'order/cancel',  //取消订单
 

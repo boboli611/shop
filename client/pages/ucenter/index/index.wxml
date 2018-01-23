@@ -12,25 +12,25 @@
   <view class="user-menu">
     <view class="item">
       <navigator url="/pages/ucenter/order/order" class="a">
-        <text class="icon order"></text>
+        <text class="icon waitpay"></text>
         <text class="txt">待付款</text>
       </navigator>
     </view>
     <view class="item">
       <navigator url="/pages/ucenter/order/order" class="a">
-        <text class="icon order"></text>
+        <text class="icon waitsend"></text>
         <text class="txt">待发货</text>
       </navigator>
     </view>
     <view class="item">
       <navigator url="/pages/ucenter/order/order" class="a">
-        <text class="icon order"></text>
+        <text class="icon waitreceive"></text>
         <text class="txt">待收货</text>
       </navigator>
     </view>
     <view class="item">
       <navigator url="/pages/ucenter/order/order" class="a">
-        <text class="icon order"></text>
+        <text class="icon receive"></text>
         <text class="txt">已收货</text>
       </navigator>
     </view>
