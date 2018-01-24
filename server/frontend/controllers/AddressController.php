@@ -17,7 +17,44 @@ class AddressController extends Controller {
     
     public function actionSave(){
         
-        $out['id'] = 1; 
+        $name = Yii::$app->request->post("name");
+        $mobile = (int)Yii::$app->request->post("mobile");
+        $full_region = Yii::$app->request->post("full_region");
+        $address = Yii::$app->request->post("address");
+        $status = (int)Yii::$app->request->post("status");
+        
+        if(!$name || !$mobile || !$full_region || !$address){
+            $this->asJson(widgets\Response::error("参数错误"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        
+        try {
+            
+            $addressModel = new \common\models\user\UserAddress();
+            $addressModel->user_id = $uid;
+            $addressModel->name = $name;
+            $addressModel->mobile = $mobile;
+            $addressModel->full_region = $full_region;
+            $addressModel->address = $address;
+            $addressModel->status = $status;
+            
+            if ($status == 1){
+                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid}");
+            }
+           
+            $res = $addressModel->save();
+            if (!$res){
+                 throw new \Exception("保存失败");
+            }
+            
+        } catch (\Exception $ex) {
+            $this->asJson(widgets\Response::error($ex->getMessage()));
+            return;
+        }
+        
+        $out['id'] = $addressModel->id; 
         $this->asJson(widgets\Response::sucess($out));
     }
     
@@ -29,25 +66,29 @@ class AddressController extends Controller {
     
     public function actionList(){
         
-        $arr["id"] = 1;
-        $arr['name'] = '张三';
-        $arr['mobile'] = 13564887650; 
-        $arr['full_region'] = '上海市徐汇区';
-        $arr['address'] = "龙华街道123号801";
-        $arr['status'] = 1;
-        $out = [$arr,$arr,$arr,$arr];
-        $this->asJson(widgets\Response::sucess($out));
+        $uid = widgets\User::getUid();
+        
+        $list = \common\models\user\UserAddress::find()->where(["user_id" => $uid])->orderBy("id desc")->all();
+       
+        $this->asJson(widgets\Response::sucess($list));
     }
     public function actionDetail(){
         
-        $arr["id"] = 1;
-        $arr['name'] = '张三';
-        $arr['mobile'] = 13564887650; 
-        $arr['full_region'] = '上海市徐汇区';
-        $arr['address'] = "龙华街道123号801";
-        $arr['status'] = 1;
-
-        $this->asJson(widgets\Response::sucess($arr));
+        $id = (int)Yii::$app->request->post("id");
+        if (!$id){
+            $this->asJson(widgets\Response::error("参数错误"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        
+        $Info = \common\models\user\UserAddress::find()->where(["id" => $id])->andWhere(["user_id" => $uid])->one();
+        if (!$Info){
+             $this->asJson(widgets\Response::error("参数错误!"));
+            return;
+        }
+        
+        $this->asJson(widgets\Response::sucess($Info));
     }
     
 }
