@@ -1,6 +1,6 @@
 
 @import "../public/search/search.wxss";
-
+@import "../public/menu/menu.wxss";
 .banner{
   margin-top: 10px;
 }

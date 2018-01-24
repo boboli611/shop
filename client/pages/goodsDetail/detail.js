@@ -34,7 +34,8 @@ Page({
           recommend: res.data.recommend,
           buy_button: "gray",
           chart_button: "gray",
-          show:"hidden"
+          show:"hidden",
+          sizeShow:"hidden"
         });
 
         wx.setNavigationBarTitle({
@@ -82,6 +83,7 @@ Page({
     this.setData({
       storage: storage,
       selectStyle: style,
+      sizeShow:"show",
     })
   },
 
@@ -96,12 +98,16 @@ Page({
     }
 
     this.select()
-
     this.setData({
       selectSize: size,
     })
   },
-
+  close:function(e){
+    this.buyInit()
+    this.setData({
+      show: "hidden",
+    })
+  },
   //购买商品
   addBuy:function(e){
     var status
@@ -131,6 +137,7 @@ Page({
       that.setData({
         show: "show"
       })
+      return
     } 
 
     if (that.data.selectPrice <= 0) {
@@ -187,7 +194,7 @@ Page({
       selectStyle: "",
       buy_button: "gray",
       chart_button: "gray",
-      
+      sizeShow: "hidden",
     })
   },
 

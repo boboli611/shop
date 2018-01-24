@@ -19,4 +19,7 @@
     </navigator>
  </view>
 
+
+<import src="../public/menu/menu.wxml" />
+  <template is="menu"/>
 </view>

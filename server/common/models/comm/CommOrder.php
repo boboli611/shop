@@ -16,16 +16,19 @@ use Yii;
  * @property integer $num
  * @property integer $adress
  * @property integer $status
+ * @property integer $expressage
  * @property string $updated_at
  * @property string $created_at
  */
 class CommOrder extends \common\models\BaseModel
 {
     
-    const status_add = 1;//下单
-    const status_pay_sucess = 2;//支付成功
-    const status_pay_fail = 3;//支付失败
-    
+    const status_waiting_pay = 1;//待付款
+    const status_goods_waiting_send = 2;//代发货
+    const status_goods_waiting_receve = 3;//代收货
+    const status_goods_receve = 4;//已收货
+    const status_pay_fail = 9;//支付失败
+
     /**
      * @inheritdoc
      */
@@ -41,7 +44,7 @@ class CommOrder extends \common\models\BaseModel
     {
         return [
             [['user_id', 'product_id', 'price', 'pay_price', 'num', 'status'], 'integer'],
-            [['order_id', 'updated_at', 'created_at'], 'string', 'max' => 32],
+            [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
             [['address'], 'string', 'max' => 256],
         ];
     }

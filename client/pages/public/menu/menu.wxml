@@ -2,25 +2,33 @@
   <view class="menu">
     <view class='col'>
       <view class='title'>
-        <text>外套</text>
+        <navigator url='../itemGoods/itemGoods?word=外套'>
+          <text>外套</text>
+        </navigator>
       </view>
       <view class='color'>
         <text>/</text>
       </view>
       <view class='title'>
-        <text>毛衣</text>
+        <navigator url='../itemGoods/itemGoods?word=毛衣'>
+          <text>毛衣</text>
+        </navigator>
       </view>
       <view class='color'>
         <text>/</text>
       </view>
       <view class='title'>
-        <text>牛仔裤</text>
+        <navigator url='../itemGoods/itemGoods?word=牛仔裤'>
+          <text>牛仔裤</text>
+        </navigator>
       </view>
       <view class='color'>
         <text>/</text>
       </view>
       <view class='title'>
-        <text>靴子</text>
+        <navigator url='../itemGoods/itemGoods?word=靴子'>
+          <text>靴子</text>
+        </navigator>
       </view>
     </view>
 

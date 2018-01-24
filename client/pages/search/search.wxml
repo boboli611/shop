@@ -34,29 +34,22 @@
           <image mode="aspectFit" src='https://img.alicdn.com/imgextra/i2/3302985722/TB2LhgduYplpuFjSspiXXcdfFXa_!!3302985722.jpg'></image>
         </view>
         <view class='text'>
-        <text>新品</text>
-      </view>
-      <view class='text'>
-        <text>为此长款牛仔裤</text>
-      </view>
-      <view class='text'>
-        <text>￥399</text>
+          <text>新品</text>
+        </view>
+        <view class='text'>
+          <text>为此长款牛仔裤</text>
+        </view>
+        <view class='text'>
+          <text>￥399</text>
+        </view>
       </view>
     </view>
-  </view>
-</view>
 
 
-<view class="menu">
-    <view class='col'>
-      <view class='title'><text>外套</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>毛衣</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>牛仔裤</text></view>
-      <view class='color'><text>/</text></view>
-      <view class='title'><text>靴子</text></view>
-    </view>
-  
+
+
+
   </view>
+  <import src="../public/menu/menu.wxml" />
+  <template is="menu" />
 </view>

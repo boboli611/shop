@@ -8,11 +8,12 @@ Page({
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
 
-    this.getOrderList();
+    this.getOrderList(options);
   },
-  getOrderList(){
+  getOrderList(options){
     let that = this;
-    util.request(api.OrderList).then(function (res) {
+    var url = api.OrderList + "?type=" + options.type
+    util.request(url).then(function (res) {
       if (res.errno === 0) {
         console.log(res.data);
         that.setData({

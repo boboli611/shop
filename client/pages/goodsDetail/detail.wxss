@@ -117,6 +117,7 @@
   width: 100%;
   bottom: 41px;
   position: fixed;
+  height: 130px;
 }
 
 .buy .close{

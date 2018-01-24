@@ -1,6 +1,6 @@
 
 @import "../public/search/search.wxss";
-
+@import "../public/menu/menu.wxss";
 .banner{
   margin-top: 10px;
 }
@@ -69,30 +69,3 @@
   width: 180px;
 }
 
-
-.menu{
-  display: block;
-  margin: 0px;
-  width: 320px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.menu .col {
-  display: flex;
-  font-family: -apple-system-font, "Helvetica Neue", sans-serif;
-  font-size: 17px;
-}
-
-.menu .col view{
-  margin-right: 23px;
-}
-
-.menu .color{
-  color: #999;
-}
-
-.menu text{
-  font-size: 14px;
-  font-weight: 700;
-}

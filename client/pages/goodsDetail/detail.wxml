@@ -31,9 +31,11 @@
 
   <import src="../public/menu/menu.wxml" />
   <template is="menu"/>
+
+  
   <view style='height:40px;width:100%;'></view>
     <view class='buy {{show}}'>
-      <view class='close'>
+      <view bindtap='close' class='close'>
         <image mode='aspectFit' src="../../static/images/lipz/close.png"></image>
       </view>
       <view class='attribute'>
@@ -41,12 +43,14 @@
           <text bindtap='changeStyle' data-style="{{index}}">{{index}}</text>
         </view>
       </view>
-
-      <view class='size'>
-        <view class="one {{iitem.size == selectSize ? 'selected':''}}" wx:for="{{storage}}" wx:for-item="iitem">
-          <text bindtap="changeSize" data-Size="{{iitem.size}}">{{iitem.size}}</text>
+     <view class='{{sizeShow}}'>
+        <view class='size'>
+          <view class="one {{iitem.size == selectSize ? 'selected':''}}" wx:for="{{storage}}" wx:for-item="iitem">
+            <text bindtap="changeSize" data-Size="{{iitem.size}}">{{iitem.size}}</text>
+          </view>
         </view>
-      </view>
+     </view>
+
       <view class='line'></view>
     </view>
 

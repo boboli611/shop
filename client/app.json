@@ -72,7 +72,7 @@
         "text": "分类"
       },
       {
-        "pagePath": "pages/cart/cart",
+        "pagePath": "pages/shop/shop",
         "iconPath": "static/images/ic_menu_shoping_nor.png",
         "selectedIconPath": "static/images/ic_menu_shoping_pressed.png",
         "text": "购物车" 
