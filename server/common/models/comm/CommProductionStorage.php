@@ -84,4 +84,24 @@ class CommProductionStorage extends \common\models\BaseModel
  
         return $list;
     }
+    
+    public static function getByid($id){
+        $item =  self::find()->where(['=', "id" , $id])->andwhere(['status' => 1])->one();
+        if(!$item){
+            return $item;
+        }
+        $item->price = $item->price / 100;
+        
+        return $item;
+    }
+    
+    public static function getByUserId($uid){
+        
+        $list =  self::find()->where(["user_id" => $uid])->andwhere(['status' => 1])->all();
+        foreach ($list as &$val){
+            $val->price = $val->price / 100;
+        }
+        
+        return $list;
+    }
 }

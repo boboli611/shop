@@ -16,6 +16,7 @@ use Yii;
  * @property integer $item_id
  * @property string $tag
  * @property integer $count
+ * @property integer $sort
  * @property string $update_time
  * @property string $create_time
  */
@@ -38,7 +39,7 @@ class CommProduct extends \common\models\BaseModel
             [['title', 'desc', 'tag', 'status', 'item_id'], 'required'],
             [['tag'], 'string', "max" => 4, "message" => "标签过长"],
             [['desc'], 'string'],
-            [['item_id'], 'integer', 'min' => 1, "message" => "请选择类目"],
+            [['item_id', 'sort'], 'integer', 'min' => 1, "message" => "请选择类目"],
             [['price', 'sell', 'count', 'status', 'item_id'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
             [['title'], 'string', 'max' => 128, "message" => "标题过长"],
@@ -62,6 +63,7 @@ class CommProduct extends \common\models\BaseModel
             'item_id' => '类别',
             'tag' => '标签',
             'status' => '下架',
+            'sort' => '排序',
             'updated_at' => '修改时间',
             'created_at' => '创建时间',
         ];
@@ -95,7 +97,7 @@ class CommProduct extends \common\models\BaseModel
         if ($key){
             $model->andWhere("title like '%{$key}%'");
         }
-        
+
         $ret = $model->orderBy($order)->offset($page)->limit($limit)->all();
         return $ret;
     }

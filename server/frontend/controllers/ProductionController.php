@@ -20,6 +20,8 @@ use common\widgets;
  */
 class ProductionController extends Controller {
 
+    private $type_num = [1 => 1, 2 => 2, 3 => 3];
+
     public function init() {
         $this->enableCsrfValidation = false;
     }
@@ -30,15 +32,16 @@ class ProductionController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        
+
         $title = Yii::$app->request->get("word");
-        $page = (int)Yii::$app->request->post("page");
-        $orderField = (int)Yii::$app->request->post("order_field");
-        $order = (int)Yii::$app->request->post("order");
-        
+        $page = (int) Yii::$app->request->post("page");
+        $orderField = (int) Yii::$app->request->post("order_field");
+        $order = (int) Yii::$app->request->post("order");
+        $lastId = (int) Yii::$app->request->post("last_id");
+
         $item = \common\models\comm\CommProductItem::getByTitle($title);
         $condition = [];
-        if ($item){
+        if ($item) {
             $title = '';
             $condition['item_id'] = $item->id;
         }
@@ -46,39 +49,68 @@ class ProductionController extends Controller {
         $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page);
         $products = $products ? $products : [];
         $out['list'] = [];
-        
-        foreach ($products as $k =>  &$val){
-            
-            $val = $val->toarray();
-            //$item['cover'] = "https://w3.hoopchina.com.cn/fe/68/7f/fe687fac1d41dfa75d03aaaf1ae176d8002.png";
-            $id = intval($k / 3);
-            
-            $out['list'][$id] = is_array($out['list'][$id]) ? $out['list'][$id] : $val;
-            if ($k % 3){
-                $out['list'][$id]['list'] = isset($out['list'][$id]['list']) ? $out['list'][$id]['list'] : [];
-                $out['list'][$id]['list'][] = $val;
-            }
-             
+
+
+        $id = 0;
+        $list = $types = $useList = [];
+        $items = $products;
+        foreach ($products as $k => $val) {
+            $item = $val->toarray();
+            $types[$val->type][] = $item;
         }
 
+        foreach ($products as $k => $val) {
+            
+            $itemType = 0;
+            
+            if ($useList[$val->id]){
+                continue;
+            }
+            
+            if (!isset($types[$val->type])) {
+                continue;
+            }
+            
+            if (count($types[$val->type]) < $this->type_num[$val->type]){
+                    $itemType = count($types[$val->type]);
+            }else{
+                $itemType = $val->type;
+            }
+            
+            for ($i = count($list[$id]); $i < $this->type_num[$itemType]; $i++) {
+
+                $item = @array_shift($types[$val->type]);
+                $item && $item['type'] = $itemType;
+                $item && $list[$id][] = $item;
+                $item && $useList[$item['id']] = 1;
+               
+            }
+
+            if (empty($types[$val->type])) {
+                unset($types[$val->type]);
+            }
+
+            $id++;
+        }
+
+        $out['list'] = $list;
         return $this->asJson(widgets\Response::sucess($out));
     }
-    
-    
+
     /**
      * Displays homepage.
      *
      * @return mixed
      */
     public function actionDetail() {
-        
-        $id = (int)Yii::$app->request->get("id");
-        if (!$id){
+
+        $id = (int) Yii::$app->request->get("id");
+        if (!$id) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
 
-        
+
         $info = \common\models\comm\CommProduct::findOne($id);
         $info = $info->toArray();
         $products = \frontend\service\Product::search([], "", 2, 1, 1, 2);
@@ -86,69 +118,65 @@ class ProductionController extends Controller {
 
         $modelStorage = new \common\models\comm\CommProductionStorage();
         $modelStorageList = $modelStorage->getAllBPid($id);
-        
+
         $storage = [];
-        foreach ($modelStorageList as $val){
-            $storage[$val->style][$val->size] = $val; 
+        foreach ($modelStorageList as $val) {
+            $storage[$val->style][$val->size] = $val;
         }
-        
+
         $info['price'] = $modelStorageList[0]->price;
         $info['storage'] = $storage;
         $out["info"] = $info;
         $out['recommend'] = $products;
         return $this->asJson(widgets\Response::sucess($out));
     }
-    
-    
+
     /**
      * Displays homepage.
      *
      * @return mixed
      */
     public function actionInfo() {
-        
-        $id = (int)Yii::$app->request->get("id");
-        if (!$id){
+
+        $id = (int) Yii::$app->request->get("id");
+        if (!$id) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
-        
+
         $uid = widgets\User::getUid();
-        
+
         $storage = \common\models\comm\CommProductionStorage::findOne($id);
-        if (!$storage){
+        if (!$storage) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
 
         $info = \common\models\comm\CommProduct::findOne($storage->product_id);
         $info = $info->toArray();
-        if (!$info){
+        if (!$info) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
-        
+
         $address = \common\models\user\UserAddress::getByUserAuto($uid);
 
         $info['style'] = $storage->style;
         $info['size'] = $storage->size;
         $info['price'] = $storage->price;
         $info['storage_id'] = $storage->id;
+      
+        
+        //postage
         $out["info"] = $info;
-        $out["order"]["price"] =  $storage->price;
-        $out["order"]["carriage_price"] =  10;
-        $out["order"]["discount"] =  50;
+        $out["order"]["price"] = $storage->price;
+        $out["order"]["carriage"] = $info['carriage'];
+        $out["order"]["discount"] = 50;
         $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = $address['address'];
+        $out["address"]['address'] = $address['full_region'].$address['address'];
         return $this->asJson(widgets\Response::sucess($out));
     }
-    
-    public function actionAddChart(){
-        sleep(5);
-        return $this->asJson(widgets\Response::sucess([]));
-    }
 
-    
-    
    
+
 }

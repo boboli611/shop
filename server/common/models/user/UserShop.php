@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
- * @property integer $product_id
+ * @property integer $storage_id
  * @property integer $num
  * @property string $updated_at
  * @property string $created_at
@@ -30,7 +30,7 @@ class UserShop extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'product_id', 'num'], 'integer'],
+            [['user_id', 'storage_id', 'num'], 'integer'],
             [['updated_at', 'created_at'], 'string', 'max' => 20],
         ];
     }
@@ -43,7 +43,7 @@ class UserShop extends \common\models\BaseModel
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'product_id' => 'Product ID',
+            'storage_id' => 'storage_id',
             'num' => 'Num',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',

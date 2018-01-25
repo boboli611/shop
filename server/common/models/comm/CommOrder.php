@@ -92,9 +92,21 @@ class CommOrder extends \common\models\BaseModel
         return self::find()->where(["order_id" => $orderId])->one();
     }
     
+    /**
+     * @inheritdoc
+     * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
+     */
+    public static function getByUser($userId, $type, $page, $limit = 10) {
+        
+        $page = $page > 0 ? $page - 1 :$page;
+        $offset = $page * $limit;
+        return self::find()->where(["user_id" => $userId])->andWhere(['status' => $type])->orderBy("id desc")->offset($offset)->limit($limit)->all();
+    }
+    
     public static function createOrderId($userId){
         
-        return md5($userId.time().mt_rand(1,50000));
+        return date("Ymd").time().mt_rand(10000, 99999);
+        //return md5($userId.time().mt_rand(1,50000));
     }
 
 }
