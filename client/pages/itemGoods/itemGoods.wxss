@@ -14,34 +14,30 @@
   margin-top: 5px;
 }
 
-.bannerList{
-  display: block;
-  margin: 0px;
-  width: 320px;
-  margin-top: 30px;
-}
-
-.bannerList .col {
+.goods .three{
+  margin: 0 22px 0 22px;
   display: flex;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
   font-size: 17px;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.bannerList .col view{
+
+.goods .three view{
   display: block;
 }
 
-.bannerList .col image{
+.goods .three image{
   width: 100px;
   height: 150px;
 }
-
 
 .goods {
   display: block;
   margin: 0px;
   width: 100%;
-  margin-top:50px; 
+  margin-top:30px; 
 }
 
 .goods .text{
@@ -50,15 +46,18 @@
   font-weight: 700;
 }
 
+.goods .one{
+  margin: 0 20px 0 20px;
+}
+
 .goods .one image{
-  width: 100%;
+  width: 335px;
 }
 
 .goods .two {
   display: flex;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
   font-size: 17px;
-  margin-top: 40px;
 }
 
 .goods .product{

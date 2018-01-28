@@ -11,7 +11,7 @@ Page({
       full_region: '',
       name: '',
       mobile: '',
-      is_default: 0
+      status: 0
     },
     addressId: 0,
     openSelectRegion: false,
@@ -42,7 +42,7 @@ Page({
   },
   bindIsDefault(){
     let address = this.data.address;
-    address.is_default = !address.is_default;
+    address.status = !address.status;
     this.setData({
       address: address
     });
@@ -223,7 +223,7 @@ Page({
       city_id: address.city_id,
       address: address.address,
       full_region: address.full_region,
-      is_default: address.is_default,
+      status: address.status ? 1 : 0,
     }, 'POST').then(function (res) {
       if (res.errno === 0) {
         wx.navigateTo({

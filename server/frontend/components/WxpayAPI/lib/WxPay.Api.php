@@ -50,19 +50,26 @@ class WxPayApi
 			$inputObj->SetNotify_url(WxPayConfig::NOTIFY_URL);//异步通知url
 		}
 		
-		$inputObj->SetAppid(WxPayConfig::APPID);//公众账号ID
-		$inputObj->SetMch_id(WxPayConfig::MCHID);//商户号
+		//$inputObj->SetAppid(WxPayConfig::APPID);//公众账号ID
+		//$inputObj->SetMch_id(WxPayConfig::MCHID);//商户号
 		$inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip	  
 		//$inputObj->SetSpbill_create_ip("1.1.1.1");  	    
 		$inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 		
+                
+               
 		//签名
 		$inputObj->SetSign();
 		$xml = $inputObj->ToXml();
-		
+	
 		$startTimeStamp = self::getMillisecond();//请求开始时间
 		$response = self::postXmlCurl($xml, $url, false, $timeOut);
+                //var_dump($response);
 		$result = WxPayResults::Init($response);
+                $paystr = sprintf("appId=%s&nonceStr=%s&package=prepay_id=%s&signType=MD5&timeStamp=%d&key=%s", 
+                        $result['appid'], $result['nonce_str'],$result['prepay_id'], time(),WxPayConfig::KEY);
+                //var_dump($paystr);
+                $result['paySign'] = md5($paystr);
 		self::reportCostTime($url, $startTimeStamp, $result);//上报请求花费时间
 		
 		return $result;

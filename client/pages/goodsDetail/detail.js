@@ -120,12 +120,12 @@ Page({
     this.setData({
       show: status
     })
-
+   
     if (this.data.selectPrice <= 0){
       return
     }
-
-    wx.navigateTo({
+    
+    wx.switchTab({
       url: '../shop/shop?type=buy&id=' + this.data.goods.storage_id
     })
   },
@@ -178,11 +178,11 @@ Page({
     }
 
     this.data.selectPrice = storageList[size].price
-    var good = this.data.goods
-    good.price = storageList[size].price
-    good.storage_id = storageList[size].id
+    this.data.goods.price = storageList[size].price
+    this.data.goods.storage_id = storageList[size].id
+    console.log("good", this.data.goods)
     this.setData({
-      goods: good,
+      goods: this.data.goods,
       storage: storageList,
       buy_button: "black",
       chart_button: "white"

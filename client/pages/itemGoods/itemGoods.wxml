@@ -10,43 +10,35 @@
     </navigator>
   </view>
 
-  <view class='bannerList'>
-    <view class="col">
-      <view>
-        <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i2/TB1i3T2XMjN8KJjSZFgYXHjbVXa_M2.SS2_180x180.jpg'></image>
-      </view>
-      <view style='margin-left: 10px;margin-right: 10px; '>
-        <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i2/TB1i3T2XMjN8KJjSZFgYXHjbVXa_M2.SS2_180x180.jpg'></image>
-      </view>
-      <view>
-        <image mode="aspectFit" src='https://img.alicdn.com/bao/uploaded/i2/TB1i3T2XMjN8KJjSZFgYXHjbVXa_M2.SS2_180x180.jpg'></image>
-      </view>
-    </view>
-  </view>
+
 
   <view class='goods' wx:for="{{goods}}" wx:for-item="item">
-    <view class='one'>
-      <view>
-      <navigator url="../goodsDetail/detail?id={{item.id}}">
-        <image mode="aspectFit" src='{{item.cover}}'></image>
-      </navigator>
-      </view>
-      <view class='text'>
-        <text>{{item.tag}}</text>
-      </view>
-      <view class='text'>
-        <text>{{item.title}}</text>
-      </view>
-      <view class='text'>
-        <text>￥{{item.price}}</text>
+    <view class='one' wx:if="{{item.length == 1}}">
+      <view wx:for="{{item}}" wx:for-item="iitem">
+        <view>
+          <navigator url="../goodsDetail/detail?id={{iitem.id}}">
+            <image mode="widthFix" src='{{iitem.cover}}?x-oss-process=image/resize,w_335'></image>
+          </navigator>
+        </view>
+        <view class='text'>
+          <text>{{iitem.tag}}</text>
+        </view>
+        <view class='text'>
+          <text>{{iitem.title}}</text>
+        </view>
+        <view class='text'>
+          <text>￥{{iitem.price}}</text>
+        </view>
       </view>
     </view>
-    <view class='two'>
 
-      <view  wx:for="{{item.list}}" wx:for-item="product">
+
+    <view class='two' wx:elif="{{item.length == 2}}">
+
+      <view wx:for="{{item}}" wx:for-item="product">
         <view class='product'>
-          <navigator url="../goodsDetail/detail?id={{product.id}}"> 
-            <image mode="aspectFit" src='{{product.cover}}'></image>
+          <navigator url="../goodsDetail/detail?id={{product.id}}">
+            <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_335'></image>
           </navigator>
         </view>
         <view class='text'>
@@ -62,9 +54,26 @@
 
 
     </view>
+
+    <view class='three' wx:elif="{{item.length == 3}}">
+      <view wx:for="{{item}}" wx:for-item="product" wx:key="index">
+        <view>
+          <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_100'></image>
+        </view>
+        <view class='text'>
+          <text>{{product.tag}}</text>
+        </view>
+        <view class='text'>
+          <text>{{product.title}}</text>
+        </view>
+        <view class='text'>
+          <text>￥{{product.price}}</text>
+        </view>
+      </view>
+    </view>
   </view>
 
-<import src="../public/menu/menu.wxml" />
-  <template is="menu"/>
+  <import src="../public/menu/menu.wxml" />
+  <template is="menu" />
 
 </view>

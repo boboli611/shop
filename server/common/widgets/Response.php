@@ -22,4 +22,8 @@ class Response extends \yii\bootstrap\Widget
        $out["data"] = [];
        return $out;
    }
+   
+   public static function encode($data){
+       return json_encode($data);
+   }
 }

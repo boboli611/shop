@@ -8,8 +8,19 @@ class User extends \yii\bootstrap\Widget
 {
    public static function getUid(){
        
-      
-       return 6;
+       //var_dump($_SERVER);exit;
+       $token = $_SERVER['HTTP_X_LIPZ_TOKEN'];
+       if (!$token){
+           echo Response::encode(Response::error('未登录'));
+           exit;
+       }
+       
+       $uid = \common\models\user\UserWxSession::find()->where(['token'=> $token])->one();
+       if(!$uid){
+           echo Response::encode(Response::error('未登录!!!'));
+           exit;
+       }
+       return $uid->user_id;
    }
    
 }

@@ -8,10 +8,11 @@ module.exports = {
     GoodsList: NewApiRootUrl + 'production/index',  //获得商品列表---
     GoodsDetail: NewApiRootUrl + 'production/detail',  //获得商品的详情
     AddChart: NewApiRootUrl + 'production/add-chart',//加入购物车
-    GoodsInfo: NewApiRootUrl + 'production/info',  //获得商品的详情
+    GoodsInfo: NewApiRootUrl + 'production/buy-info',  //获得商品的详情
     Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
     AddressSave: NewApiRootUrl + 'address/save',  //保存收货地址
     AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
+    AddressDefault: NewApiRootUrl + 'address/default',  //收货地址列表
     OrderList: NewApiRootUrl + 'order/list',  //订单列表
 
 

@@ -110,6 +110,7 @@ class WxPayDataBase
 	 */
 	public function MakeSign()
 	{
+
 		//签名步骤一：按字典序排序参数
 		ksort($this->values);
 		$string = $this->ToUrlParams();
@@ -201,6 +202,7 @@ class WxPayResults extends WxPayDataBase
      */
 	public static function Init($xml)
 	{	
+
 		$obj = new self();
 		$obj->FromXml($xml);
 		//fix bug 2015-06-29

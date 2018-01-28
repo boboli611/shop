@@ -17,6 +17,7 @@ class AddressController extends Controller {
     
     public function actionSave(){
         
+        $id = (int)Yii::$app->request->post("id");
         $name = Yii::$app->request->post("name");
         $mobile = (int)Yii::$app->request->post("mobile");
         $full_region = Yii::$app->request->post("full_region");
@@ -28,11 +29,22 @@ class AddressController extends Controller {
             return;
         }
         
+        
+        
         $uid = widgets\User::getUid();
         
         try {
             
-            $addressModel = new \common\models\user\UserAddress();
+            if ($id){
+                $addressModel = \common\models\user\UserAddress::findOne($id);
+                if ($addressModel->user_id != $uid){
+                    $this->asJson(widgets\Response::error("只能修改自己的地址"));
+                    return;
+                }
+            }else{
+                $addressModel = new \common\models\user\UserAddress();
+            }
+
             $addressModel->user_id = $uid;
             $addressModel->name = $name;
             $addressModel->mobile = $mobile;
@@ -43,7 +55,7 @@ class AddressController extends Controller {
             if ($status == 1){
                 \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid}");
             }
-           
+      
             $res = $addressModel->save();
             if (!$res){
                  throw new \Exception("保存失败");
@@ -72,9 +84,10 @@ class AddressController extends Controller {
        
         $this->asJson(widgets\Response::sucess($list));
     }
+    
     public function actionDetail(){
         
-        $id = (int)Yii::$app->request->post("id");
+        $id = (int)Yii::$app->request->get("id");
         if (!$id){
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -83,6 +96,20 @@ class AddressController extends Controller {
         $uid = widgets\User::getUid();
         
         $Info = \common\models\user\UserAddress::find()->where(["id" => $id])->andWhere(["user_id" => $uid])->one();
+        if (!$Info){
+             $this->asJson(widgets\Response::error("参数错误!"));
+            return;
+        }
+        
+        $this->asJson(widgets\Response::sucess($Info));
+    }
+    
+    public function actionDefault(){
+        
+        
+        $uid = widgets\User::getUid();
+        
+        $Info = \common\models\user\UserAddress::find()->where(["status" => 1])->andWhere(["user_id" => $uid])->one();
         if (!$Info){
              $this->asJson(widgets\Response::error("参数错误!"));
             return;

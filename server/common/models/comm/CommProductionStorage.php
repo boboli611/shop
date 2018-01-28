@@ -69,6 +69,10 @@ class CommProductionStorage extends \common\models\BaseModel
     
     public function getAllBPid($pid){
         $list =  self::find()->where(["product_id" => $pid])->all();
+        if (!$list){
+            return $list;
+        }
+
         foreach ($list as &$val){
             $val->price = $val->price / 100;
         }

@@ -39,6 +39,8 @@ class ProductionController extends Controller {
         $order = (int) Yii::$app->request->post("order");
         $lastId = (int) Yii::$app->request->post("last_id");
 
+        
+        $title = "";
         $item = \common\models\comm\CommProductItem::getByTitle($title);
         $condition = [];
         if ($item) {
@@ -136,11 +138,11 @@ class ProductionController extends Controller {
      *
      * @return mixed
      */
-    public function actionInfo() {
+    public function actionBuyInfo() {
 
         $id = (int) Yii::$app->request->get("id");
         if (!$id) {
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("参数错误1"));
             return;
         }
 
@@ -148,14 +150,14 @@ class ProductionController extends Controller {
 
         $storage = \common\models\comm\CommProductionStorage::findOne($id);
         if (!$storage) {
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("参数错误2"));
             return;
         }
 
         $info = \common\models\comm\CommProduct::findOne($storage->product_id);
         $info = $info->toArray();
         if (!$info) {
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("参数错误3"));
             return;
         }
 

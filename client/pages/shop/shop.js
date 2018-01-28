@@ -17,7 +17,7 @@ Page({
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          goods: [res.data.info, res.data.info],
+          goods: [res.data.info],
           order: res.data.order,
           address: res.data.address ? res.data.address : "",
         });
@@ -25,8 +25,9 @@ Page({
     });
   },
   onLoad: function (options) {
-    console.log("options \n")
-    console.log(options)
+    options.type = "buy"
+    options.id = 75
+
     if (options.type == "buy"){
       this.getBuyData(options);
     }
@@ -85,11 +86,25 @@ Page({
     var param = { "ids": ids,"address_id": this.data.address.id }
     util.request (url, param, "POST").then(function (res) {
       if (res.errno === 0) {
-        that.setData({
-          goods: [res.data.info, res.data.info],
-          order: res.data.order,
-          address_id: res.data.address.id ? res.data.address.id : "",
-        });
+        console.log(res.data.timeStamp)
+        console.log(res.data.nonceStr)
+        console.log(res.data.package)
+        console.log(res.data.sign)
+        wx.requestPayment({
+          'timeStamp': res.data.timeStamp,
+          'nonceStr': res.data.nonceStr,
+          'package': res.data.package,
+          'signType': 'MD5',
+          'paySign': res.data.sign,
+          'success': function (res) {
+            console.log("sucess",res)
+          },
+          'fail': function (res) {
+            console.log("fail", res)
+          }
+        })
+
+       
       }
     });
 

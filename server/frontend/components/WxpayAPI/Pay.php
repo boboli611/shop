@@ -11,7 +11,12 @@ class Pay {
 
     public static function pay($openId, $product) {
         
+        $appid = \yii::$app->params["wx"]['appId'];
+        $mchId = \yii::$app->params["wx"]['mchId'];
+
         $input = new \WxPayUnifiedOrder();
+        $input->SetAppid($appid);
+        $input->SetMch_id($mchId);
         $input->SetBody($product->title);
         $input->SetAttach($product->order_id);
         $input->SetOut_trade_no($product->order_id);
@@ -22,9 +27,9 @@ class Pay {
         $input->SetNotify_url(self::$notifyUrl);
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
-        var_dump($input,date("Y-m-d H:i:s"));
+        //var_dump($input);exit;
         $order = \WxPayApi::unifiedOrder($input);
-        
+
         return $order;
     }
 

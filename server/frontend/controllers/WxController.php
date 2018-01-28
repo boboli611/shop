@@ -104,9 +104,11 @@ class WxController extends Controller {
 
         $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
         
-        $pids = $data["ids"];
-        $addressId = $data["address_id"];
-
+        
+        $pids = Yii::$app->request->post("ids");
+        $addressId = Yii::$app->request->post("address_id");
+        $pids = [$pids];
+        
         if (!$pids || !$addressId) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -169,10 +171,9 @@ class WxController extends Controller {
                 $model->price = $item->price;
                 $model->pay_price = $item->price;
                 $model->address = (string)$addres;
-                $model->status = \common\models\comm\CommOrder::status_add;
+                $model->status = \common\models\comm\CommOrder::status_waiting_pay;
 
                 $ret = $model->save();
-                var_dump($addres, $model->getErrors());
                 $countPrice += $item->price;
             }
         } catch (Exception $ex) {
@@ -190,11 +191,12 @@ class WxController extends Controller {
             $this->asJson(widgets\Response::error("下单失败"));
             return;
         }
-
+        //var_dump($order);exit;
         $out['id'] = $model->getPrimaryKey();
-        $out['nonceStr'] = $order['prepay_id'];
-        $out['package'] = $order['prepay_id'];
-        $out["timeStamp"] = time();
+        $out['nonceStr'] = $order['nonce_str'];
+        $out['package'] = "prepay_id={$order['prepay_id']}";
+        $out['sign'] = $order['paySign'];
+        $out["timeStamp"] = (string)time();
         $this->asJson(widgets\Response::sucess($out));
     }
 
