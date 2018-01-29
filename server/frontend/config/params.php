@@ -7,4 +7,5 @@ return [
         "appId" => "wx428d3b3414fa245a",
         "appSecret" => "27c2001c0a799121389f547a429e3d41",
     ],
+    'domain' => "https://www.ttyouhiu.com",
 ];

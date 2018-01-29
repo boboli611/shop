@@ -102,9 +102,6 @@ class WxController extends Controller {
     //创建订单
     public function actionCreateOrder() {
 
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        
-        
         $pids = Yii::$app->request->post("ids");
         $addressId = Yii::$app->request->post("address_id");
         $pids = [$pids];
@@ -144,6 +141,7 @@ class WxController extends Controller {
         try {
             foreach ($product as $item) {
 
+                $item->price = $item->price * 100;
                 $num = $item->num - $item->sell;
                 if ($num <= 0) {
                     //$this->asJson(widgets\Response::error("已售罄"));
@@ -205,15 +203,10 @@ class WxController extends Controller {
      */
     public function actionNotice() {
 
-        $userId = 1;
-        $orderId = 111;
-        $price = 10;
-        $wx = new \frontend\components\WxpayAPI\PayNotify();
-        return $wx->Handle(false);
-
         try {
-            (new \frontend\service\Pay())->storage($orderId, $price);
-        } catch (Exception $exc) {
+            $wx = new \frontend\components\WxpayAPI\PayNotify();
+            $wx->Handle(false);
+        } catch(\Exception $exc) {
             echo $exc->getMessage();
             \frontend\service\Error::addLog($userId, $exc->getMessage(), json_encode($exc->errorInfo));
             exit;

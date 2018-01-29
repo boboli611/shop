@@ -7,13 +7,12 @@ require_once "lib/WxPay.Api.php";
 
 class Pay {
     
-    private static $notifyUrl = "http://paysdk.weixin.qq.com/example/notify.php";
+    private static $notifyUrl = "https://www.ttyouhiu.com/wx/notice";
 
     public static function pay($openId, $product) {
-        
+
         $appid = \yii::$app->params["wx"]['appId'];
         $mchId = \yii::$app->params["wx"]['mchId'];
-
         $input = new \WxPayUnifiedOrder();
         $input->SetAppid($appid);
         $input->SetMch_id($mchId);

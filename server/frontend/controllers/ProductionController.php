@@ -165,7 +165,7 @@ class ProductionController extends Controller {
 
         $info['style'] = $storage->style;
         $info['size'] = $storage->size;
-        $info['price'] = $storage->price;
+        $info['price'] = $storage->price / 100;
         $info['storage_id'] = $storage->id;
       
         
