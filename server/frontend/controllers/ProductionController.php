@@ -40,7 +40,6 @@ class ProductionController extends Controller {
         $lastId = (int) Yii::$app->request->post("last_id");
 
         
-        $title = "";
         $item = \common\models\comm\CommProductItem::getByTitle($title);
         $condition = [];
         if ($item) {

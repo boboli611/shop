@@ -1,0 +1,106 @@
+<!--index.wxml-->
+<view class="container">
+
+
+  <view class='line'>
+  </view>
+
+  <view class='goods'>
+    <view wx:for="{{goods}}" wx:for-item="item" wx:for-index="index">
+      <view class='col'>
+        <view class='left'>
+          <image mode='aspectFit' src='{{item.cover}}'></image>
+        </view>
+        <view class='right'>
+          <view class='info'>
+            <view class='left_ara'>
+              <text>{{item.title}}</text>
+            </view>
+            <view class='right_ara'>
+              <image class='close' mode='aspectFit' bindtap='close' data-id="{{index}}"  src='../../static/images/lipz/close.png'></image>
+            </view>
+          </view>
+          <view class='info'>
+            <view>
+              <text>{{item.style}}</text>
+            </view>
+          </view>
+          <view class='info'>
+            <view class='left_ara'>
+              <text>{{item.size}}</text>
+            </view>
+            <view class='right_ara'>
+              <text>￥{{item.price}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class='good-line' wx:if="{{goods.length - 1 > index}}"></view>
+    </view>  
+  </view>
+  <view class='line'></view>
+  <view class="address" wx:if="{{address == ''}}">
+    <navigator url='../ucenter/address/address'>
+      <image class='icon' mode='aspectFit'  src='../../static/images/lipz/close.png'></image>
+      <text class="{{warning}}">+请添加收货地址及联系人信息</text>
+    </navigator>
+  </view>
+  <view class="address" wx:else>
+    <navigator url='../ucenter/address/address'>
+      <image class='icon' mode='aspectFit' src='../../static/images/lipz/close.png'></image>
+      <text>{{address.address}}</text>
+    </navigator>
+  </view>
+  <view class='line'></view>
+  <view class='message'>
+  <textarea placeholder="选项:买家留言（50字以内）" bindinput="bindContent" name="content" maxlength="50"></textarea>
+  </view>
+
+  <view class='line'></view>
+
+  <view class='buy'>
+    <view class='list'>
+      <view class='buy-line'>
+        <view>
+          <text>共{{goods.length}}件商品</text>
+        </view>
+        <view>
+          <text>￥{{order.price}}</text>
+        </view>
+      </view>
+
+      <view class='buy-line'>
+        <view>
+          <text>预计运费</text>
+        </view>
+        <view>
+          <text>￥{{order.carriage}}</text>
+        </view>
+      </view>
+      <view class='buy-line'>
+        <view>
+          <text>优惠抵扣</text>
+        </view>
+        <view>
+          <text>￥{{order.discount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class='count'>
+      <view>
+        <text>总金额</text>
+      </view>
+      <view>
+        <text>￥{{order.price + order.carriage - order.discount}}</text>
+      </view>
+    </view>
+  </view>
+
+
+  <view class='price'>
+    <button size='mini' bindtap='buy' class='black'>立即购买</button>
+  </view>
+
+
+</view>

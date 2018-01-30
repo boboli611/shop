@@ -125,8 +125,8 @@ Page({
       return
     }
     
-    wx.switchTab({
-      url: '../shop/shop?type=buy&id=' + this.data.goods.storage_id
+    wx.navigateTo({
+      url: '../buy/buy?type=buy&id=' + this.data.goods.storage_id
     })
   },
   //购物车

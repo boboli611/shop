@@ -30,42 +30,46 @@
   </view>
 
   <import src="../public/menu/menu.wxml" />
-  <template is="menu"/>
+  <template is="menu" />
 
-  
+
   <view style='height:40px;width:100%;'></view>
-    <view class='buy {{show}}'>
-      <view bindtap='close' class='close'>
-        <image mode='aspectFit' src="../../static/images/lipz/close.png"></image>
-      </view>
+  <view class='buy {{show}}'>
+    <view bindtap='close' class='close'>
+      <image mode='aspectFit' src="../../static/images/lipz/close.png"></image>
+    </view>
+
+    <view class="change">
       <view class='attribute'>
         <view class="one {{index == selectStyle ? 'selected':''}}" wx:for="{{goods.storage}}" wx:for-item="iitem" wx:for-index="index">
           <text bindtap='changeStyle' data-style="{{index}}">{{index}}</text>
         </view>
       </view>
-     <view class='{{sizeShow}}'>
+      <view class='{{sizeShow}}'>
         <view class='size'>
           <view class="one {{iitem.size == selectSize ? 'selected':''}}" wx:for="{{storage}}" wx:for-item="iitem">
             <text bindtap="changeSize" data-Size="{{iitem.size}}">{{iitem.size}}</text>
           </view>
         </view>
-     </view>
-
-      <view class='line'></view>
-    </view>
-
-    <view class='price'>
-      <view class='col'>
-        <view class='one'>
-          <text>￥{{goods.price}}</text>
-        </view>
-        <view class='two'>
-          <button size='mini' bindtap='addChart' class='{{chart_button}}'>加入购物袋</button>
-        </view>
-        <view>
-          <button bindtap='addBuy' size='mini' class='{{buy_button}}'>立即购买</button>
-        </view>
       </view>
     </view>
+
+
+    <view class='line'></view>
+  </view>
+
+  <view class='price'>
+    <view class='col'>
+      <view class='one'>
+        <text>￥{{goods.price}}</text>
+      </view>
+      <view class='two'>
+        <button size='mini' bindtap='addChart' class='{{chart_button}}'>加入购物袋</button>
+      </view>
+      <view>
+        <button bindtap='addBuy' size='mini' class='{{buy_button}}'>立即购买</button>
+      </view>
+    </view>
+  </view>
 
 </view>

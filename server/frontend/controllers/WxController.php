@@ -104,7 +104,7 @@ class WxController extends Controller {
 
         $pids = Yii::$app->request->post("ids");
         $addressId = Yii::$app->request->post("address_id");
-        $pids = [$pids];
+        $pids = explode(',', $pids);
         
         if (!$pids || !$addressId) {
             $this->asJson(widgets\Response::error("参数错误"));

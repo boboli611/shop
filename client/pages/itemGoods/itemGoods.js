@@ -1,6 +1,7 @@
 const util = require('../../utils/util.js');
 const api = require('../../config/api.js');
 const user = require('../../services/user.js');
+const search = require('../public/search/search.js');
 
 //获取应用实例
 const app = getApp()
@@ -34,10 +35,7 @@ Page({
     });
   },
   onLoad: function (options) {
-    console.log("options \n")
-    console.log(options)
     this.getIndexData(options);
-   
   },
   onReady: function () {
     // 页面渲染完成
@@ -57,6 +55,16 @@ Page({
     var options = {}; 
     options["word"] = searchWord;
     this.onLoad(options)
+  },
+  search: function (e) {
+    var word = this.data.word
+    //search.search(word)
+    this.getIndexData(this.data);
+  },
+  searchWord: function (e) {
+    this.setData({
+      word: e.detail.value
+    })
   },
 
 })

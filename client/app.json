@@ -1,14 +1,16 @@
 {
   "pages":[
-    
+    "pages/payResult/payResult",
     "pages/index/index",
+    
     "pages/goodsDetail/detail",
     "pages/ucenter/address/address",
     "pages/shop/shop",
+    "pages/buy/buy",
     "pages/itemGoods/itemGoods", 
     "pages/items/items", 
     "pages/search/search", 
-   
+    "pages/ucenter/addressAdd/addressAdd",
 
 
     
@@ -17,7 +19,7 @@
     "pages/goodsList/goodsList",
     "pages/newGoods/newGoods",
 
-    "pages/ucenter/addressAdd/addressAdd",
+    
     "pages/ucenter/footprint/footprint",
     "pages/ucenter/order/order",
     "pages/ucenter/orderDetail/orderDetail",
@@ -28,7 +30,7 @@
     "pages/auth/register/register",
     "pages/auth/reset/reset",
     "pages/pay/pay",
-    "pages/payResult/payResult",
+    
     "pages/ucenter/index/index",
     "pages/comment/comment",
     "pages/commentPost/commentPost",

@@ -4,11 +4,11 @@
   <import src="../public/search/search.wxml" />
   <template is="search" data="{{word}}" />
 
-  <view class='banner'>
+ <!--<view class='banner'>
     <navigator url="{{item.link}}">
       <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
     </navigator>
-  </view>
+  </view>-->
 
 
 

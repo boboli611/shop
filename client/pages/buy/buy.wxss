@@ -1,0 +1,136 @@
+
+.line{
+  height: 1px;
+  width: 330px;
+  background: #e8e8e8;
+  margin: 10px 0px;
+  justify-content:flex-end;
+}
+
+.goods{
+  width: 320px;
+  font-size: 12px;
+  
+}
+
+.goods .col{
+  display: flex;
+  flex-direction: row;
+}
+
+.goods .col .close{
+  width: 10px;
+  height: 10px;
+}
+
+.goods image{
+  width: 75px;
+  height: 75px;
+}
+
+.goods .col .left{
+  width: 75px;
+  height: 75px;
+  margin-left: 5px;
+}
+
+.goods .col .right{
+  display: flex;
+  margin-left: 5px;
+  width: 240px;
+  flex-direction: column;
+  justify-content:space-around;
+}
+
+.goods .col .right .info{
+  display: flex;
+  justify-content: space-between;
+}
+
+.goods .col .right .info .left_ara{
+  width: 200px;
+}
+
+.goods .col .right .info .right_ara{
+}
+
+.good-line{
+  margin:10px 0 10px 80px;
+  height: 1px;
+  display:flex;
+  Flex-direction:row-reverse;
+  background-color: #e8e8e8;
+  width: 240px;
+}
+
+.price {
+  background-color: #FFFFFF;
+  display: block;
+  margin: 0px;
+  width: 320px;
+  bottom: 0;
+  position: fixed;
+}
+
+.price button{
+  font-size: 12px;
+  border-radius: 0px;
+  color: #FFFFFF;
+  background-color: #000000;
+  width: 320px;
+}
+
+.buy{
+  margin-top: 20px;
+  background: #f3f3f3;
+  width: 320px;
+  font-size: 12px;
+}
+
+.buy .list{
+  margin: 10px;
+  width: 300px;
+
+}
+
+.buy .list .buy-line{
+  margin: 5px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+}
+
+.buy .count{
+  margin: 20px 10px;
+  width: 300px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+}
+
+.message{
+  width: 300px;
+  font-size: 10px;
+  margin: 15px 0 15px 0; 
+}
+
+.message textarea{
+  height:50px;
+}
+
+.address{
+  width: 300px;
+  font-size: 10px;
+  margin: 15px 0 15px 0; 
+}
+
+.address image{
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+}
+
+.red{
+  color: #ff061d;
+}

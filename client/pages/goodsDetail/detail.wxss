@@ -81,6 +81,7 @@
   width: 150px;
   display: block;
   margin-left: 15px;
+  
 }
 
 .price .two{
@@ -117,11 +118,11 @@
   width: 100%;
   bottom: 41px;
   position: fixed;
-  height: 130px;
+  height: 140px;
 }
 
 .buy .close{
-  margin-top: 5px;
+  margin-top: 10px;
   margin-right: 5px;
   display: flex;
   flex-direction: row-reverse;
@@ -137,12 +138,13 @@
   
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
   font-size: 17px;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
   width: 92%;
   display: flex;
   flex-direction: row;
   justify-content:flex-start;
   padding-left: 30px;
+  
 }
 
 .buy .size {
@@ -158,7 +160,7 @@
  .buy .line{
    height: 1px;
    background: #f6f6f7;
-   margin: 20px 20px;
+   margin: 0px 20px;
  }
 
  .buy .one{
@@ -169,6 +171,7 @@
    color: #fafafb;
    */
    margin-right: 30px;
+   height: 25px;
  }
 
  .buy .selected{
@@ -176,7 +179,9 @@
    color: #fafafb;
  }
 
-
+ .buy .change{
+   height: 90px;
+ }
  
 .menu{
   display: block;
