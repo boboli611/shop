@@ -15,16 +15,18 @@ Page({
     var url = api.OrderList + "?type=" + options.type
     util.request(url).then(function (res) {
       if (res.errno === 0) {
-        console.log(res.data);
         that.setData({
-          orderList: res.data.data
+          orderList: res.data
         });
       }
     });
   },
-  payOrder(){
+  payOrder(e){
+    console.log(e)
+    var order_id = e.currentTarget.dataset.orderId
+    var price = e.currentTarget.dataset.price
     wx.redirectTo({
-      url: '/pages/pay/pay',
+      url: '/pages/pay/pay?order_id=' + order_id + '&price=' + price,
     })
   },
   onReady:function(){

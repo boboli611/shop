@@ -28,6 +28,13 @@ class CommOrder extends \common\models\BaseModel
     const status_goods_waiting_receve = 3;//代收货
     const status_goods_receve = 4;//已收货
     const status_pay_fail = 9;//支付失败
+    
+    public static $payName = [
+        self::status_waiting_pay => "待付款",
+        self::status_goods_waiting_send => "代发货",
+        self::status_goods_waiting_receve => "代收货",
+        self::status_goods_receve => "已收货",
+    ];
 
     /**
      * @inheritdoc

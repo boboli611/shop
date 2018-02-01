@@ -10,8 +10,8 @@ const api = require('../config/api.js');
  */
 function payOrder(orderId) {
   return new Promise(function (resolve, reject) {
-    util.request(api.PayPrepayId, {
-      orderId: orderId
+    util.request(api.GetOrder, {
+      order_id: orderId
     }).then((res) => {
       console.log(res)
       if (res.errno === 0) {
@@ -20,8 +20,8 @@ function payOrder(orderId) {
           'timeStamp': payParam.timeStamp,
           'nonceStr': payParam.nonceStr,
           'package': payParam.package,
-          'signType': payParam.signType,
-          'paySign': payParam.paySign,
+          'signType': 'MD5',
+          'paySign': payParam.sign,
           'success': function (res) {
             resolve(res);
           },

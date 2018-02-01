@@ -10,8 +10,8 @@ Page({
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
     this.setData({
-      orderId: options.orderId,
-      actualPrice: options.actualPrice
+      orderId: options.order_id,
+      actualPrice: options.price
     })
   },
   onReady: function () {
@@ -32,15 +32,15 @@ Page({
   //向服务请求支付参数
   requestPayParam() {
     let that = this;
-    util.request(api.PayPrepayId, { orderId: that.data.orderId, payType: 1 }).then(function (res) {
+    util.request(api.GetOrder, { order_id: that.data.orderId }).then(function (res) {
       if (res.errno === 0) {
         let payParam = res.data;
         wx.requestPayment({
           'timeStamp': payParam.timeStamp,
           'nonceStr': payParam.timeStamp,
           'package': payParam.nonceStr,
-          'signType': payParam.signType,
-          'paySign': payParam.paySign,
+          'signType': 'MD5',
+          'paySign': payParam.sign,
           'success': function (res) {
             wx.redirectTo({
               url: '/pages/payResult/payResult?status=true',

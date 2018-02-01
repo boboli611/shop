@@ -9,9 +9,11 @@ Page({
     orderId: 0
   },
   onLoad: function (options) {
+    options.orderId = '20180129151723509892775'
+    options.status = false
     // 页面初始化 options为页面跳转所带来的参数
     this.setData({
-      orderId: options.orderId || 24,
+      orderId: options.orderId,
       status: options.status
     })
   },
@@ -31,7 +33,7 @@ Page({
 
   },
   payOrder() {
-    pay.payOrder(parseInt(this.data.orderId)).then(res => {
+    pay.payOrder(this.data.orderId).then(res => {
       this.setData({
         status: true
       });

@@ -77,15 +77,15 @@
           <text>￥{{order.carriage}}</text>
         </view>
       </view>
-      <view class='buy-line'>
+      <!--<view class='buy-line'>
         <view>
           <text>优惠抵扣</text>
         </view>
         <view>
           <text>￥{{order.discount}}</text>
         </view>
-      </view>
-    </view>
+      </view>-->
+    </view>-
 
     <view class='count'>
       <view>
