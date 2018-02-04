@@ -7,7 +7,8 @@ module.exports = {
     BannerInfo: NewApiRootUrl + 'banner/info',  //获得banner详情 ---
     GoodsList: NewApiRootUrl + 'production/index',  //获得商品列表---
     GoodsDetail: NewApiRootUrl + 'production/detail',  //获得商品的详情
-    AddChart: NewApiRootUrl + 'production/add-chart',//加入购物车
+    AddChart: NewApiRootUrl + 'shop/add',//加入购物车
+    ShopList: NewApiRootUrl + 'shop/list',//购物车列表
     GoodsInfo: NewApiRootUrl + 'production/buy-info',  //获得商品的详情
     Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
     GetOrder: NewApiRootUrl + 'wx/order', //获取订单

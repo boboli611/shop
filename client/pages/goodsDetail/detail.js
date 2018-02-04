@@ -1,9 +1,9 @@
 const util = require('../../utils/util.js');
 const api = require('../../config/api.js');
 const user = require('../../services/user.js');
-
+var WxParse = require('../../wxParse/wxParse.js');
 //获取应用实例
-const app = getApp()
+const app = getApp();
 Page({
   data: {
     httpstatus:false,
@@ -12,6 +12,7 @@ Page({
     selectStyle:"",
     selectSize:"",
     selectPrice:0,
+  
   },
   onShareAppMessage: function () {
     return {
@@ -27,6 +28,8 @@ Page({
     var url = api.GoodsDetail + "?id=" + options.id
     util.request(url).then(function (res) {
       if (res.errno === 0) {
+        var content = res.data.info.desc;
+        WxParse.wxParse('article', 'html', content, that, 0);
         that.setData({
           goods: res.data.info,
           storageList:res.data.info.storage,
@@ -38,6 +41,7 @@ Page({
           sizeShow:"hidden"
         });
 
+        
         wx.setNavigationBarTitle({
           title: res.data.info.title//页面标题为路由参数
         })
@@ -45,8 +49,6 @@ Page({
     });
   },
   onLoad: function (options) {
-    console.log("options \n")
-    console.log(options)
     this.getData(options);
   },
   onReady: function () {
@@ -57,6 +59,12 @@ Page({
   },
   onHide: function () {
     // 页面隐藏
+    //this.data.goods = {};
+    this.data.selectPrice = 0;
+    this.buyInit()
+    this.setData({
+      show: "hidden"
+    })
   },
   onUnload: function () {
     // 页面关闭
@@ -91,6 +99,7 @@ Page({
     var storageList, storage, style, size
     style = this.data.selectStyle
     size = e.currentTarget.dataset.size
+    
     this.data.selectSize = size
     storageList = this.data.storageList[style]
     if (storageList){
@@ -111,12 +120,7 @@ Page({
   //购买商品
   addBuy:function(e){
     var status
-    if (this.data.show == "hidden"){
-      var status = "show"
-    }else{
-      var status = "hidden"
-    }
-
+    var status = "show"
     this.setData({
       show: status
     })
@@ -124,9 +128,9 @@ Page({
     if (this.data.selectPrice <= 0){
       return
     }
-    
+    var stoage_id = this.data.goods.storage_id
     wx.navigateTo({
-      url: '../buy/buy?type=buy&id=' + this.data.goods.storage_id
+      url: '../buy/buy?type=buy&id=' + stoage_id
     })
   },
   //购物车
@@ -169,18 +173,18 @@ Page({
     var  storageList, storageList, style, size
     style = this.data.selectStyle
     size = this.data.selectSize
+
     storageList = this.data.storageList[style]
     this.data.selectPrice = 0
-
     if (!storageList || !storageList[size]){
       this.buyInit()
       return
     }
-
+   
     this.data.selectPrice = storageList[size].price
     this.data.goods.price = storageList[size].price
     this.data.goods.storage_id = storageList[size].id
-    console.log("good", this.data.goods)
+    
     this.setData({
       goods: this.data.goods,
       storage: storageList,

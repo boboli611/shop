@@ -37,7 +37,8 @@ class FileController extends Controller {
         /** @var \yiier\AliyunOSS\OSS $oss */
         $oss = \Yii::$app->get('oss');
         $day = date("Ymd");
-        $fileName = md5($img->name . time()) . '.' . end(explode('.', $img->name));
+        $files = explode('.', $img->name);
+        $fileName = md5($img->name . time()) . '.' . end($files);
         $fh = \Yii::$app->params['uploadPath'] . "/image/{$day}/{$fileName}";
         $ret = $oss->upload($fh, $img->tempName); // 会自动创建文件夹
         if (!$ret) {

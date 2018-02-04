@@ -85,7 +85,7 @@
           <text>￥{{order.discount}}</text>
         </view>
       </view>-->
-    </view>-
+    </view>
 
     <view class='count'>
       <view>

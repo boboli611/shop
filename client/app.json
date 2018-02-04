@@ -1,8 +1,8 @@
 {
   "pages":[
-    "pages/payResult/payResult",
-    "pages/index/index",
     
+    "pages/index/index",
+    "pages/payResult/payResult",
     "pages/goodsDetail/detail",
     "pages/ucenter/address/address",
     "pages/shop/shop",
@@ -11,7 +11,7 @@
     "pages/items/items", 
     "pages/search/search", 
     "pages/ucenter/addressAdd/addressAdd",
-
+"pages/ucenter/order/order",
 
     
 
@@ -21,7 +21,7 @@
 
     
     "pages/ucenter/footprint/footprint",
-    "pages/ucenter/order/order",
+    
     "pages/ucenter/orderDetail/orderDetail",
     "pages/ucenter/feedback/feedback",
     "pages/ucenter/coupon/coupon",

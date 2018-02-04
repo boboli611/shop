@@ -4,6 +4,9 @@
   <view class='info'>
     <image mode='widthFix' src='{{goods.cover}}'></image>
   </view>
+ <import src="/wxParse/wxParse.wxml"/>
+
+<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
 
   <view class='recommend'>
     <view class='title'>
@@ -17,12 +20,14 @@
         <view class='text'>
           <text>{{item.title}}</text>
         </view>
-        <view class='text'>
+        <!--<view class='text'>
           <text>￥{{item.price}}</text>
-        </view>
+        </view>-->
 
         <view class='chart'>
-          <button size='mini' class='white'>加入购物袋</button>
+          <navigator open-type="redirectTo" url="/pages/goodsDetail/detail?id={{item.id}}" class="a">
+            <button size='mini' class='white'>加入购物袋</button>
+          </navigator>
         </view>
       </view>
 

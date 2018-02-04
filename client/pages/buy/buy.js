@@ -98,9 +98,20 @@ Page({
           'paySign': res.data.sign,
           'success': function (res) {
             console.log("sucess",res)
+            wx.redirectTo({
+              url: '/pages/ucenter/order/order?type=2',
+            })
           },
           'fail': function (res) {
             console.log("fail", res)
+            if (res.errMsg == "requestPayment:fail cancel"){
+              return
+            }
+            /*
+            wx.redirectTo({
+              url: '/pages/payResult/payResult?status=false',
+            })
+            */
           }
         })
       }
