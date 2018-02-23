@@ -117,15 +117,27 @@ Page({
       show: "hidden",
     })
   },
+
   //购买商品
-  addBuy:function(e){
+  showBuy: function (e) {
     var status
     var status = "show"
     this.setData({
       show: status
     })
-   
+  },
+
+  //购买商品
+  addBuy:function(e){
+
+    
     if (this.data.selectPrice <= 0){
+      wx.showModal({
+        title: '提示',
+        content: '请选择样式和尺码',
+        showCancel:false
+      })
+
       return
     }
     var stoage_id = this.data.goods.storage_id
@@ -200,6 +212,6 @@ Page({
       chart_button: "gray",
       sizeShow: "hidden",
     })
-  },
+  }
 
 })

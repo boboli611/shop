@@ -1,0 +1,79 @@
+<!--index.wxml-->
+<view class="container">
+
+  <import src="../public/search/search.wxml" />
+  <template is="search" data="{{word}}" />
+
+ <!--<view class='banner'>
+    <navigator url="{{item.link}}">
+      <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
+    </navigator>
+  </view>-->
+
+
+
+  <view class='goods' wx:for="{{goods}}" wx:for-item="item" wx:key="index">
+    <view class='one' wx:if="{{item.length == 1}}">
+      <view wx:for="{{item}}" wx:for-item="iitem" wx:key="index2">
+        <view>
+          <navigator url="../goodsDetail/detail?id={{iitem.id}}">
+            <image mode="widthFix" src='{{iitem.cover}}?x-oss-process=image/resize,w_335'></image>
+          </navigator>
+        </view>
+        <view class='text'>
+          <text>{{iitem.tag}}</text>
+        </view>
+        <view class='text'>
+          <text>{{iitem.title}}</text>
+        </view>
+        <view class='text'>
+          <text>￥{{iitem.price}}</text>
+        </view>
+      </view>
+    </view>
+
+
+    <view class='two' wx:elif="{{item.length == 2}}">
+
+      <view wx:for="{{item}}" wx:for-item="product" wx:key="index2">
+        <view class='product'>
+          <navigator url="../goodsDetail/detail?id={{product.id}}">
+            <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_335'></image>
+          </navigator>
+        </view>
+        <view class='text'>
+          <text>{{product.tag}}</text>
+        </view>
+        <view class='text'>
+          <text>{{product.title}}</text>
+        </view>
+        <view class='text'>
+          <text>￥{{product.price}}</text>
+        </view>
+      </view>
+
+
+    </view>
+
+    <view class='three' wx:elif="{{item.length == 3}}">
+      <view wx:for="{{item}}" wx:for-item="product" wx:key="index">
+        <view>
+          <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_100'></image>
+        </view>
+        <view class='text'>
+          <text>{{product.tag}}</text>
+        </view>
+        <view class='text'>
+          <text>{{product.title}}</text>
+        </view>
+        <view class='text'>
+          <text>￥{{product.price}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <import src="../public/menu/menu.wxml" />
+  <template is="menu" />
+
+</view>

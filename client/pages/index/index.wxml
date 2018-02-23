@@ -12,7 +12,7 @@
     </navigator>
  </view>
 
- <view class='items' wx:for="{{data.list}}" wx:for-item="item">
+ <view class='items' wx:for="{{data.list}}" wx:for-item="item" wx:key="index">
   <view class='txt'><text>{{item.item}}</text></view>
     <navigator url="../itemGoods/itemGoods?word={{item.item}}">
       <image mode='widthFix' src="{{item.cover}}" background-size="cover"></image>

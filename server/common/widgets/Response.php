@@ -16,7 +16,7 @@ class Response extends \yii\bootstrap\Widget
    }
    
    public static function error($msg){
-       
+       $out["errno"] = 1000;
        $out["sucess"] = false;
        $out["msg"] = $msg;
        $out["data"] = [];

@@ -4,9 +4,9 @@
   <view class='info'>
     <image mode='widthFix' src='{{goods.cover}}'></image>
   </view>
- <import src="/wxParse/wxParse.wxml"/>
+  <import src="/wxParse/wxParse.wxml" />
 
-<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+  <template is="wxParse" data="{{wxParseData:article.nodes}}" />
 
   <view class='recommend'>
     <view class='title'>
@@ -63,18 +63,47 @@
     <view class='line'></view>
   </view>
 
-  <view class='price'>
+  <!--<view class='price'>
     <view class='col'>
       <view class='one'>
         <text>￥{{goods.price}}</text>
       </view>
       <view class='two'>
-        <button size='mini' bindtap='addChart' class='{{chart_button}}'>加入购物袋</button>
+        <button size='mini' bindtap='addChart' class='white'>加入购物袋</button>
       </view>
       <view>
-        <button bindtap='addBuy' size='mini' class='{{buy_button}}'>立即购买</button>
+        <button bindtap='addBuy' size='mini' class='black'>立即购买</button>
+      </view>
+    </view>
+  </view>-->
+
+  <view class='buttom'>
+    <view class='col'>
+      <view class='item' style='width:100px'>
+        <text>￥{{goods.price}}</text>
+      </view>
+      <view class='item'>
+        <navigator open-type="switchTab" url="../goodsIndex/goodsIndex">
+          <image mode="widthFix" src='/static/images/ic_menu_choice_nor.png'></image>
+        </navigator>
+      </view>
+      <view class='item'>
+        <navigator open-type="switchTab" url='../shop/shop'>
+          <image mode="widthFix" src='/static/images/ic_menu_shoping_nor.png'></image>
+        </navigator>
+      </view>
+      <view class='item white' bindtap='addChart'>
+        加入购物袋
+      </view>
+      <view class='item black' bindtap='showBuy'>
+        立即购买
       </view>
     </view>
   </view>
 
+  <view class='{{show}} buttom'>
+    <view class='check black' bindtap='addBuy'>
+      立即购买
+    </view>
+  </view>
 </view>

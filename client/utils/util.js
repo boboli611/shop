@@ -24,6 +24,12 @@ var showSuccess = text => wx.showToast({
     icon: 'success'
 })
 
+// 显示提示
+var showNotice = text => wx.showToast({
+  title: text,
+  icon: 'none'
+})
+
 // 显示失败提示
 var showModel = (title, content) => {
     wx.hideToast();
@@ -55,7 +61,6 @@ function request(url, data = {}, method = "GET") {
         'X-lipz-Token': wx.getStorageSync('lipz_token')
       },
       success: function (res) {
-        console.log("success");
         if (res.statusCode == 200) {
 
           if (res.data.errno == 401) {
@@ -75,7 +80,9 @@ function request(url, data = {}, method = "GET") {
 
                   resolve(res);
                 } else {
+                  
                   reject(res);
+                  
                 }
               }).catch((err) => {
                 reject(err);
@@ -178,6 +185,7 @@ module.exports = {
   formatTime, 
   showBusy, 
   showSuccess, 
+  showNotice,
   showModel, 
   request,
   redirect,

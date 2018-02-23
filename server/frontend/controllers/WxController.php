@@ -104,6 +104,7 @@ class WxController extends Controller {
 
         $pids = Yii::$app->request->post("ids");
         $addressId = Yii::$app->request->post("address_id");
+        $content = Yii::$app->request->post("content");
         $pids = explode(',', $pids);
         
         if (!$pids || !$addressId) {
@@ -130,7 +131,6 @@ class WxController extends Controller {
         foreach ($pids as $pid) {
             $shop[$pid] ++;
         }
-
         
         $product = \common\models\comm\CommProductionStorage::getByids(array_keys($shop));
         if (!$product || count($product) != count($shop)) {
@@ -168,13 +168,14 @@ class WxController extends Controller {
                 $model->order_id = $orderId;
                 $model->product_id = $item->id;
                 $model->num = $shop[$item->id];
-                $model->price = $item->price;
+                $model->price = $item->price * $shop[$item->id];
                 $model->pay_price = $item->price;
+                $model->content = $content;
                 $model->address = (string)$addres;
                 $model->status = \common\models\comm\CommOrder::status_waiting_pay;
 
                 $ret = $model->save();
-                $countPrice += $item->price;
+                $countPrice += $model->price;
             }
         } catch (Exception $ex) {
             $this->asJson(widgets\Response::error($ex->getMessage()));

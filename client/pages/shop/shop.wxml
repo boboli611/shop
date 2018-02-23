@@ -6,56 +6,44 @@
   </view>
 
   <view class='goods'>
-    <view wx:for="{{goods}}" wx:for-item="item" wx:for-index="index">
+    <view wx:for="{{goods}}" wx:for-item="item" wx:for-index="index" wx:key="key">
       <view class='col'>
+        <view class='select'>
+          <image bindtap='select' data-id="{{index}}" mode='aspectFit' src='/static/images/{{item.select}}'></image>
+        </view>
+        <navigator url="../goodsDetail/detail?id={{iitem.id}}">
         <view class='left'>
           <image mode='aspectFit' src='{{item.cover}}'></image>
         </view>
+        </navigator>
+        <navigator url="../goodsDetail/detail?id={{iitem.id}}">
         <view class='right'>
           <view class='info'>
             <view class='left_ara'>
               <text>{{item.title}}</text>
             </view>
-            <view class='right_ara'>
-              <image class='close' mode='aspectFit' bindtap='close' data-id="{{index}}"  src='../../static/images/lipz/close.png'></image>
-            </view>
+            
           </view>
-          <view class='info'>
+          <view class='info margin-top'>
             <view>
               <text>{{item.style}}</text>
-            </view>
-          </view>
-          <view class='info'>
-            <view class='left_ara'>
               <text>{{item.size}}</text>
             </view>
-            <view class='right_ara'>
+          </view>
+          <view class='info margin-top'>
+            <view class='left_ara'>
               <text>￥{{item.price}}</text>
             </view>
           </view>
         </view>
+        </navigator>
+        <view class='right_ara'>
+              <image class='close' mode='aspectFit' bindtap='close' data-id="{{index}}"  src='../../static/images/lipz/close.png'></image>
+            </view>
       </view>
       <view class='good-line' wx:if="{{goods.length - 1 > index}}"></view>
     </view>  
   </view>
-  <view class='line'></view>
-  <view class="address" wx:if="{{address == ''}}">
-    <navigator url='../ucenter/address/address'>
-      <image class='icon' mode='aspectFit'  src='../../static/images/lipz/close.png'></image>
-      <text class="{{warning}}">+请添加收货地址及联系人信息</text>
-    </navigator>
-  </view>
-  <view class="address" wx:else>
-    <navigator url='../ucenter/address/address'>
-      <image class='icon' mode='aspectFit' src='../../static/images/lipz/close.png'></image>
-      <text>{{address.address}}</text>
-    </navigator>
-  </view>
-  <view class='line'></view>
-  <view class='message'>
-  <textarea placeholder="选项:买家留言（50字以内）" name="content" maxlength="50"></textarea>
-  </view>
-
   <view class='line'></view>
 
   <view class='buy'>
@@ -68,33 +56,8 @@
           <text>￥{{order.price}}</text>
         </view>
       </view>
-
-      <view class='buy-line'>
-        <view>
-          <text>预计运费</text>
-        </view>
-        <view>
-          <text>￥{{order.carriage_price}}</text>
-        </view>
-      </view>
-      <view class='buy-line'>
-        <view>
-          <text>优惠抵扣</text>
-        </view>
-        <view>
-          <text>￥{{order.discount}}</text>
-        </view>
-      </view>
     </view>
 
-    <view class='count'>
-      <view>
-        <text>总金额</text>
-      </view>
-      <view>
-        <text>￥{{order.price + order.carriage_price - order.discount}}</text>
-      </view>
-    </view>
   </view>
 
 

@@ -13,10 +13,9 @@ class Product {
        $orderField = isset(self::$orderField[$orderField]) ? self::$orderField[$orderField] : self::$orderField[2];
        $orderType = isset(self::$order[$orderType]) ? self::$order[$orderType] : self::$order[2];
        $order = "{$orderField} {$orderType}, id desc";
-       $page = (int) $page;
+       $page = (int) $page ? (int) $page - 1 : 0;
        
        $out = \common\models\comm\CommProduct::getList($condiction, $key, $order, $page, $limit);
-       
        return $out;
     }
     
@@ -27,7 +26,7 @@ class Product {
         }
         
         $storageId = implode(',', $storageId);
-        $sql = "select b.*, a.id as storage_id from comm_production_storage a "
+        $sql = "select b.*,b.id as pid, a.id as storage_id from comm_production_storage a "
                 . " inner join comm_product b on a.product_id = b.id"
                 . " where a.id in({$storageId}) and a.status = 1 and b.status = 1";
                 

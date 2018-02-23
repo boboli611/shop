@@ -68,21 +68,3 @@
   width: 180px;
 }
 
-.search_fail{
-  font-size: 10px;
-  margin: 20px 0;
-}
-
-.search_fail image{
-  height: 20px;
-  width: 20px;
-}
-
-.recommend{
-  font-size: 18px;
-  font-weight: 800;
-  width: 100%;
-}
-.recommend text{
-  margin-left: 22px;
-}

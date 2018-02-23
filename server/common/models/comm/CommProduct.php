@@ -97,6 +97,8 @@ class CommProduct extends \common\models\BaseModel
         if ($key){
             $model->andWhere("title like '%{$key}%'");
         }
+        
+        $page = $page * $limit;
 
         $ret = $model->orderBy($order)->offset($page)->limit($limit)->all();
         return $ret;

@@ -5,10 +5,14 @@ var NewApiRootUrl = config.service.host + "/";
 module.exports = {
     IndexUrl: NewApiRootUrl + 'page/index', //首页数据接口 ---
     BannerInfo: NewApiRootUrl + 'banner/info',  //获得banner详情 ---
-    GoodsList: NewApiRootUrl + 'production/index',  //获得商品列表---
+    GoodsList: NewApiRootUrl + 'production/search',  //获得商品列表---
+    GoodsIndex: NewApiRootUrl + 'production/index',  //获得商品首页---
     GoodsDetail: NewApiRootUrl + 'production/detail',  //获得商品的详情
     AddChart: NewApiRootUrl + 'shop/add',//加入购物车
     ShopList: NewApiRootUrl + 'shop/list',//购物车列表
+    ShopIdList: NewApiRootUrl + 'shop/id-list',//购物车列表
+    ShopBuy: NewApiRootUrl + 'shop/buy-list', //创建订单
+    ShopDrop: NewApiRootUrl + 'shop/delete',//购物车列表
     GoodsInfo: NewApiRootUrl + 'production/buy-info',  //获得商品的详情
     Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
     GetOrder: NewApiRootUrl + 'wx/order', //获取订单

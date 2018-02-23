@@ -10,55 +10,23 @@
     </navigator>
   </view>-->
 
+  <view class='search_fail' wx:if="{{!search}}">
+  <image src='/static/images/search_fail.png'></image>
+  <text>~~亲，对不起！暂时没有找到你要的商品。</text>
+  </view>
 
+  <view class='recommend' wx:if="{{!search}}">
+  <text>推荐商品</text>
+  </view>
 
-  <view class='goods' wx:for="{{goods}}" wx:for-item="item">
-    <view class='one' wx:if="{{item.length == 1}}">
-      <view wx:for="{{item}}" wx:for-item="iitem">
-        <view>
-          <navigator url="../goodsDetail/detail?id={{iitem.id}}">
-            <image mode="widthFix" src='{{iitem.cover}}?x-oss-process=image/resize,w_335'></image>
-          </navigator>
-        </view>
-        <view class='text'>
-          <text>{{iitem.tag}}</text>
-        </view>
-        <view class='text'>
-          <text>{{iitem.title}}</text>
-        </view>
-        <view class='text'>
-          <text>￥{{iitem.price}}</text>
-        </view>
-      </view>
-    </view>
+  <view class='goods' wx:for="{{goods}}" wx:for-item="item" wx:key="index2">
 
-
-    <view class='two' wx:elif="{{item.length == 2}}">
-
-      <view wx:for="{{item}}" wx:for-item="product">
-        <view class='product'>
-          <navigator url="../goodsDetail/detail?id={{product.id}}">
-            <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_335'></image>
-          </navigator>
-        </view>
-        <view class='text'>
-          <text>{{product.tag}}</text>
-        </view>
-        <view class='text'>
-          <text>{{product.title}}</text>
-        </view>
-        <view class='text'>
-          <text>￥{{product.price}}</text>
-        </view>
-      </view>
-
-
-    </view>
-
-    <view class='three' wx:elif="{{item.length == 3}}">
+    <view class='three'>
       <view wx:for="{{item}}" wx:for-item="product" wx:key="index">
         <view>
+         <navigator url="../goodsDetail/detail?id={{product.id}}">
           <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_100'></image>
+          </navigator>
         </view>
         <view class='text'>
           <text>{{product.tag}}</text>

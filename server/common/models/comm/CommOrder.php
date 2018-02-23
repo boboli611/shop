@@ -17,6 +17,7 @@ use Yii;
  * @property integer $adress
  * @property integer $status
  * @property integer $expressage
+ * @property integer $content
  * @property string $updated_at
  * @property string $created_at
  */
@@ -50,9 +51,9 @@ class CommOrder extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'product_id', 'price', 'pay_price', 'num', 'status'], 'integer'],
+            [['user_id', 'product_id', 'price', 'pay_price', 'num', 'status', 'address'], 'integer'],
             [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
-            [['address'], 'string', 'max' => 256],
+            [['content'], 'string', 'max' => 256],
         ];
     }
 
@@ -71,6 +72,7 @@ class CommOrder extends \common\models\BaseModel
             'num' => 'Num',
             'address' => 'Adress ID',
             'status' => 'Status',
+            'content' => 'Content',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
         ];
@@ -107,6 +109,7 @@ class CommOrder extends \common\models\BaseModel
         
         $page = $page > 0 ? $page - 1 :$page;
         $offset = $page * $limit;
+
         return self::find()->where(["user_id" => $userId])->andWhere(['status' => $type])->orderBy("id desc")->offset($offset)->limit($limit)->all();
     }
     

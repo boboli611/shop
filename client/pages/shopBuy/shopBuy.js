@@ -6,40 +6,35 @@ const user = require('../../services/user.js');
 const app = getApp()
 Page({
   data: {
-    content:"",
+    content: "",
     goods: [],
-    address:"",
-    order:{},
+    address: "",
+    order: {},
   },
 
   getBuyData: function (options) {
     let that = this;
-    var url = api.GoodsInfo + "?id=" + options.id
+    console.log(options)
+    var url = api.ShopIdList + "?ids=" + options.ids
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          goods: [res.data.info],
+          goods: res.data.info,
           order: res.data.order,
           address: res.data.address ? res.data.address : "",
         });
-      } 
+      }
     });
   },
   onLoad: function (options) {
-    options.type = "buy"
-    options.id = 75
-
-    if (options.type == "buy"){
       this.getBuyData(options);
-    }
-    
-
   },
   onReady: function () {
     // 页面渲染完成
   },
-  onShow: function () {
-    // 页面显示
+  onShow: function (options) {
+      //this.getBuyData(options);
+    
   },
   onHide: function () {
     // 页面隐藏
@@ -54,40 +49,48 @@ Page({
     options["word"] = searchWord;
     this.onLoad(options)
   },
-  close:function(e){
+  close: function (e) {
+    let that = this;
     var id = e.currentTarget.dataset.id
-    console.log(id)
     var goods = this.data.goods
-    goods.splice(id, 1)
-    this.setData({
-      goods: goods,
-    })
+    var good = goods[id]
+    var url = api.ShopDrop + "?id=" + good.shop_id
+    util.request(url).then(function (res) {
+      if (res.errno === 0) {
+        goods.splice(id, 1)
+        console.log(goods)
+        that.setData({
+          goods: goods,
+        })
+      }
+    });
+
+   
   },
-  buy:function(e){
+  buy: function (e) {
 
     let that = this;
-    if (that.data.goods.length == 0){
+    if (that.data.goods.length == 0) {
       return
     }
 
-    if (!that.data.address){
+    if (!that.data.address) {
       that.setData({
-        warning:"red",
+        warning: "red",
       })
       return
     }
 
     var ids = []
-    that.data.goods.forEach(function(item, index, array){
+    that.data.goods.forEach(function (item, index, array) {
       console.log(item.storage_id, index)
       ids.push(item.storage_id)
     })
 
     var url = api.Createorder
     var content = this.data.content
-    var param = { "ids": ids, "address_id": this.data.address.id, "content": content}
-    console.log(param)
-    util.request (url, param, "POST").then(function (res) {
+    var param = { "ids": ids, "address_id": this.data.address.id, "content": content }
+    util.request(url, param, "POST").then(function (res) {
       if (res.errno === 0) {
 
         wx.requestPayment({
@@ -103,7 +106,7 @@ Page({
           },
           'fail': function (res) {
             console.log("fail", res)
-            if (res.errMsg == "requestPayment:fail cancel"){
+            if (res.errMsg == "requestPayment:fail cancel") {
               return
             }
             /*
@@ -115,14 +118,13 @@ Page({
         })
       }
     });
-
   },
 
-  bindContent: function (event){
+
+  bindContent: function (event) {
     var content = event.detail.value;
-    this.setData({
-      content: content
-    });
+    console.log(event)
+    this.data.content = content;
   },
 
 })

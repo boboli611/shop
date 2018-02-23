@@ -421,24 +421,7 @@ class WxPayApi
 	{
 		//获取通知的数据
 		$xml = file_get_contents('php://input');
-                $xml = '<xml><appid><![CDATA[wx428d3b3414fa245a]]></appid>
-<attach><![CDATA[20180129151723509892775]]></attach>
-<bank_type><![CDATA[CMB_CREDIT]]></bank_type>
-<cash_fee><![CDATA[1]]></cash_fee>
-<fee_type><![CDATA[CNY]]></fee_type>
-<is_subscribe><![CDATA[N]]></is_subscribe>
-<mch_id><![CDATA[1491468342]]></mch_id>
-<nonce_str><![CDATA[u4xvg4zrcb51l8hlxrw2uh285csubr4g]]></nonce_str>
-<openid><![CDATA[o8y4E0ReRJ4SRFL--AXItu33Uy90]]></openid>
-<out_trade_no><![CDATA[20180129151723509892775]]></out_trade_no>
-<result_code><![CDATA[SUCCESS]]></result_code>
-<return_code><![CDATA[SUCCESS]]></return_code>
-<sign><![CDATA[77C7BAACC14F109CBDA3D717D59D41A9]]></sign>
-<time_end><![CDATA[20180129221149]]></time_end>
-<total_fee>1</total_fee>
-<trade_type><![CDATA[JSAPI]]></trade_type>
-<transaction_id><![CDATA[4200000072201801293273983079]]></transaction_id>
-</xml>';
+           
 		//如果返回成功则验证签名
 		try {
 			$result = WxPayResults::Init($xml);

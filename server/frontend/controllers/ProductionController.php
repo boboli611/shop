@@ -33,21 +33,19 @@ class ProductionController extends Controller {
      */
     public function actionIndex() {
 
-        $title = Yii::$app->request->get("word");
-        $page = (int) Yii::$app->request->post("page");
+        $page = (int) Yii::$app->request->get("page");
         $orderField = (int) Yii::$app->request->post("order_field");
         $order = (int) Yii::$app->request->post("order");
         $lastId = (int) Yii::$app->request->post("last_id");
 
         
-        $item = \common\models\comm\CommProductItem::getByTitle($title);
+        $item = \common\models\comm\CommProductItem::getByTitle("");
         $condition = [];
         if ($item) {
-            $title = '';
             $condition['item_id'] = $item->id;
         }
 
-        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page);
+        $products = \frontend\service\Product::search($condition, "", $orderField, $order, $page);
         $products = $products ? $products : [];
         $out['list'] = [];
 
@@ -95,6 +93,56 @@ class ProductionController extends Controller {
         }
 
         $out['list'] = $list;
+        return $this->asJson(widgets\Response::sucess($out));
+    }
+    
+    
+    
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionSearch() {
+       
+        $title = Yii::$app->request->get("word");
+        $page = (int) Yii::$app->request->get("page");
+        $orderField = (int) Yii::$app->request->post("order_field");
+        $order = (int) Yii::$app->request->post("order");
+        $lastId = (int) Yii::$app->request->post("last_id");
+
+        $searchStatus = true;
+        $item = \common\models\comm\CommProductItem::getByTitle($title);
+        if (!$item){
+            $item = \common\models\comm\CommProductItem::getByTitle("");
+            $title = "";
+            $searchStatus = false;
+        }
+        $condition = [];
+        if ($item) {
+            $title = '';
+            $condition['item_id'] = $item->id;
+        }
+
+        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page, 12);
+        $products = $products ? $products : [];
+        $out['list'] = [];
+
+
+        $i = 0;
+        $list   = [];
+        
+        foreach ($products as $k => $val) {
+            $item = $val->toarray();
+            $item['type'] = 3;
+            $list[$i][] = $item;
+            if (count($list[$i]) == 3){
+                $i++;
+            }
+        }
+
+        $out['list'] = $list;
+        $out['search'] = $searchStatus;
         return $this->asJson(widgets\Response::sucess($out));
     }
 

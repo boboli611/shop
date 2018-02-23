@@ -15,6 +15,43 @@ use common\widgets;
  */
 class OrderController extends Controller {
     
+    public function actionDetail(){
+        
+         $id = Yii::$app->request->get("orderId");
+         $uid = widgets\User::getUid();
+         $info = \common\models\comm\CommOrder::find()->where(['order_id' => $id])->andWhere(['user_id' =>$uid ])->all();
+         $out = $pids = $products = [];
+         foreach ($info as $val){
+             $price += $val->price;
+             $order = $val->order_id;
+             $create_time = $val->created_at;
+             $id = $val->product_id;
+             $pids[] = $id;
+             $address_id = $val->address;
+         }
+         
+       
+        $pList = \frontend\service\Product::getByStorageid($pids);
+        foreach ($pList as $val){
+            
+            $status = $val['status'];
+            $pid = $val['pid'];
+            $val['num'] = 1;
+            $out['goods'][$pid] = $val;
+            $out['goods'][$pid]['pay_price'] = $val['pay_price'] / 100;
+            $out['goods'][$pid]['order_status_text'] = \common\models\comm\CommOrder::$payName[$status];
+        }
+
+         $address = \common\models\user\UserAddress::findOne($address_id);
+
+         $out['info'] = ['order_id' => $order, 'price' => $price / 100, 
+             'create_at' => $create_time, 'order_status_text' => '已下单',
+             'consignee' => $address->name, 'mobile' => $address->mobile,
+             'address' => $address->full_region . $address->address,
+             ];
+         $this->asJson(widgets\Response::sucess($out));
+    }
+    
     public function actionList(){
         
         $page = (int) Yii::$app->request->get("p");
@@ -26,6 +63,7 @@ class OrderController extends Controller {
         
         $uid = widgets\User::getUid();
         $list = \common\models\comm\CommOrder::getByUser($uid, $type, $page);
+    
         $out = $pids = $products = [];
         
         foreach ($list as $val){

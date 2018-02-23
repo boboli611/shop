@@ -8,9 +8,7 @@ const app = getApp()
 Page({
   data: {
     goods: [],
-    page:1,
-    word: "",
-    search: false,
+    page: 1,
   },
   onShareAppMessage: function () {
     return {
@@ -22,21 +20,18 @@ Page({
 
   getIndexData: function (options) {
     let that = this;
-    var word = that.data.word
-    var url = api.GoodsList + "?word=" + word + "&page=" + that.data.page
+    var url = api.GoodsIndex + "?page=" + that.data.page
     util.request(url).then(function (res) {
-      
+
       if (res.errno === 0 && res.data.list.length > 0) {
         that.data.goods = that.data.goods.concat(res.data.list)
         that.data.page++
-      } else if (res.errno !== 0){
+      } else if(res.errno !== 0) {
         util.showModel('请求失败', res.msg)
       }
 
       that.setData({
         goods: that.data.goods,
-        word: word,
-        search: res.data.search,
       });
     });
   },
@@ -57,23 +52,28 @@ Page({
     // 页面关闭
   },
 
-  searchHandle:function(e){
+  searchHandle: function (e) {
     var searchWord = e.detail.value;
-    var options = {}; 
+    var options = {};
     options["word"] = searchWord;
-    this.onLoad(options)
+    wx.navigateTo({
+      url: '../itemGoods/itemGoods?word=' + searchWord,
+    })
   },
   search: function (e) {
     var word = this.data.word
     //search.search(word)
-    this.getIndexData(this.data);
+    wx.navigateTo({
+      url: '../itemGoods/itemGoods?word=' + word,
+    })
+    //this.getIndexData(this.data);
   },
   searchWord: function (e) {
     this.setData({
       word: e.detail.value
     })
   },
-  onReachBottom:function(options){
+  onReachBottom: function (options) {
     this.getIndexData(options)
   },
 

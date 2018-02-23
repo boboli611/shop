@@ -192,3 +192,56 @@
 .hidden{
   display: none;
 }
+
+
+.buttom {
+  background-color: #FFFFFF;
+  margin: 0px;
+  width: 375px;
+  height: 40px;
+  bottom: 1px;
+  position: fixed;
+  line-height:40px; 
+  border-style: solid;
+  border-top-width:1px;
+  border-color: #efeeed;
+  
+}
+
+.buttom .col {
+  display: flex;
+  font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+  font-size: 17px;
+  flex-direction: row;
+  justify-content:flex-end;
+  height: 100%;
+  
+}
+
+.buttom .white{
+  color: #000000;
+  background-color: #FFFFFF;
+
+}
+
+.buttom .black{
+  color: #FFFFFF;
+  background-color: #000000;
+}
+
+.buttom image{
+  padding-top: 8px;
+  width: 25px;
+}
+
+.buttom .item {
+  padding: 0 10px;
+  border-style: solid; 
+  border-width: 0px 1px 0 0;
+  border-color: #efeeed;
+  font-size: 13px;
+}
+
+.buttom .check{
+  text-align: center;
+}

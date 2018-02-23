@@ -23,6 +23,7 @@ class PayNotify extends \WxPayNotify {
     public function NotifyProcess($data, &$msg) {
 
         $notfiyOutput = array();
+        
 
         if (!array_key_exists("transaction_id", $data)) {
             $msg = "输入参数不正确";

@@ -18,13 +18,13 @@ Page({
   getOrderDetail() {
     let that = this;
     util.request(api.OrderDetail, {
-      orderId: that.data.orderId
+      orderId: that.data.order_id
     }).then(function (res) {
       if (res.errno === 0) {
         console.log(res.data);
         that.setData({
-          orderInfo: res.data.orderInfo,
-          orderGoods: res.data.orderGoods,
+          orderInfo: res.data.info,
+          orderGoods: res.data.goods,
           handleOption: res.data.handleOption
         });
         //that.payTimer();
