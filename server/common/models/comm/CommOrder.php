@@ -32,8 +32,8 @@ class CommOrder extends \common\models\BaseModel
     
     public static $payName = [
         self::status_waiting_pay => "待付款",
-        self::status_goods_waiting_send => "代发货",
-        self::status_goods_waiting_receve => "代收货",
+        self::status_goods_waiting_send => "待发货",
+        self::status_goods_waiting_receve => "待收货",
         self::status_goods_receve => "已收货",
     ];
 
@@ -64,7 +64,7 @@ class CommOrder extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'user_id' => '用户 ID',
             'order_id' => 'order_id',
             'product_id' => 'Product ID',
             'price' => 'Price',
@@ -118,5 +118,10 @@ class CommOrder extends \common\models\BaseModel
         return date("Ymd").time().mt_rand(10000, 99999);
         //return md5($userId.time().mt_rand(1,50000));
     }
+    
+    public static  function  get_type_text($id){
+    return  self::$payName[$id];
+    }
+
 
 }

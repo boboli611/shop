@@ -34,7 +34,7 @@ class CommProductionStorage extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['product_id', 'style', 'size', 'status', 'price'], 'required'],
+            [['product_id', 'style', 'size', 'status', 'price', 'num'], 'required'],
             [['product_id', 'num', 'status', 'sell'], 'integer'],
             [['price'], 'number'],
             [['style', 'size'], 'string', 'max' => 32],
@@ -107,5 +107,13 @@ class CommProductionStorage extends \common\models\BaseModel
         }
         
         return $list;
+    }
+    
+    public static function getInfoById($id){
+        $sql = "select b.* from comm_production_storage a "
+                . " inner join comm_product b on a.product_id = b.id"
+                . " where a.id = {$id}";
+                
+        return self::findBySql($sql)->asArray()->one();        
     }
 }

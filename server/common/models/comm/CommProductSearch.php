@@ -10,13 +10,12 @@ use common\models\comm\CommProduct;
 /**
  * CommProductSearch represents the model behind the search form about `common\models\comm\CommProduct`.
  */
-class CommProductSearch extends CommProduct
-{
+class CommProductSearch extends CommProduct {
+
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'price', 'sell', 'count'], 'integer'],
             [['title', 'desc', 'cover', 'updated_at', 'created_at'], 'safe'],
@@ -26,8 +25,7 @@ class CommProductSearch extends CommProduct
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,14 +37,18 @@ class CommProductSearch extends CommProduct
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = CommProduct::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
         ]);
 
         $this->load($params);
@@ -68,9 +70,10 @@ class CommProductSearch extends CommProduct
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'desc', $this->desc])
-            ->andFilterWhere(['like', 'cover', $this->cover]);
+                ->andFilterWhere(['like', 'desc', $this->desc])
+                ->andFilterWhere(['like', 'cover', $this->cover]);
 
         return $dataProvider;
     }
+
 }

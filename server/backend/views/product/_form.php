@@ -11,6 +11,8 @@ use yii\helpers\Url;
 $items = (new \common\models\comm\CommProductItem())->getList();
 array_unshift($items,"选择类别");
 $model->price = $model->price / 100;
+
+$imgModel = new common\models\Img();
 ?>
 
 <div class="comm-product-form" style="width: 1000px;">
@@ -30,19 +32,18 @@ $model->price = $model->price / 100;
         
     ]) ?>
     
+    <?php echo $form->field($model, 'cover')->hiddenInput();?>
     <?php 
-
 $img = [$model->cover];
-
-echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classname(), [
+echo $form->field($imgModel, 'img')->label(false)->widget(FileInput::classname(), [
     'options' => ['multiple' => false],
-    //'id' => "CommProduct-cover",
+    'id' => "CommProduct-cover", 
     'pluginOptions' => [
         // 需要预览的文件格式
         'previewFileType' => 'image',
         // 预览的文件
         'initialPreview' =>  $img,
-        //'value' => $model->cover,
+        'value' => $model->cover,
         // 需要展示的图片设置，比如图片的宽度等
         //'initialPreviewConfig' => $p2,
         // 是否展示预览图
@@ -83,15 +84,20 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
         "fileuploaded" => "function (event, data, id, index) {
            addImgHiden(data.response.initialPreview)
         }",
+        "fileclear" => "function (event, data, id, index) {
+           clearImg();
+        }",
+        "filesuccessremove" => "function (event, data, id, index) {
 
+        }",
     ],
-]);
+])->fileInput();
  
 ?>
-    
-    <?= $form->field($model, 'tag')->textInput() ?> 
 
-    <?= $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态") ?>  
+    <?= $form->field($model, 'tag')->textInput(['style'=>'width:100px'])->label("标签(最大4个字)") ?> 
+
+    <?php //echo $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态") ?>  
     
     <?php echo $form->field($model, 'item_id')->dropDownList($items, ['style'=>'width:120px', "value" => $model->item_id])->label("类别") ?>  
     
@@ -143,8 +149,12 @@ echo $form->field($model, 'cover')->label('商品图')->widget(FileInput::classn
 <script>
 
 function addImgHiden(url){
-    $("input[name='CommProduct[cover]").attr("id", "CommProduct-cover");       
+    //$("input[name='CommProduct[cover]").attr("id", "CommProduct-cover");       
     $("input[name='CommProduct[cover]']").attr("value", url);
+}
+
+function clearImg(){   
+    $("input[name='CommProduct[cover]']").attr("value", "");
 }
 
 function add(){

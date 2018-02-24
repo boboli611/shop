@@ -87,7 +87,6 @@ class ProductController extends Controller
             $model->load(Yii::$app->request->post()) ;
             $result = $model->save();
             if (!$result){
-                var_dump($model->getErrors());exit;
                 throw new \yii\db\Exception("error save");
             }
 
@@ -137,7 +136,7 @@ class ProductController extends Controller
         $model = $this->findModel($id);
         $modelStorage = new \common\models\comm\CommProductionStorage();
         $modelStorageList = $modelStorage->getAllBPid($id);
- 
+      
         if (!Yii::$app->request->post()){
             return $this->render('update', [
                 'model' => $model,
@@ -145,7 +144,6 @@ class ProductController extends Controller
             ]);
             return;
         }
-        
         
         try {
             
@@ -186,7 +184,6 @@ class ProductController extends Controller
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());exit;
             return $this->render('create', [
                 'model' => $model,
                 'modelStorage' => $modelStorageList,

@@ -36,7 +36,8 @@ class CommProduct extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['title', 'desc', 'tag', 'status', 'item_id'], 'required'],
+            [['title', 'desc', 'tag', 'status', 'item_id', 'cover'], 'required'],
+            [[], 'file', 'skipOnEmpty' => false],
             [['tag'], 'string', "max" => 4, "message" => "标签过长"],
             [['desc'], 'string'],
             [['item_id', 'sort'], 'integer', 'min' => 1, "message" => "请选择类目"],
