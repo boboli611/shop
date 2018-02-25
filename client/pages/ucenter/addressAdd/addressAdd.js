@@ -3,6 +3,9 @@ var api = require('../../../config/api.js');
 var app = getApp();
 Page({
   data: {
+    customItem: '全部',
+    region: [],
+    isBuy:0,
     address: {
       id:0,
       province_id: 0,
@@ -49,10 +52,16 @@ Page({
   },
   getAddressDetail() {
     let that = this;
+    var region
     util.request(api.AddressDetail, { id: that.data.addressId }).then(function (res) {
       if (res.errno === 0) {
+        if (res.data.full_region){
+          region = res.data.full_region.split(",");
+        }
+        
         that.setData({
-          address: res.data
+          address: res.data,
+          region: region
         });
       }
     });
@@ -78,10 +87,10 @@ Page({
   },
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
-    console.log(options)
     if (options.id) {
       this.setData({
-        addressId: options.id
+        addressId: options.id,
+        isBuy: options.isBuy
       });
       this.getAddressDetail();
     }
@@ -188,7 +197,6 @@ Page({
     })
   },
   saveAddress(){
-    console.log(this.data.address)
     let address = this.data.address;
 
     if (address.name == '') {
@@ -226,9 +234,16 @@ Page({
       status: address.status ? 1 : 0,
     }, 'POST').then(function (res) {
       if (res.errno === 0) {
-        wx.navigateTo({
-          url: '/pages/ucenter/address/address',
-        })
+        if (that.data.isBuy === 0){
+          wx.redirectTo({
+            url: '/pages/ucenter/address/address',
+          })
+        }else{
+          wx.navigateTo({
+            url: '/pages/ucenter/address/address?back=1',
+          })
+        }
+       
       }
     });
 
@@ -244,5 +259,14 @@ Page({
   onUnload: function () {
     // 页面关闭
 
+  },
+  bindRegionChange: function (e) {
+    var region = e.detail.value
+    var full_region = region[0] + ',' + region[1] + ',' + region[2]
+    this.data.address.full_region = full_region
+    this.setData({
+      region: e.detail.value,
+      address: this.data.address,
+    })
   }
 })

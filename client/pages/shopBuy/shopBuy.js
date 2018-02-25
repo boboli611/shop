@@ -6,6 +6,7 @@ const user = require('../../services/user.js');
 const app = getApp()
 Page({
   data: {
+    ids:"",
     content: "",
     goods: [],
     address: "",
@@ -14,8 +15,8 @@ Page({
 
   getBuyData: function (options) {
     let that = this;
-    console.log(options)
-    var url = api.ShopIdList + "?ids=" + options.ids
+
+    var url = api.ShopIdList + "?ids=" + that.data.ids
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
@@ -27,14 +28,15 @@ Page({
     });
   },
   onLoad: function (options) {
-      this.getBuyData(options);
+    this.data.ids = options.ids
+      
   },
   onReady: function () {
     // 页面渲染完成
   },
   onShow: function (options) {
       //this.getBuyData(options);
-    
+    this.getBuyData(options);
   },
   onHide: function () {
     // 页面隐藏

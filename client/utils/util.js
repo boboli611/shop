@@ -25,10 +25,28 @@ var showSuccess = text => wx.showToast({
 })
 
 // 显示提示
-var showNotice = text => wx.showToast({
-  title: text,
-  icon: 'none'
-})
+var showNotice =  text => {
+  //wx.canIUse('showToast.icon.none')
+  wx.showToast({
+    title: text,
+    icon: 'none',
+  })
+  return
+  if (wx.canIUse('showToast.object.icon.none')) {
+    wx.showToast({
+      title: text,
+      icon: 'none',
+    })
+  }else{
+    wx.showModal({
+      title: '提示',
+      content: text,
+      showCancel: false
+    })
+  }
+
+ 
+}
 
 // 显示失败提示
 var showModel = (title, content) => {

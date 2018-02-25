@@ -123,7 +123,17 @@ Page({
     var status
     var status = "show"
     this.setData({
-      show: status
+      show: status,
+      buyAction: "addBuy",
+    })
+  },
+
+  showChart: function (e) {
+    var status
+    var status = "show"
+    this.setData({
+      show: status,
+      buyAction:"addChart",
     })
   },
 
@@ -132,11 +142,7 @@ Page({
 
     
     if (this.data.selectPrice <= 0){
-      wx.showModal({
-        title: '提示',
-        content: '请选择样式和尺码',
-        showCancel:false
-      })
+      util.showNotice('请选择样式和尺码')
 
       return
     }
@@ -149,14 +155,9 @@ Page({
   addChart:function(){
 
     let that = this
-    if (that.data.show == "hidden") {
-      that.setData({
-        show: "show"
-      })
-      return
-    } 
 
     if (that.data.selectPrice <= 0) {
+      util.showNotice('请选择样式和尺码')
       return
     }
 

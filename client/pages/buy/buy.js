@@ -6,15 +6,16 @@ const user = require('../../services/user.js');
 const app = getApp()
 Page({
   data: {
-    content:"",
+    id :0,
+    content: "",
     goods: [],
-    address:"",
-    order:{},
+    address: "",
+    order: {},
   },
 
-  getBuyData: function (options) {
+  getBuyData: function () {
     let that = this;
-    var url = api.GoodsInfo + "?id=" + options.id
+    var url = api.GoodsInfo + "?id=" + this.data.id
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         that.setData({
@@ -22,24 +23,21 @@ Page({
           order: res.data.order,
           address: res.data.address ? res.data.address : "",
         });
-      } 
+      }
     });
   },
   onLoad: function (options) {
-    options.type = "buy"
-    options.id = 75
-
-    if (options.type == "buy"){
-      this.getBuyData(options);
-    }
-    
-
+    //options.id = 75
+    this.data.id = options.id
+    //this.getBuyData();
   },
   onReady: function () {
     // 页面渲染完成
   },
-  onShow: function () {
+  onShow: function (options) {
     // 页面显示
+    //console.log('onShow', this.data.id)
+    this.getBuyData(options);
   },
   onHide: function () {
     // 页面隐藏
@@ -54,7 +52,7 @@ Page({
     options["word"] = searchWord;
     this.onLoad(options)
   },
-  close:function(e){
+  close: function (e) {
     var id = e.currentTarget.dataset.id
     console.log(id)
     var goods = this.data.goods
@@ -63,31 +61,31 @@ Page({
       goods: goods,
     })
   },
-  buy:function(e){
+  buy: function (e) {
 
     let that = this;
-    if (that.data.goods.length == 0){
+    if (that.data.goods.length == 0) {
       return
     }
 
-    if (!that.data.address){
+    if (!that.data.address) {
       that.setData({
-        warning:"red",
+        warning: "red",
       })
       return
     }
 
     var ids = []
-    that.data.goods.forEach(function(item, index, array){
+    that.data.goods.forEach(function (item, index, array) {
       console.log(item.storage_id, index)
       ids.push(item.storage_id)
     })
 
     var url = api.Createorder
     var content = this.data.content
-    var param = { "ids": ids, "address_id": this.data.address.id, "content": content}
+    var param = { "ids": ids, "address_id": this.data.address.id, "content": content }
     console.log(param)
-    util.request (url, param, "POST").then(function (res) {
+    util.request(url, param, "POST").then(function (res) {
       if (res.errno === 0) {
 
         wx.requestPayment({
@@ -103,7 +101,7 @@ Page({
           },
           'fail': function (res) {
             console.log("fail", res)
-            if (res.errMsg == "requestPayment:fail cancel"){
+            if (res.errMsg == "requestPayment:fail cancel") {
               return
             }
             /*
@@ -118,7 +116,7 @@ Page({
 
   },
 
-  bindContent: function (event){
+  bindContent: function (event) {
     var content = event.detail.value;
     this.setData({
       content: content

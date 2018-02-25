@@ -16,20 +16,19 @@
             <view class='left_ara'>
               <text>{{item.title}}</text>
             </view>
-            <view class='right_ara'>
+            <!--<view class='right_ara'>
               <image class='close' mode='aspectFit' bindtap='close' data-id="{{index}}"  src='../../static/images/lipz/close.png'></image>
-            </view>
+            </view>-->
           </view>
           <view class='info'>
             <view>
               <text>{{item.style}}</text>
+              <text>{{item.size}}</text>
             </view>
           </view>
           <view class='info'>
+           
             <view class='left_ara'>
-              <text>{{item.size}}</text>
-            </view>
-            <view class='right_ara'>
               <text>￥{{item.price}}</text>
             </view>
           </view>

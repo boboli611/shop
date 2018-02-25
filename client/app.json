@@ -1,11 +1,12 @@
 {
   "pages":[
-    
-    "pages/goodsIndex/goodsIndex",
-    "pages/index/index",
-    "pages/payResult/payResult",
-    "pages/ucenter/address/address",
     "pages/shop/shop",
+    "pages/index/index",
+    "pages/goodsIndex/goodsIndex",
+    "pages/ucenter/address/address",
+    "pages/payResult/payResult",
+    "pages/shopBuy/shopBuy",
+    
     "pages/buy/buy",
     "pages/itemGoods/itemGoods", 
     "pages/goodsDetail/detail",
@@ -13,7 +14,7 @@
     "pages/search/search", 
     "pages/ucenter/addressAdd/addressAdd",
     "pages/ucenter/order/order",
-    "pages/shopBuy/shopBuy",
+    
 
     
 
@@ -53,7 +54,7 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Lipz",
     "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": "true"
+    "enablePullDownRefresh": true
   },
   "tabBar": {
     "backgroundColor": "#fafafa",

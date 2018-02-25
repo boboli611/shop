@@ -4,37 +4,45 @@ var app = getApp();
 
 Page({
   data: {
+    isBuy:0,
+    back:0,
     addressList: [],
   },
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
+   
+    this.data.isBuy = options.isBuy ? 1 : 0
+    this.data.back = options.back ? 1 : 0
     this.getAddressList();
   },
   onReady: function () {
     // 页面渲染完成
   },
-  onShow: function () {
+  onShow: function (options) {
     // 页面显示
-
+    if (this.data.back === 1){
+      wx.navigateBack({
+        delta: 3
+      })
+    }
   },
   getAddressList (){
     let that = this;
     util.request(api.AddressList).then(function (res) {
       if (res.errno === 0) {
         that.setData({
-          addressList: res.data
+          addressList: res.data,
+          isBuy: that.data.isBuy
         });
       }
     });
   },
   addressAddOrUpdate (event) {
-    console.log(event)
     wx.navigateTo({
-      url: '/pages/ucenter/addressAdd/addressAdd?id=' + event.currentTarget.dataset.addressId
+      url: '/pages/ucenter/addressAdd/addressAdd?id=' + event.currentTarget.dataset.addressId+'&isBuy='+this.data.isBuy
     })
   },
   deleteAddress(event){
-    console.log(event.target)
     let that = this;
     wx.showModal({
       title: '',

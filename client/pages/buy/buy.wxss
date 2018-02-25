@@ -44,7 +44,11 @@
 
 .goods .col .right .info{
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.goods .col .right text{
+  margin-left: 10px;
 }
 
 .goods .col .right .info .left_ara{

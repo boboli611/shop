@@ -46,7 +46,7 @@
     </navigator>
   </view>
   <view class="address" wx:else>
-    <navigator url='../ucenter/address/address'>
+    <navigator url='../ucenter/address/address?isBuy=1'>
       <image class='icon' mode='aspectFit' src='../../static/images/address.png'></image>
       <text>{{address.address}}</text>
     </navigator>

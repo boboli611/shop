@@ -92,7 +92,7 @@
           <image mode="widthFix" src='/static/images/ic_menu_shoping_nor.png'></image>
         </navigator>
       </view>
-      <view class='item white' bindtap='addChart'>
+      <view class='item white' bindtap='showChart'>
         加入购物袋
       </view>
       <view class='item black' bindtap='showBuy'>
@@ -102,7 +102,7 @@
   </view>
 
   <view class='{{show}} buttom'>
-    <view class='check black' bindtap='addBuy'>
+    <view class='check black' bindtap='{{buyAction}}'>
       立即购买
     </view>
   </view>

@@ -61,7 +61,6 @@ Page({
     util.request(url).then(function (res) {
       if (res.errno === 0) {
         goods.splice(id, 1)
-        console.log(goods)
         that.setData({
           goods: goods,
         })
@@ -81,7 +80,6 @@ Page({
       }
     })
 
-    console.log(countPrice)
     that.data.order.price = countPrice / 100
     
     that.setData({
@@ -95,7 +93,6 @@ Page({
 
     var ids = []
     that.data.goods.forEach(function (item, index, array) {
-      console.log(item.storage_id, index)
       if (item.select === "select.png"){
         ids.push(item.shop_id)
       }

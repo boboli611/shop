@@ -109,6 +109,7 @@ var login = function login(options) {
                     if (res.userInfo) {
                         Session.set(res);
                         options.success(userInfo);
+                        console.log("登录成功")
                         wx.setStorageSync("lipz_token", res.token)
                         wx.setStorageSync("userInfo", userInfo)
                         
