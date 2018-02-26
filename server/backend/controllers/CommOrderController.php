@@ -12,13 +12,12 @@ use yii\filters\VerbFilter;
 /**
  * CommOrderController implements the CRUD actions for CommOrder model.
  */
-class CommOrderController extends Controller
-{
+class CommOrderController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -33,15 +32,14 @@ class CommOrderController extends Controller
      * Lists all CommOrder models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
 
         $searchModel = new CommOrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -50,29 +48,10 @@ class CommOrderController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
-    }
-
-    /**
-     * Creates a new CommOrder model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new CommOrder();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
     }
 
     /**
@@ -81,30 +60,26 @@ class CommOrderController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+    public function actionUpdate($id) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = $this->findModel($id);
+        if (Yii::$app->request->post()) {
+            $patams = Yii::$app->request->post();
+            $data['expressage'] = $patams['CommOrder']['expressage'];
+            $data['status'] = CommOrder::status_goods_waiting_receve;
+
+            if (CommOrder::updateAll($data, ['order_id' => $id])) {
+                return $this->redirect(['view', 'id' => $id]);
+            } else {
+                return $this->render('update', [
+                            'model' => $model,
+                ]);
+            }
         } else {
             return $this->render('update', [
-                'model' => $model,
+                        'model' => $model,
             ]);
         }
-    }
-
-    /**
-     * Deletes an existing CommOrder model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**
@@ -114,12 +89,17 @@ class CommOrderController extends Controller
      * @return CommOrder the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = CommOrder::findOne($id)) !== null) {
+    protected function findModel($id) {
+        $model = CommOrder::find()->select(['comm_order.*', 'user.username', 'sum(comm_order.pay_price) as sumPayPrice']);
+        $model->groupBy("order_id");
+        $model->join('inner join', "user", "user.id = comm_order.user_id");
+        $model->where(["comm_order.order_id" => $id]);
+        $model = $model->one();
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

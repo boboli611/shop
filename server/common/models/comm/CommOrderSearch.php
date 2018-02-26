@@ -18,7 +18,7 @@ class CommOrderSearch extends CommOrder
     public function rules()
     {
         return [
-            [['id', 'user_id', 'product_id', 'price', 'pay_price', 'num', 'status'], 'integer'],
+            [['id', 'user_id', 'product_id', 'price', 'pay_price', 'num', 'status', 'refund'], 'integer'],
             [['order_id', 'address', 'expressage', 'content', 'updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -41,8 +41,11 @@ class CommOrderSearch extends CommOrder
      */
     public function search($params)
     {
-        $query = CommOrder::find();
-
+        $query = CommOrder::find()->select(['comm_order.*','user.username', 'sum(comm_order.pay_price) as sumPayPrice']);
+        $query->groupBy("order_id");
+        $query->join('inner join', "user", "user.id = comm_order.user_id");
+        //$query->join('inner join', "comm_production_storage", "comm_production_storage.id = comm_order.product_id");
+        //$query->join('inner join', "comm_product", "comm_product.id = comm_production_storage.product_id");
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,23 +58,26 @@ class CommOrderSearch extends CommOrder
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
+            
             return $dataProvider;
         }
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'product_id' => $this->product_id,
-            'price' => $this->price,
-            'pay_price' => $this->pay_price,
-            'num' => $this->num,
-            'status' => $this->status,
+            'comm_order.id' => $this->id,
+            'comm_order.user_id' => $this->user_id,
+            'comm_order.product_id' => $this->product_id,
+            'comm_order.price' => $this->price,
+            'comm_order.pay_price' => $this->pay_price,
+            'comm_order.num' => $this->num,
+            'comm_order.status' => $this->status,
+            'comm_order.refund' => $this->refund,
         ]);
+        
+        //var_dump($query);exit;
 
         $query->andFilterWhere(['like', 'order_id', $this->order_id])
             ->andFilterWhere(['like', 'address', $this->address])
