@@ -109,8 +109,14 @@ class CommOrder extends \common\models\BaseModel
         
         $page = $page > 0 ? $page - 1 :$page;
         $offset = $page * $limit;
+        
+        $model = self::find();
+        if ($type){
+            $model->where(['status' => $type]);
+        }
+        
+        return $model->andWhere(["user_id" => $userId])->groupBy("order_id")->orderBy("id desc")->offset($offset)->limit($limit)->all();
 
-        return self::find()->where(["user_id" => $userId])->andWhere(['status' => $type])->orderBy("id desc")->offset($offset)->limit($limit)->all();
     }
     
     public static function createOrderId($userId){

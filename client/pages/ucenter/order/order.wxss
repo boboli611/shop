@@ -98,6 +98,7 @@ page{
 
 .order .b .r{
     float: right;
+    margin-left: 10px;
 }
 
 .order .b .btn{
@@ -110,4 +111,14 @@ page{
     font-size: 28rpx;
     color: #fff;
     background: #000000;
+}
+
+.search_fail{
+  text-align: center;
+  font-size: 10px;
+  margin: 20px 0;
+}
+.search_fail image{
+  height: 20px;
+  width: 20px;
 }

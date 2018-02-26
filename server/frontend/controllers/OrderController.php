@@ -14,26 +14,26 @@ use common\widgets;
  * index controller
  */
 class OrderController extends Controller {
-    
-    public function actionDetail(){
-        
-         $id = Yii::$app->request->get("orderId");
-         $uid = widgets\User::getUid();
-         $info = \common\models\comm\CommOrder::find()->where(['order_id' => $id])->andWhere(['user_id' =>$uid ])->all();
-         $out = $pids = $products = [];
-         foreach ($info as $val){
-             $price += $val->price;
-             $order = $val->order_id;
-             $create_time = $val->created_at;
-             $id = $val->product_id;
-             $pids[] = $id;
-             $address_id = $val->address;
-         }
-         
-       
+
+    public function actionDetail() {
+
+        $id = Yii::$app->request->get("orderId");
+        $uid = widgets\User::getUid();
+        $info = \common\models\comm\CommOrder::find()->where(['order_id' => $id])->andWhere(['user_id' => $uid])->all();
+        $out = $pids = $products = [];
+        foreach ($info as $val) {
+            $price += $val->price;
+            $order = $val->order_id;
+            $create_time = $val->created_at;
+            $id = $val->product_id;
+            $pids[] = $id;
+            $address_id = $val->address;
+        }
+
+
         $pList = \frontend\service\Product::getByStorageid($pids);
-        foreach ($pList as $val){
-            
+        foreach ($pList as $val) {
+
             $status = $val['status'];
             $pid = $val['pid'];
             $val['num'] = 1;
@@ -42,45 +42,46 @@ class OrderController extends Controller {
             $out['goods'][$pid]['order_status_text'] = \common\models\comm\CommOrder::$payName[$status];
         }
 
-         $address = \common\models\user\UserAddress::findOne($address_id);
+        $address = \common\models\user\UserAddress::findOne($address_id);
 
-         $out['info'] = ['order_id' => $order, 'price' => $price / 100, 
-             'create_at' => $create_time, 'order_status_text' => '已下单',
-             'consignee' => $address->name, 'mobile' => $address->mobile,
-             'address' => $address->full_region . $address->address,
-             ];
-         $this->asJson(widgets\Response::sucess($out));
+        $out['info'] = ['order_id' => $order, 'price' => $price / 100,
+            'create_at' => $create_time, 'order_status_text' => '已下单',
+            'consignee' => $address->name, 'mobile' => $address->mobile,
+            'address' => $address->full_region . $address->address,
+        ];
+        $this->asJson(widgets\Response::sucess($out));
     }
-    
-    public function actionList(){
-        
+
+    public function actionList() {
+
         $page = (int) Yii::$app->request->get("p");
         $type = (int) Yii::$app->request->get("type");
-        if (!$type) {
-            $this->asJson(widgets\Response::error("参数错误"));
-            return;
-        }
-        
+
         $uid = widgets\User::getUid();
         $list = \common\models\comm\CommOrder::getByUser($uid, $type, $page);
-    
-        $out = $pids = $products = [];
+        $out = $ids = $pids = $products = [];
+        foreach ($list as $val) {
+            $id = $val['order_id'];
+            $ids[] = $id;
+        }
         
-        foreach ($list as $val){
+        $list = \common\models\comm\CommOrder::find()->where(['in', 'order_id', $ids])->all();
+ 
+        foreach ($list as $val) {
             $id = $val['product_id'];
             $pids[$id] = 1;
         }
-        
+
         $ids = array_keys($pids);
-        
+
         $pList = \frontend\service\Product::getByStorageid($ids);
-        
-        foreach ($pList as $val){
+
+        foreach ($pList as $val) {
             $id = $val['storage_id'];
             $products[$id] = $val;
         }
 
-        foreach ($list as $val){
+        foreach ($list as $val) {
             $id = $val->order_id;
             $sid = $val->product_id;
             $status = $val->status;
@@ -94,6 +95,7 @@ class OrderController extends Controller {
         }
 
         //$out['data'] =  $list;
-        $this->asJson(widgets\Response::sucess($out));
+        $this->asJson(widgets\Response::sucess(array_values($out)));
     }
+
 }

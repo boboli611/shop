@@ -1,12 +1,12 @@
 {
   "pages":[
-    "pages/shop/shop",
-    "pages/index/index",
     "pages/goodsIndex/goodsIndex",
+    "pages/index/index",
+    
     "pages/ucenter/address/address",
     "pages/payResult/payResult",
     "pages/shopBuy/shopBuy",
-    
+    "pages/shop/shop",
     "pages/buy/buy",
     "pages/itemGoods/itemGoods", 
     "pages/goodsDetail/detail",

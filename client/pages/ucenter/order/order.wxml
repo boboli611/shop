@@ -1,26 +1,39 @@
 <view class="container">
-    <view class="orders">
-        <navigator url="../orderDetail/orderDetail?order_id={{item.order_id}}" class="order" wx:for="{{orderList}}" wx:key="{{item.id}}">
-            <view class="h">
-                <view class="l">订单编号：{{item.order_id}}</view>
-                <view class="r">{{item.order_status_text}}</view>
-            </view>
-            <view class="goods" wx:for="{{item.goodsList}}" wx:key="{{gitem.id}}" wx:for-item="gitem">
-                <view class="img">
-                    <image src="{{gitem.cover}}"></image>
-                </view>
-                <view class="info">
-                    <text class="name">{{gitem.title}}</text>
-                    <text class="number">共{{gitem.num}}件商品</text>
-                </view>
-                <view class="status"></view>
-            </view>
-            <view class="b">
-                <view class="l">实付：￥{{item.pay_price}}</view>
-                <view class="r">
-                    <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder" wx:if="{{item.status == 1}}">去付款</button>
-                </view>
-            </view>
-        </navigator>
-    </view>
+  <view class='search_fail' wx:if="{{empty === 0}}">
+    <image src='/static/images/fail.png'></image>
+    <text>~~您还没有相关的订单！</text>
+  </view>
+  <view class="orders">
+
+    <navigator url="../orderDetail/orderDetail?order_id={{item.order_id}}" class="order" wx:for="{{orderList}}" wx:key="{{item.id}}">
+      <view class="h">
+        <view class="l">订单编号：{{item.order_id}}</view>
+        <view class="r">{{item.order_status_text}}</view>
+      </view>
+      <view class="goods" wx:for="{{item.goodsList}}" wx:key="{{gitem.id}}" wx:for-item="gitem">
+        <view class="img">
+          <image src="{{gitem.cover}}"></image>
+        </view>
+        <view class="info">
+          <text class="name">{{gitem.title}}</text>
+          <text class="number">共{{gitem.num}}件商品</text>
+        </view>
+        <view class="status"></view>
+      </view>
+      <view class="b">
+        <view class="l">实付：￥{{item.pay_price}}</view>
+        <view class="r" wx:if="{{item.status == 1}}">
+          <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder" >去付款</button>
+        </view>
+
+        <view class="r" wx:if="{{item.status == 2 || item.status == 3}}">
+          <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder">申请退货</button>
+        </view>
+
+        <view class="r" wx:if="{{item.status == 3}}">
+          <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder" wx:if="{{item.status == 3}}">确认收货</button>
+        </view>
+      </view>
+    </navigator>
+  </view>
 </view>

@@ -21,7 +21,7 @@ class Product {
     
     public static function getByStorageid($storageId){
         
-        if (!is_array($storageId)){
+        if (!is_array($storageId) || !$storageId){
             return [];
         }
         

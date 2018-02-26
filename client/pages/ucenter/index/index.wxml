@@ -34,6 +34,12 @@
         <text class="txt">已收货</text>
       </navigator>
     </view>
+    <view class="item">
+      <navigator url="/pages/ucenter/order/order?type=0" class="a">
+        <text class="icon all"></text>
+        <text class="txt">全部</text>
+      </navigator>
+    </view>
     <!--<view class="item">
       <navigator url="/pages/ucenter/coupon/coupon" class="a">
         <text class="icon coupon"></text>
@@ -46,7 +52,7 @@
         <text class="txt">地址管理</text>
       </navigator>
     </view>
-    <view class="item no-border">
+    <view class="item item-bottom">
       <navigator url="url" class="a">
         <text class="icon kefu"></text>
         <text class="txt">联系客服</text>
