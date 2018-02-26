@@ -10,39 +10,44 @@ use yii\grid\GridView;
 $this->title = '订单列表';
 $this->params['breadcrumbs'][] = $this->title;
 $params = Yii::$app->request->queryParams['CommOrderSearch'];
-var_dump($params['status']);
 ?>
 <div class="comm-order-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Comm Order', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'order_id',
             [
-                'attribute' => 'user_id',
+                'attribute' => 'id',
                 'format' => 'raw',
+                'filter' => false,
                 'value' =>
                 function($model) {
-                    $useModel = common\models\user\User::findOne($model->user_id);
-                    return $useModel->username . "[{$useModel->id}]";
+                    return $model->id;
                 },
             ],
             [
-                'attribute' => 'product_id',
+                'attribute' => 'order_id',
+                'options' => [
+                    'width' => '200px'
+                ],
                 'format' => 'raw',
                 'value' =>
                 function($model) {
-                    $product = \common\models\comm\CommProductionStorage::getInfoById($model->product_id);
-                    return $product['title'];
+            return $model->order_id;
+        },
+            ],
+            [
+                'attribute' => 'user_id',
+                'format' => 'raw',
+                'filter' => false,
+                'value' =>
+                function($model) {
+                    return $model->username . "[{$model->user_id}]";
                 },
             ],
             [
@@ -51,7 +56,16 @@ var_dump($params['status']);
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    return $model->pay_price / 100;
+                    return $model->sumPayPrice / 100;
+                },
+            ],
+            [
+                'attribute' => 'expressage',
+                'format' => 'raw',
+                'filter' => false,
+                'value' =>
+                function($model) {
+                    return $model->expressage;
                 },
             ],
             // 'num',
@@ -59,11 +73,19 @@ var_dump($params['status']);
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'filter' =>  Html::dropDownList("CommOrderSearch[status]", $params['status'], common\models\comm\CommOrder::$payName, ['prompt' => '全部', "class" => "form-control "]),
+                'filter' => Html::dropDownList("CommOrderSearch[status]", $params['status'], common\models\comm\CommOrder::$payName, ['prompt' => '全部', "class" => "form-control", 'style' => "width:100px;"]),
                 'value' => function($model) {
                     return common\models\comm\CommOrder::$payName[$model->status];
-                },
+                    },
             ],
+            [
+                'attribute' => 'refund',
+                'format' => 'raw',
+                'filter' => Html::dropDownList("CommOrderSearch[refund]", $params['refund'], common\models\comm\CommOrder::$refund, ['prompt' => '全部', "class" => "form-control", 'style' => "width:100px;"]),
+                'value' => function($model) {
+                    return common\models\comm\CommOrder::$refund[$model->refund];
+                    },
+            ],                
             // 'expressage',
             [
                 'attribute' => 'content',
@@ -71,14 +93,45 @@ var_dump($params['status']);
                 'filter' => false,
                 'value' =>
                 function($model) {
-              
-                    $str =  mb_substr($model->content, 0, 8);
-                    return strlen($model->content) == strlen($str) ? $str : $str."...";
+
+                    $str = mb_substr($model->content, 0, 8);
+                    return strlen($model->content) == strlen($str) ? $str : $str . "...";
                 },
             ],
-            'updated_at',
-            'created_at',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'raw',
+                'filter' => false,
+                'value' =>
+                function($model) {
+                    return $model->updated_at;
+                },
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'raw',
+                'filter' => false,
+                'value' =>
+                function($model) {
+                    return $model->updated_at;
+                },
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} ',
+                'buttons' => [],
+                'header' => '操作',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    switch ($action) {
+                        case 'view':
+                            return '/comm-order/view?id=' . $model->order_id;
+                            break;
+                        case 'update':
+                            return '/comm-order/update?id=' . $model->order_id;
+                            break;
+                    }
+                },
+            ],
         ],
     ]);
     ?>
