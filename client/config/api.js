@@ -20,7 +20,9 @@ module.exports = {
     AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
     AddressDefault: NewApiRootUrl + 'address/default',  //收货地址列表
     OrderList: NewApiRootUrl + 'order/list',  //订单列表
-
+    OrderDetail: NewApiRootUrl + 'order/detail',  //订单详情
+    OrderRefund: NewApiRootUrl + 'order/refund',  //退货
+    OrderReceve: NewApiRootUrl + 'order/receve',  //退货
 
 
 
@@ -78,7 +80,7 @@ module.exports = {
     RegionList: NewApiRootUrl + 'region/list',  //获取区域列表
 
     
-    OrderDetail: NewApiRootUrl + 'order/detail',  //订单详情
+    
     OrderCancel: NewApiRootUrl + 'order/cancel',  //取消订单
 
     FootprintList: NewApiRootUrl + 'footprint/list',  //足迹列表

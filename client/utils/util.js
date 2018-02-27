@@ -98,7 +98,6 @@ function request(url, data = {}, method = "GET") {
 
                   resolve(res);
                 } else {
-                  
                   reject(res);
                   
                 }
@@ -109,6 +108,10 @@ function request(url, data = {}, method = "GET") {
               reject(err);
             })
           } else {
+            console.log(res)
+            if (res.data.errno !== 0){
+              showNotice(res.data.msg)
+            }
             resolve(res.data);
           }
         } else {

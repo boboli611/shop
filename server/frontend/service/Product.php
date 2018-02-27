@@ -26,7 +26,7 @@ class Product {
         }
         
         $storageId = implode(',', $storageId);
-        $sql = "select b.*,b.id as pid, a.id as storage_id from comm_production_storage a "
+        $sql = "select b.*,b.id as pid, a.id as storage_id, a.price as storage_price,a.style,a.size from comm_production_storage a "
                 . " inner join comm_product b on a.product_id = b.id"
                 . " where a.id in({$storageId}) and a.status = 1 and b.status = 1";
                 

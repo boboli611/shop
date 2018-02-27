@@ -112,6 +112,7 @@ class WxController extends Controller {
             return;
         }
 
+        
         $uid = widgets\User::getUid();
         $addres = \common\models\user\UserAddress::findOne($addressId);
         if (!$addres || $addres->user_id != $uid) {
@@ -119,9 +120,14 @@ class WxController extends Controller {
             return;
         }
 
-        $addres = $addres->full_region + $addres->address;
-        $openid = \common\models\user\UserWxSession::findOne($uid);
+        $addresData['full_region'] = $addres->full_region;
+        $addresData['address'] = $addres->address;
+        $addresData['name'] = $addres->name;
+        $addresData['user_id'] = $addres->user_id;
+        $addresData['mobile'] = $addres->mobile;
+        $address = json_encode($addresData);
         
+        $openid = \common\models\user\UserWxSession::findOne($uid);       
         if (!$openid) {
             $this->asJson(widgets\Response::error("未登录"));
             return;
@@ -171,7 +177,7 @@ class WxController extends Controller {
                 $model->price = $item->price * $shop[$item->id];
                 $model->pay_price = $item->price;
                 $model->content = $content;
-                $model->address = (string)$addres;
+                $model->address = $address;
                 $model->status = \common\models\comm\CommOrder::status_waiting_pay;
                 $model->refund = \common\models\comm\CommOrder::status_refund_no;
 

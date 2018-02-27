@@ -31,7 +31,7 @@ class CommOrder extends \common\models\BaseModel {
     const status_pay_fail = 9; //支付失败
     
     const status_refund_no = 1; // '未申请',
-    const status_refund_waiting = 2; // '处理中',
+    const status_refund_waiting = 2; // '退货中',
     const status_refund_ok = 3; // '已退货',
     const status_refund_fail = 4; // '未退货',
 
@@ -43,7 +43,7 @@ class CommOrder extends \common\models\BaseModel {
     ];
     public static $refund = [
         self::status_refund_no => '未申请',
-        self::status_refund_waiting => '处理中',
+        self::status_refund_waiting => '退货中',
         self::status_refund_ok => '已退货',
         self::status_refund_fail => '不退货',
     ];
@@ -63,9 +63,10 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
-            [['user_id', 'product_id', 'price', 'pay_price', 'num', 'address'], 'integer'],
+            [['user_id', 'product_id', 'price', 'pay_price', 'num'], 'integer'],
             [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 256],
+            [['address'], 'string', 'max' => 512],
         ];
     }
 
@@ -130,6 +131,7 @@ class CommOrder extends \common\models\BaseModel {
             $model->where(['status' => $type]);
         }
         
+
         return $model->andWhere(["user_id" => $userId])->groupBy("order_id")->orderBy("id desc")->offset($offset)->limit($limit)->all();
 
     }

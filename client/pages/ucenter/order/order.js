@@ -39,6 +39,34 @@ Page({
       url: '/pages/pay/pay?order_id=' + order_id + '&price=' + price,
     })
   },
+  refundOrder(e) {
+    let that = this;
+    var order_id = e.currentTarget.dataset.orderId
+    var index = e.currentTarget.dataset.index
+    var url = api.OrderRefund + "?order_id=" + order_id
+    util.request(url).then(function (res) {
+      if (res.errno === 0) {
+        that.data.orderList[index].order_status_text = res.data.order_status_text
+        that.setData({
+          orderList: that.data.orderList,
+        });
+      }
+    });
+  },
+  receveOrder(e) {
+    let that = this;
+    var order_id = e.currentTarget.dataset.orderId
+    var index = e.currentTarget.dataset.index
+    var url = api.OrderReceve + "?order_id=" + order_id
+    util.request(url).then(function (res) {
+      if (res.errno === 0) {
+        that.data.orderList[index].order_status_text = res.data.order_status_text
+        that.setData({
+          orderList: that.data.orderList,
+        });
+      }
+    });
+  },
   onReady:function(){
     // 页面渲染完成
   },

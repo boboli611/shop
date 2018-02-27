@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\widgets;
+use common\models\comm\CommOrder;
 
 /**
  * index controller
@@ -27,7 +28,7 @@ class OrderController extends Controller {
             $create_time = $val->created_at;
             $id = $val->product_id;
             $pids[] = $id;
-            $address_id = $val->address;
+            $address = $val->address;
         }
 
 
@@ -38,16 +39,16 @@ class OrderController extends Controller {
             $pid = $val['pid'];
             $val['num'] = 1;
             $out['goods'][$pid] = $val;
-            $out['goods'][$pid]['pay_price'] = $val['pay_price'] / 100;
+            $out['goods'][$pid]['pay_price'] = $val['storage_price'] / 100;
             $out['goods'][$pid]['order_status_text'] = \common\models\comm\CommOrder::$payName[$status];
         }
 
-        $address = \common\models\user\UserAddress::findOne($address_id);
+        $address = json_decode($address);
 
         $out['info'] = ['order_id' => $order, 'price' => $price / 100,
-            'create_at' => $create_time, 'order_status_text' => '已下单',
+            'created_at' => $create_time, 'order_status_text' => '已下单',
             'consignee' => $address->name, 'mobile' => $address->mobile,
-            'address' => $address->full_region . $address->address,
+            'address' => $address->full_region .' '. $address->address,
         ];
         $this->asJson(widgets\Response::sucess($out));
     }
@@ -65,8 +66,7 @@ class OrderController extends Controller {
             $ids[] = $id;
         }
         
-        $list = \common\models\comm\CommOrder::find()->where(['in', 'order_id', $ids])->all();
- 
+        $list = \common\models\comm\CommOrder::find()->where(['in', 'order_id', $ids])->orderBy("id desc")->all();
         foreach ($list as $val) {
             $id = $val['product_id'];
             $pids[$id] = 1;
@@ -90,7 +90,7 @@ class OrderController extends Controller {
             $out[$id]['pay_price'] = $val->pay_price / 100;
             $out[$id]['order_id'] = $id;
             $out[$id]['status'] = $status;
-            $out[$id]['order_status_text'] = \common\models\comm\CommOrder::$payName[$status];
+            $out[$id]['order_status_text'] = $val->refund == CommOrder::status_refund_no ? CommOrder::$payName[$status] : CommOrder::$refund[$val->refund];
             $out[$id]['goodsList'][] = $product;
         }
 
@@ -102,14 +102,13 @@ class OrderController extends Controller {
     public function actionRefund(){
         
         $orderId = Yii::$app->request->get("order_id");
-        $orderId = '20180219151902206975662';
         if (!$orderId){
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
         
-        $uid = 7;
-        //$uid = widgets\User::getUid();
+        //$uid = 7;
+        $uid = widgets\User::getUid();
         
         $order = \common\models\comm\CommOrder::getByOrderId($orderId);
         if ($order->user_id != $uid){
@@ -123,16 +122,19 @@ class OrderController extends Controller {
         }
         
         if ($order->refund != \common\models\comm\CommOrder::status_refund_no){
-            $this->asJson(widgets\Response::error("已申请退换"));
+            $this->asJson(widgets\Response::error("已申请退货"));
             return;
         }
         
         $order->refund = \common\models\comm\CommOrder::status_refund_waiting;
-        if (!$order->save()){
+        $ret = \common\models\comm\CommOrder::updateAll(['refund' => \common\models\comm\CommOrder::status_refund_waiting], "order_id='{$orderId}'");
+        if (!$ret){
             $this->asJson(widgets\Response::error("申请失败"));
             return;
         }
         
+        $order = $order->toArray();
+        $order['order_status_text'] = \common\models\comm\CommOrder::$refund[\common\models\comm\CommOrder::status_refund_waiting];
         $this->asJson(widgets\Response::sucess($order));
     }
     
@@ -140,14 +142,12 @@ class OrderController extends Controller {
     public function actionReceve(){
         
         $orderId = Yii::$app->request->get("order_id");
-        $orderId = '20180219151902206975662';
         if (!$orderId){
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
         
-        $uid = 7;
-        //$uid = widgets\User::getUid();
+        $uid = widgets\User::getUid();
         
         $order = \common\models\comm\CommOrder::getByOrderId($orderId);
         if ($order->user_id != $uid){
@@ -166,16 +166,18 @@ class OrderController extends Controller {
         }
         
         if ($order->refund != \common\models\comm\CommOrder::status_refund_no){
-            $this->asJson(widgets\Response::error("已申请退换"));
+            $this->asJson(widgets\Response::error("已申请退货"));
             return;
         }
         
-        $order->status = \common\models\comm\CommOrder::status_goods_receve;
-        if (!$order->save()){
+        $ret = CommOrder::updateAll(['status' => CommOrder::status_goods_receve], "order_id='{$orderId}'");
+        if (!$ret){
             $this->asJson(widgets\Response::error("确认失败"));
             return;
         }
         
+        $order = $order->toArray();
+        $order['order_status_text'] = CommOrder::$payName[CommOrder::status_goods_receve];
         $this->asJson(widgets\Response::sucess($order));
     }
 }

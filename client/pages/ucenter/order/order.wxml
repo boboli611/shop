@@ -1,4 +1,5 @@
 <view class="container">
+  <web-view src="https://m.kuaidi100.com/result.jsp?nu=3351166582908"></web-view>
   <view class='search_fail' wx:if="{{empty === 0}}">
     <image src='/static/images/fail.png'></image>
     <text>~~您还没有相关的订单！</text>
@@ -10,13 +11,14 @@
         <view class="l">订单编号：{{item.order_id}}</view>
         <view class="r">{{item.order_status_text}}</view>
       </view>
-      <view class="goods" wx:for="{{item.goodsList}}" wx:key="{{gitem.id}}" wx:for-item="gitem">
+      <view class="goods" wx:for="{{item.goodsList}}" wx:key="{{index}}" wx:for-item="gitem">
         <view class="img">
           <image src="{{gitem.cover}}"></image>
         </view>
         <view class="info">
           <text class="name">{{gitem.title}}</text>
-          <text class="number">共{{gitem.num}}件商品</text>
+          <text class="name">{{gitem.style}} {{gitem.size}}</text>
+          <text class="name">共{{gitem.num}}件商品</text>
         </view>
         <view class="status"></view>
       </view>
@@ -27,13 +29,15 @@
         </view>
 
         <view class="r" wx:if="{{item.status == 2 || item.status == 3}}">
-          <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder">申请退货</button>
+          <button class="btn" data-order-id="{{item.order_id}}" data-index="{{index}}" catchtap="refundOrder">申请退货</button>
         </view>
 
         <view class="r" wx:if="{{item.status == 3}}">
-          <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder" wx:if="{{item.status == 3}}">确认收货</button>
+          <button class="btn" data-order-id="{{item.order_id}}" data-index="{{index}}" catchtap="receveOrder" wx:if="{{item.status == 3}}">确认收货</button>
         </view>
       </view>
     </navigator>
   </view>
+
+  
 </view>
