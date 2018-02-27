@@ -98,4 +98,84 @@ class OrderController extends Controller {
         $this->asJson(widgets\Response::sucess(array_values($out)));
     }
 
+    //退货
+    public function actionRefund(){
+        
+        $orderId = Yii::$app->request->get("order_id");
+        $orderId = '20180219151902206975662';
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("参数错误"));
+            return;
+        }
+        
+        $uid = 7;
+        //$uid = widgets\User::getUid();
+        
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不能退换别人的货物"));
+            return;
+        }
+        
+        if ($order->status == \common\models\comm\CommOrder::status_goods_receve){
+            $this->asJson(widgets\Response::error("已签收"));
+            return;
+        }
+        
+        if ($order->refund != \common\models\comm\CommOrder::status_refund_no){
+            $this->asJson(widgets\Response::error("已申请退换"));
+            return;
+        }
+        
+        $order->refund = \common\models\comm\CommOrder::status_refund_waiting;
+        if (!$order->save()){
+            $this->asJson(widgets\Response::error("申请失败"));
+            return;
+        }
+        
+        $this->asJson(widgets\Response::sucess($order));
+    }
+    
+    //确认收货
+    public function actionReceve(){
+        
+        $orderId = Yii::$app->request->get("order_id");
+        $orderId = '20180219151902206975662';
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("参数错误"));
+            return;
+        }
+        
+        $uid = 7;
+        //$uid = widgets\User::getUid();
+        
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不能退换别人的货物"));
+            return;
+        }
+        
+         if ($order->status < \common\models\comm\CommOrder::status_goods_waiting_receve){
+            $this->asJson(widgets\Response::error("未发货"));
+            return;
+        }
+        
+        if ($order->status == \common\models\comm\CommOrder::status_goods_receve){
+            $this->asJson(widgets\Response::error("已签收"));
+            return;
+        }
+        
+        if ($order->refund != \common\models\comm\CommOrder::status_refund_no){
+            $this->asJson(widgets\Response::error("已申请退换"));
+            return;
+        }
+        
+        $order->status = \common\models\comm\CommOrder::status_goods_receve;
+        if (!$order->save()){
+            $this->asJson(widgets\Response::error("确认失败"));
+            return;
+        }
+        
+        $this->asJson(widgets\Response::sucess($order));
+    }
 }

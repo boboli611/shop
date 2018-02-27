@@ -173,6 +173,7 @@ class WxController extends Controller {
                 $model->content = $content;
                 $model->address = (string)$addres;
                 $model->status = \common\models\comm\CommOrder::status_waiting_pay;
+                $model->refund = \common\models\comm\CommOrder::status_refund_no;
 
                 $ret = $model->save();
                 $countPrice += $model->price;
@@ -203,7 +204,7 @@ class WxController extends Controller {
     
     
     
-    //创建订单
+    
     public function actionOrder() {
 
         $order_id = Yii::$app->request->get("order_id");
