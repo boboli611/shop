@@ -66,6 +66,7 @@ Page({
   search: function (e) {
     var word = this.data.word
     //search.search(word)
+    this.data.page = 1;
     this.getIndexData(this.data);
   },
   searchWord: function (e) {

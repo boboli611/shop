@@ -13,8 +13,10 @@ class Product {
        $orderField = isset(self::$orderField[$orderField]) ? self::$orderField[$orderField] : self::$orderField[2];
        $orderType = isset(self::$order[$orderType]) ? self::$order[$orderType] : self::$order[2];
        $order = "{$orderField} {$orderType}, id desc";
+        //var_dump($page);
        $page = (int) $page ? (int) $page - 1 : 0;
        
+       //var_dump($page);exit;
        $out = \common\models\comm\CommProduct::getList($condiction, $key, $order, $page, $limit);
        return $out;
     }

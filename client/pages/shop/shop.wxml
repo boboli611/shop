@@ -11,12 +11,12 @@
         <view class='select'>
           <image bindtap='select' data-id="{{index}}" mode='aspectFit' src='/static/images/{{item.select}}'></image>
         </view>
-        <navigator url="../goodsDetail/detail?id={{iitem.id}}">
+        <navigator url="../goodsDetail/detail?id={{item.id}}">
         <view class='left'>
           <image mode='aspectFit' src='{{item.cover}}'></image>
         </view>
         </navigator>
-        <navigator url="../goodsDetail/detail?id={{iitem.id}}">
+        <navigator url="../goodsDetail/detail?id={{item.id}}">
         <view class='right'>
           <view class='info'>
             <view class='left_ara'>

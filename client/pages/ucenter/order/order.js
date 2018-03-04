@@ -35,8 +35,8 @@ Page({
   payOrder(e){
     var order_id = e.currentTarget.dataset.orderId
     var price = e.currentTarget.dataset.price
-    wx.redirectTo({
-      url: '/pages/pay/pay?order_id=' + order_id + '&price=' + price,
+    wx.navigateTo({
+      url: '/pages/ucenter/orderDetail/orderDetail?order_id=' + order_id + '&price=' + price,
     })
   },
   refundOrder(e) {

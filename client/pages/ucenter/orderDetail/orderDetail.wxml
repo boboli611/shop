@@ -11,6 +11,10 @@
         </view>
     </view>
 
+  <view class='price' wx:if="{{orderInfo.status === 1}}">
+    <button  bindtap='startPay' class='black'>付款</button>
+  </view>
+
     <view class="order-bottom">
         <view class="h">
             <view class="label">收货地址</view>

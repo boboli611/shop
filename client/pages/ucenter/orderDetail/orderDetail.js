@@ -11,14 +11,14 @@ Page({
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
     this.setData({
-      order_id: options.order_id
+      orderId: options.order_id
     });
     this.getOrderDetail();
   },
   getOrderDetail() {
     let that = this;
     util.request(api.OrderDetail, {
-      orderId: that.data.order_id
+      orderId: that.data.orderId
     }).then(function (res) {
       if (res.errno === 0) {
         console.log(res.data);
@@ -66,6 +66,30 @@ Page({
       }
     });
 
+  },
+  //向服务请求支付参数
+  startPay() {
+    let that = this;
+    console.log(that.data.orderId)
+    util.request(api.GetOrder, { order_id: that.data.orderId }).then(function (res) {
+      if (res.errno === 0) {
+        let payParam = res.data;
+        wx.requestPayment({
+          'timeStamp': payParam.timeStamp,
+          'nonceStr': payParam.timeStamp,
+          'package': payParam.nonceStr,
+          'signType': 'MD5',
+          'paySign': payParam.sign,
+          'success': function (res) {
+            wx.redirectTo({
+              url: '/pages/payResult/payResult?status=true',
+            })
+          },
+          'fail': function (res) {
+          }
+        })
+      }
+    });
   },
   onReady: function () {
     // 页面渲染完成

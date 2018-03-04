@@ -1,5 +1,5 @@
 <view class="container">
-  <web-view src="https://m.kuaidi100.com/result.jsp?nu=3351166582908"></web-view>
+  <!--<web-view src="https://m.kuaidi100.com/result.jsp?nu=3351166582908"></web-view>-->
   <view class='search_fail' wx:if="{{empty === 0}}">
     <image src='/static/images/fail.png'></image>
     <text>~~您还没有相关的订单！</text>

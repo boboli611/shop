@@ -29,24 +29,23 @@ class OrderController extends Controller {
             $id = $val->product_id;
             $pids[] = $id;
             $address = $val->address;
+            $status = $val->status;
         }
-
-
+     
         $pList = \frontend\service\Product::getByStorageid($pids);
         foreach ($pList as $val) {
 
-            $status = $val['status'];
-            $pid = $val['pid'];
+            $id = $val['storage_id'];
             $val['num'] = 1;
-            $out['goods'][$pid] = $val;
-            $out['goods'][$pid]['pay_price'] = $val['storage_price'] / 100;
-            $out['goods'][$pid]['order_status_text'] = \common\models\comm\CommOrder::$payName[$status];
+            $out['goods'][$id] = $val;
+            $out['goods'][$id]['pay_price'] = $val['storage_price'] / 100;
         }
 
         $address = json_decode($address);
 
         $out['info'] = ['order_id' => $order, 'price' => $price / 100,
-            'created_at' => $create_time, 'order_status_text' => '已下单',
+            'status'=> (int)$status,
+            'created_at' => $create_time, 'order_status_text' =>  \common\models\comm\CommOrder::$payName[$status],
             'consignee' => $address->name, 'mobile' => $address->mobile,
             'address' => $address->full_region .' '. $address->address,
         ];

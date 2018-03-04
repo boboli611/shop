@@ -12,13 +12,12 @@ use yii\filters\VerbFilter;
 /**
  * ProductController implements the CRUD actions for CommProduct model.
  */
-class ProductController extends Controller
-{
+class ProductController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -33,16 +32,15 @@ class ProductController extends Controller
      * Lists all CommProduct models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
 
-        
+
         $searchModel = new CommProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -51,10 +49,9 @@ class ProductController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -63,66 +60,74 @@ class ProductController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-       
+    public function actionCreate() {
+
         $model = new CommProduct();
         $modelStorage = new \common\models\comm\CommProductionStorage();
         //var_dump(Yii::$app->request->post());exit;
         $status = false;
-        
-        if (!Yii::$app->request->post()){
+
+        if (!Yii::$app->request->post()) {
             return $this->render('create', [
-                'model' => $model,
-                'modelStorage' => $modelStorage,
-                
+                        'model' => $model,
+                        'modelStorage' => $modelStorage,
             ]);
             return;
         }
-        
+
         try {
-            
+
             $data = Yii::$app->request->post();
             $transaction = CommProduct::getDb()->beginTransaction();
-            $model->load(Yii::$app->request->post()) ;
+            $model->load(Yii::$app->request->post());
+
+            $status = 0;
+            foreach ($data['storage_status'] as $k => $val) {
+                if (!$val) {
+                    continue;
+                }
+
+                $status = $val;
+                break;
+            }
+
+            $model->status = $status;
             $result = $model->save();
-            if (!$result){
-                throw new \yii\db\Exception("error save");
+            if (!$result) {
+                throw new \yii\db\Exception("save error");
             }
 
             $storageData = [];
-            foreach ($data['storage_style'] as $k => $val){
-                
-                if (!$data['storage_style'][$k]){
+            foreach ($data['storage_style'] as $k => $val) {
+
+                if (!$data['storage_style'][$k]) {
                     continue;
                 }
-                
+
                 $modelStorage = new \common\models\comm\CommProductionStorage();
                 $storageData["CommProductionStorage"]['style'] = $data['storage_style'][$k];
                 $storageData["CommProductionStorage"]['size'] = $data['storage_size'][$k];
                 $storageData["CommProductionStorage"]['num'] = $data['storage_num'][$k];
                 $storageData["CommProductionStorage"]['price'] = $data['storage_price'][$k];
                 $storageData["CommProductionStorage"]['product_id'] = $model->getPrimaryKey();
-                 $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
-                
+                $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
+
                 $modelStorage->load($storageData);
                 $result = $modelStorage->save();
-                if (!$result){
-                    throw new \yii\db\Exception("error:".$modelStorage->getErrors());
+                if (!$result) {
+                    var_dump($modelStorage->getErrors());
+                    throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
                 //var_dump($storageData, $modelStorage->getPrimaryKey());exit;
             }
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());exit;
             return $this->render('create', [
-                'model' => $model,
-                'modelStorage' => $modelStorage,
-                
+                        'model' => $model,
+                        'modelStorage' => $modelStorage,
             ]);
         }
-        
     }
 
     /**
@@ -131,39 +136,49 @@ class ProductController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
         $modelStorage = new \common\models\comm\CommProductionStorage();
         $modelStorageList = $modelStorage->getAllBPid($id);
-      
-        if (!Yii::$app->request->post()){
+
+        if (!Yii::$app->request->post()) {
             return $this->render('update', [
-                'model' => $model,
-                'modelStorage' => $modelStorageList,
+                        'model' => $model,
+                        'modelStorage' => $modelStorageList,
             ]);
             return;
         }
-        
+
         try {
-            
+
             $data = Yii::$app->request->post();
             $transaction = CommProduct::getDb()->beginTransaction();
             $data["CommProduction"]['price'] = $data['storage_price'][0];
-            
-            $model->load($data) ;
+
+            $model->load($data);
+            $status = 0;
+            foreach ($data['storage_status'] as $k => $val) {
+                if (!$val) {
+                    continue;
+                }
+
+                $status = $val;
+                break;
+            }
+
+            $model->status = $status;
             $result = $model->save();
-            if (!$result){
+            if (!$result) {
                 throw new \yii\db\Exception("错误11");
             }
 
             $storageData = [];
-            foreach ($data['storage_style'] as $k => $val){
-                
-                if (!$data['storage_style'][$k]){
+            foreach ($data['storage_style'] as $k => $val) {
+
+                if (!$data['storage_style'][$k]) {
                     continue;
                 }
-                
+
                 $storageData["CommProductionStorage"]['style'] = $data['storage_style'][$k];
                 $storageData["CommProductionStorage"]['size'] = $data['storage_size'][$k];
                 $storageData["CommProductionStorage"]['num'] = $data['storage_num'][$k];
@@ -175,22 +190,20 @@ class ProductController extends Controller
                 $modelStorage = \common\models\comm\CommProductionStorage::findOne($data['storage_id'][$k]);
                 $modelStorage->load($storageData);
                 $result = $modelStorage->save();
-  
-                if (!$result){
-                    throw new \yii\db\Exception("error:".$modelStorage->getErrors());
+
+                if (!$result) {
+                    throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
             }
-            
+
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
             return $this->render('create', [
-                'model' => $model,
-                'modelStorage' => $modelStorageList,
-                
+                        'model' => $model,
+                        'modelStorage' => $modelStorageList,
             ]);
         }
-        
     }
 
     /**
@@ -199,8 +212,7 @@ class ProductController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -213,12 +225,12 @@ class ProductController extends Controller
      * @return CommProduct the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = CommProduct::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

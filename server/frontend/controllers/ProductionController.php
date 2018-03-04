@@ -113,21 +113,19 @@ class ProductionController extends Controller {
 
         $searchStatus = true;
         $item = \common\models\comm\CommProductItem::getByTitle($title);
-        if (!$item){
-            $item = \common\models\comm\CommProductItem::getByTitle("");
-            $title = "";
-            $searchStatus = false;
-        }
         $condition = [];
         if ($item) {
             $title = '';
             $condition['item_id'] = $item->id;
         }
 
-        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page, 12);
-        $products = $products ? $products : [];
+        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page, 10);
+        if (!$products){
+            $searchStatus = false;
+            $products = \frontend\service\Product::search([], "", $orderField, $order, $page, 10);
+        }
+        //$products = $products ? $products : [];
         $out['list'] = [];
-
 
         $i = 0;
         $list   = [];

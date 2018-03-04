@@ -277,3 +277,19 @@ page{
     width: 140rpx;
     color: #b4282d;
 }
+
+
+.price {
+  background-color: #FFFFFF;
+  display: block;
+  margin: 20rpx 0 0 0;
+  width: 320px;
+  /*position: fixed;*/
+}
+
+.price button{
+  border-radius: 0px;
+  color: #FFFFFF;
+  background-color: #000000;
+  width: 100%;
+}
