@@ -88,6 +88,7 @@ Page({
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
     if (options.id) {
+      console.log(options)
       this.setData({
         addressId: options.id,
         isBuy: options.isBuy
@@ -234,9 +235,9 @@ Page({
       status: address.status ? 1 : 0,
     }, 'POST').then(function (res) {
       if (res.errno === 0) {
-        if (that.data.isBuy === 0){
-          wx.redirectTo({
-            url: '/pages/ucenter/address/address',
+        if (that.data.isBuy === "0"){
+          wx.navigateBack({
+            delta: 1
           })
         }else{
           wx.navigateTo({

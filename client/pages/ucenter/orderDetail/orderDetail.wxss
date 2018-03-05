@@ -283,7 +283,7 @@ page{
   background-color: #FFFFFF;
   display: block;
   margin: 20rpx 0 0 0;
-  width: 320px;
+  width: 640rpx;
   /*position: fixed;*/
 }
 

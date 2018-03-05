@@ -1,13 +1,13 @@
 .items{
-  margin-top: 10px;
+  margin-top: 20rpx;
 }
 .items image {
   display: block;
 }
 .items .txt{
   color: #999;
-  font-size: 14px;
+  font-size: 28rpx;
   text-align: center;
-  margin-top: 5px;
+  margin-top: 10rpx;
 }
 

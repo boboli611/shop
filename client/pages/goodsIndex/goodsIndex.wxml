@@ -10,66 +10,22 @@
     </navigator>
   </view>-->
 
-
-
-  <view class='goods' wx:for="{{goods}}" wx:for-item="item" wx:key="index">
-    <view class='one' wx:if="{{item.length == 1}}">
-      <view wx:for="{{item}}" wx:for-item="iitem" wx:key="index2">
+  <view class='goods'>
+    <view class="{{style[item.type]}}"  wx:for="{{goods}}" wx:for-item="item" wx:key="index">
         <view>
-          <navigator url="../goodsDetail/detail?id={{iitem.id}}">
-            <image mode="widthFix" src='{{iitem.cover}}?x-oss-process=image/resize,w_335'></image>
+          <navigator url="../goodsDetail/detail?id={{item.id}}">
+            <image mode="widthFix" src='{{item.cover}}?x-oss-process=image/resize,w_335'></image>
           </navigator>
         </view>
         <view class='text'>
-          <text>{{iitem.tag}}</text>
+          <text>{{item.tag}}</text>
         </view>
         <view class='text'>
-          <text>{{iitem.title}}</text>
+          <text>{{item.title}}</text>
         </view>
         <view class='text'>
-          <text>￥{{iitem.price}}</text>
+          <text>￥{{item.price}}</text>
         </view>
-      </view>
-    </view>
-
-
-    <view class='two' wx:elif="{{item.length == 2}}">
-
-      <view wx:for="{{item}}" wx:for-item="product" wx:key="index2">
-        <view class='product'>
-          <navigator url="../goodsDetail/detail?id={{product.id}}">
-            <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_335'></image>
-          </navigator>
-        </view>
-        <view class='text'>
-          <text>{{product.tag}}</text>
-        </view>
-        <view class='text'>
-          <text>{{product.title}}</text>
-        </view>
-        <view class='text'>
-          <text>￥{{product.price}}</text>
-        </view>
-      </view>
-
-
-    </view>
-
-    <view class='three' wx:elif="{{item.length == 3}}">
-      <view wx:for="{{item}}" wx:for-item="product" wx:key="index">
-        <view>
-          <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_100'></image>
-        </view>
-        <view class='text'>
-          <text>{{product.tag}}</text>
-        </view>
-        <view class='text'>
-          <text>{{product.title}}</text>
-        </view>
-        <view class='text'>
-          <text>￥{{product.price}}</text>
-        </view>
-      </view>
     </view>
   </view>
 

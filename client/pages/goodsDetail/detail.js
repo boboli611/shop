@@ -24,7 +24,6 @@ Page({
 
   getData: function (options) {
     let that = this;
-    options.id=46
     var url = api.GoodsDetail + "?id=" + options.id
     util.request(url).then(function (res) {
       if (res.errno === 0) {

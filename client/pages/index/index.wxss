@@ -2,7 +2,7 @@
 @import "../public/search/search.wxss";
 @import "../public/menu/menu.wxss";
 .banner{
-  margin-top: 10px;
+  margin-top: 20rpx;
 }
 
 .banner image {
@@ -10,16 +10,16 @@
 }
 .banner .txt{
   color: #999;
-  font-size: 12px;
+  font-size: 24rpx;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 40rpx;
 }
 
 .items{
   display: block;
-  margin-top: 20px;
+  margin-top: 40rpx;
 }
 .items .txt{
-  margin-bottom: 5px;
+  margin-bottom: 10rpx;
   font-weight: 800;
 }

@@ -4,39 +4,30 @@
   <import src="../public/search/search.wxml" />
   <template is="search" data="{{word}}" />
 
- <!--<view class='banner'>
-    <navigator url="{{item.link}}">
-      <image mode='widthFix' src="https://img.alicdn.com/imgextra/i4/3302985722/TB2a1k6XYdvt1JjSZFuXXXG0FXa_!!3302985722.jpg" background-size="cover"></image>
-    </navigator>
-  </view>-->
-
   <view class='search_fail' wx:if="{{!search}}">
-  <image src='/static/images/fail.png'></image>
-  <text>~~亲，对不起！暂时没有找到你要的商品。</text>
+    <image src='/static/images/fail.png'></image>
+    <text>~~亲，对不起！暂时没有找到你要的商品。</text>
   </view>
 
   <view class='recommend' wx:if="{{!search}}">
-  <text>推荐商品</text>
+    <text>推荐商品</text>
   </view>
 
-  <view class='goods' wx:for="{{goods}}" wx:for-item="item" wx:key="index2">
-
-    <view class='three'>
-      <view wx:for="{{item}}" wx:for-item="product" wx:key="index">
-        <view>
-         <navigator url="../goodsDetail/detail?id={{product.id}}">
-          <image mode="widthFix" src='{{product.cover}}?x-oss-process=image/resize,w_100'></image>
-          </navigator>
-        </view>
-        <view class='text'>
-          <text>{{product.tag}}</text>
-        </view>
-        <view class='text'>
-          <text>{{product.title}}</text>
-        </view>
-        <view class='text'>
-          <text>￥{{product.price}}</text>
-        </view>
+  <view class='goods'>
+    <view class="three" wx:for="{{goods}}" wx:for-item="item" wx:key="index">
+      <view>
+        <navigator url="../goodsDetail/detail?id={{item.id}}">
+          <image mode="widthFix" src='{{item.cover}}?x-oss-process=image/resize,w_120'></image>
+        </navigator>
+      </view>
+      <view class='text'>
+        <text>{{item.tag}}</text>
+      </view>
+      <view class='text'>
+        <text>{{item.title}}</text>
+      </view>
+      <view class='text'>
+        <text>￥{{item.price}}</text>
       </view>
     </view>
   </view>

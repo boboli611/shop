@@ -7,7 +7,7 @@
 .search .col {
   display: flex;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
-  font-size: 17px;
+  font-size: 34rpx;
 }
 
 .search input{
@@ -30,24 +30,24 @@
 .goods {
   display: block;
   margin: 0px;
-  width: 320px;
-  margin-top:50px; 
+  width: 640rpx;
+  margin-top:100rpx; 
 }
 
 .goods .text{
   text-align: center;
-  font-size: 12px;
+  font-size: 24rpx;
   font-weight: 700;
 }
 
 .goods .two {
   display: flex;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
-  font-size: 17px;
-  margin-top: 40px;
+  font-size: 34rpx;
+  margin-top: 80rpx;
 }
 
 .goods .two image{
-  width: 150px;
+  width: 300rpx;
 }
 

@@ -38,61 +38,10 @@ class ProductionController extends Controller {
         $order = (int) Yii::$app->request->post("order");
         $lastId = (int) Yii::$app->request->post("last_id");
 
-        
-        $item = \common\models\comm\CommProductItem::getByTitle("");
-        $condition = [];
-        if ($item) {
-            $condition['item_id'] = $item->id;
-        }
+        $products = \frontend\service\Product::search([], "", $orderField, $order, $page);
+        $products = $products ? $products : [];       
 
-        $products = \frontend\service\Product::search($condition, "", $orderField, $order, $page);
-        $products = $products ? $products : [];
-        $out['list'] = [];
-
-
-        $id = 0;
-        $list = $types = $useList = [];
-        $items = $products;
-        foreach ($products as $k => $val) {
-            $item = $val->toarray();
-            $types[$val->type][] = $item;
-        }
-
-        foreach ($products as $k => $val) {
-            
-            $itemType = 0;
-            
-            if ($useList[$val->id]){
-                continue;
-            }
-            
-            if (!isset($types[$val->type])) {
-                continue;
-            }
-            
-            if (count($types[$val->type]) < $this->type_num[$val->type]){
-                    $itemType = count($types[$val->type]);
-            }else{
-                $itemType = $val->type;
-            }
-            
-            for ($i = count($list[$id]); $i < $this->type_num[$itemType]; $i++) {
-
-                $item = @array_shift($types[$val->type]);
-                $item && $item['type'] = $itemType;
-                $item && $list[$id][] = $item;
-                $item && $useList[$item['id']] = 1;
-               
-            }
-
-            if (empty($types[$val->type])) {
-                unset($types[$val->type]);
-            }
-
-            $id++;
-        }
-
-        $out['list'] = $list;
+        $out['list'] = $products;
         return $this->asJson(widgets\Response::sucess($out));
     }
     
@@ -124,22 +73,9 @@ class ProductionController extends Controller {
             $searchStatus = false;
             $products = \frontend\service\Product::search([], "", $orderField, $order, $page, 10);
         }
-        //$products = $products ? $products : [];
-        $out['list'] = [];
+      
 
-        $i = 0;
-        $list   = [];
-        
-        foreach ($products as $k => $val) {
-            $item = $val->toarray();
-            $item['type'] = 3;
-            $list[$i][] = $item;
-            if (count($list[$i]) == 3){
-                $i++;
-            }
-        }
-
-        $out['list'] = $list;
+        $out['list'] = $products;
         $out['search'] = $searchStatus;
         return $this->asJson(widgets\Response::sucess($out));
     }

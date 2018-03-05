@@ -7,6 +7,7 @@ const search = require('../public/search/search.js');
 const app = getApp()
 Page({
   data: {
+    style: ["", "one", "two", "three"],
     goods: [],
     page: 1,
   },
@@ -32,6 +33,7 @@ Page({
 
       that.setData({
         goods: that.data.goods,
+        style: that.data.style,
       });
     });
   },

@@ -1,15 +1,15 @@
 
 .line{
-  height: 1px;
-  width: 330px;
+  height: 2rpx;
+  width: 660rpx;
   background: #e8e8e8;
-  margin: 10px 0px;
+  margin: 20rpx 0px;
   justify-content:flex-end;
 }
 
 .goods{
-  width: 320px;
-  font-size: 12px;
+  width: 640rpx;
+  font-size: 24rpx;
   
 }
 
@@ -19,25 +19,25 @@
 }
 
 .goods .col .close{
-  width: 10px;
-  height: 10px;
+  width: 20rpx;
+  height: 20rpx;
 }
 
 .goods image{
-  width: 75px;
-  height: 75px;
+  width: 150rpx;
+  height: 150rpx;
 }
 
 .goods .col .left{
-  width: 75px;
-  height: 75px;
-  margin-left: 5px;
+  width: 150rpx;
+  height: 150rpx;
+  margin-left: 10rpx;
 }
 
 .goods .col .right{
   display: flex;
-  margin-left: 5px;
-  width: 240px;
+  margin-left: 10rpx;
+  width: 280rpx;
   flex-direction: column;
   justify-content:space-around;
 }
@@ -48,61 +48,61 @@
 }
 
 .goods .col .right .info .left_ara{
-  width: 200px;
+  width: 400rpx;
 }
 
 .goods .col .right .info .right_ara{
 }
 
 .good-line{
-  margin:10px 0 10px 80px;
-  height: 1px;
+  margin:20rpx 0 20rpx 160rpx;
+  height: 2rpx;
   display:flex;
   Flex-direction:row-reverse;
   background-color: #e8e8e8;
-  width: 240px;
+  width: 480rpx;
 }
 
 .price {
   background-color: #FFFFFF;
   display: block;
-  margin: 20px 0 0 0;
-  width: 320px;
+  margin: 40rpx 0 0 0;
+  width: 640rpx;
   bottom: 0;
   /*position: fixed;*/
 }
 
 .price button{
-  font-size: 12px;
+  font-size: 24rpx;
   border-radius: 0px;
   color: #FFFFFF;
   background-color: #000000;
-  width: 320px;
+  width: 640rpx;
 }
 
 .buy{
-  margin-top: 20px;
+  margin-top: 40rpx;
   background: #f3f3f3;
-  width: 320px;
-  font-size: 12px;
+  width: 640rpx;
+  font-size: 24rpx;
 }
 
 .buy .list{
-  margin: 10px;
-  width: 300px;
+  margin: 20rpx;
+  width: 600rpx;
 
 }
 
 .buy .list .buy-line{
-  margin: 5px 0;
+  margin: 10rpx 0;
   display: flex;
   flex-direction: row;
   justify-content:space-between;
 }
 
 .buy .count{
-  margin: 20px 10px;
-  width: 300px;
+  margin: 40rpx 20rpx;
+  width: 600rpx;
   font-weight: 700;
   display: flex;
   flex-direction: row;
@@ -110,25 +110,25 @@
 }
 
 .message{
-  width: 300px;
-  font-size: 10px;
-  margin: 15px 0 15px 0; 
+  width: 600rpx;
+  font-size: 20rpx;
+  margin: 30rpx 0 30rpx 0; 
 }
 
 .message textarea{
-  height:50px;
+  height:100rpx;
 }
 
 .address{
-  width: 300px;
-  font-size: 15px;
-  margin: 10px 0 10px 0; 
+  width: 600rpx;
+  font-size: 30rpx;
+  margin: 20rpx 0 20rpx 0; 
 }
 
 .address image{
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 20rpx;
 }
 
 .red{
