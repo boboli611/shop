@@ -47,7 +47,7 @@ page{
 }
 
 .pay-list .checkbox{
-    background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/sprites/checkbox-sed825af9d3-a6b8540d42.png) 0 -448rpx no-repeat;
+    background: url(http://static.lizzmall.com/image/checkbox.png) 0 -448rpx no-repeat;
     background-size: 38rpx 486rpx;
     width: 40rpx;
     height: 40rpx;

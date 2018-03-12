@@ -64,6 +64,29 @@ Page({
     return false;
     
   },
+  bindIsDefault(event) {
+    let index = event.target.dataset.addressIndex;
+    var address= this.data.addressList[index]
+    if(address.status){
+      return
+    }
+
+    let that = this;
+    util.request(api.AddressSave, {
+      id: address.id,
+      name: address.name,
+      mobile: address.mobile,
+      province_id: address.province_id,
+      city_id: address.city_id,
+      address: address.address,
+      full_region: address.full_region,
+      status: 1,
+    }, 'POST').then(function (res) {
+      if (res.errno === 0) {
+        that.getAddressList();
+      }
+    });
+  },
   onHide: function () {
     // 页面隐藏
   },

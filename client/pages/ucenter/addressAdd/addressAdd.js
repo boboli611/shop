@@ -14,7 +14,8 @@ Page({
       full_region: '',
       name: '',
       mobile: '',
-      status: 0
+      status: 0,
+      selected:""
     },
     addressId: 0,
     openSelectRegion: false,
@@ -93,6 +94,14 @@ Page({
         addressId: options.id,
         isBuy: options.isBuy
       });
+
+      if (options.id === "0"){
+        var address = {"status":1};
+        this.setData({
+          address: address
+        })
+        return
+      }
       this.getAddressDetail();
     }
 

@@ -1,7 +1,7 @@
 .search {
   display: block;
   margin: 0px;
-  width: 320px;
+  width: 640rpx;
 }
 
 .search {
@@ -9,7 +9,7 @@
   flex-direction: row;
   justify-content: flex-start;
   font-family: -apple-system-font, "Helvetica Neue", sans-serif;
-  font-size: 17px;
+  font-size: 34rpx;
 }
 
 .search input{

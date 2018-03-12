@@ -53,10 +53,10 @@
       </navigator>
     </view>
     <view class="item item-bottom">
-      <navigator url="url" class="a">
+        <button class="button_kefu" open-type="contact" hover-class="btn_hover">
         <text class="icon kefu"></text>
-        <text class="txt">联系客服</text>
-      </navigator>
+        <text class="txt">地址管理</text>
+        </button>
     </view>
     <view class="item item-bottom">
       <navigator url="url" class="a">
