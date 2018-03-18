@@ -33,8 +33,9 @@ class OrderController extends Controller {
         }
      
         $pList = \frontend\service\Product::getByStorageid($pids);
-        foreach ($pList as $val) {
-
+        foreach ($pList as &$val) {
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
             $id = $val['storage_id'];
             $val['num'] = 1;
             $out['goods'][$id] = $val;
@@ -43,9 +44,11 @@ class OrderController extends Controller {
 
         $address = json_decode($address);
 
-        $out['info'] = ['order_id' => $order, 'price' => $price / 100,
+        $out['info'] = ['order_id' => $order, 
+            'price' => $price / 100,
             'status'=> (int)$status,
-            'created_at' => $create_time, 'order_status_text' =>  \common\models\comm\CommOrder::$payName[$status],
+            'created_at' => $create_time,
+            'order_status_text' =>  \common\models\comm\CommOrder::$payName[$status],
             'consignee' => $address->name, 'mobile' => $address->mobile,
             'address' => $address->full_region .' '. $address->address,
         ];
@@ -75,8 +78,10 @@ class OrderController extends Controller {
 
         $pList = \frontend\service\Product::getByStorageid($ids);
 
-        foreach ($pList as $val) {
+        foreach ($pList as &$val) {
             $id = $val['storage_id'];
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
             $products[$id] = $val;
         }
 

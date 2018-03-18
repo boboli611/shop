@@ -14,7 +14,7 @@
     <view class="{{style[item.type]}}"  wx:for="{{goods}}" wx:for-item="item" wx:key="index">
         <view>
           <navigator url="../goodsDetail/detail?id={{item.id}}">
-            <image mode="widthFix" src='{{item.cover}}?x-oss-process=image/resize,w_335'></image>
+            <image  src='{{item.cover}}?x-oss-process=image/resize,w_335'></image>
           </navigator>
         </view>
         <view class='text'>

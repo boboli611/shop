@@ -108,7 +108,6 @@ function request(url, data = {}, method = "GET") {
               reject(err);
             })
           } else {
-            console.log(res)
             if (res.data.errno !== 0){
               showNotice(res.data.msg)
             }
@@ -121,7 +120,6 @@ function request(url, data = {}, method = "GET") {
       },
       fail: function (err) {
         reject(err)
-        console.log("failed")
       }
     })
   });
@@ -152,7 +150,6 @@ function login() {
       success: function (res) {
         if (res.code) {
           //登录远程服务器
-          console.log(res)
           resolve(res);
         } else {
           reject(res);
@@ -170,7 +167,6 @@ function getUserInfo() {
     wx.getUserInfo({
       withCredentials: true,
       success: function (res) {
-        console.log(res)
         resolve(res);
       },
       fail: function (err) {

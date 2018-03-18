@@ -12,7 +12,7 @@ Page({
     selectStyle:"",
     selectSize:"",
     selectPrice:0,
-  
+    imgUrls: [],
   },
   onShareAppMessage: function () {
     return {
@@ -29,6 +29,7 @@ Page({
       if (res.errno === 0) {
         var content = res.data.info.desc;
         WxParse.wxParse('article', 'html', content, that, 0);
+        console.log(res.data.info.cover)
         that.setData({
           goods: res.data.info,
           storageList:res.data.info.storage,
@@ -37,7 +38,8 @@ Page({
           buy_button: "gray",
           chart_button: "gray",
           show:"hidden",
-          sizeShow:"hidden"
+          sizeShow:"hidden",
+          imgUrls: res.data.info.cover
         });
 
         
@@ -178,6 +180,18 @@ Page({
       that.data.httpstatus = false
     });
     
+  },
+
+  //图片点击事件
+  imgYu: function (event) {
+    var src = event.currentTarget.dataset.src;//获取data-src
+    var imgList = this.data.imgUrls;//获取data-list
+    console.log(event)
+    //图片预览
+    wx.previewImage({
+      current: src, // 当前显示图片的http链接
+      urls: imgList // 需要预览的图片http链接列表
+    })
   },
 
   //选择商品

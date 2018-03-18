@@ -2,33 +2,42 @@
 <view class="container">
 
   <view class='info'>
-    <image mode='widthFix' src='{{goods.cover}}'></image>
+    <!--<image mode='widthFix' src='{{goods.cover}}'></image>-->
+    <swiper indicator-dots="{{false}}" autoplay="{{false}}">
+      <block wx:for="{{imgUrls}}">
+        <swiper-item>
+          <image bindtap="imgYu" data-src="{{item}}" src="{{item}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
   </view>
-  <import src="/wxParse/wxParse.wxml" />
 
+  <import src="/wxParse/wxParse.wxml" />
   <template is="wxParse" data="{{wxParseData:article.nodes}}" />
 
   <view class='recommend'>
     <view class='title'>
-      <text>模特推荐商品</text>
+      <text>推荐商品</text>
     </view>
     <view class='col'>
       <view class='product' wx:for="{{recommend}}" wx:for-item="item">
-        <view>
-          <image mode="aspectFit" src='{{item.cover}}'></image>
-        </view>
-        <view class='text'>
-          <text>{{item.title}}</text>
-        </view>
+        <navigator url="/pages/goodsDetail/detail?id={{item.id}}" class="a">
+          <view>
+            <image mode="widthFix" src='{{item.cover}}'></image>
+          </view>
+          <view class='text'>
+            <text>{{item.title}}</text>
+          </view>
+        </navigator>
         <!--<view class='text'>
           <text>￥{{item.price}}</text>
         </view>-->
 
-        <view class='chart'>
+        <!--<view class='chart'>
           <navigator open-type="redirectTo" url="/pages/goodsDetail/detail?id={{item.id}}" class="a">
             <button size='mini' class='white'>加入购物袋</button>
           </navigator>
-        </view>
+        </view>-->
       </view>
 
     </view>

@@ -28,7 +28,8 @@
           <button class="btn" data-order-id="{{item.order_id}}" data-price="{{item.pay_price}}" catchtap="payOrder" >去付款</button>
         </view>
 
-        <view class="r" wx:if="{{item.status == 2 || item.status == 3}}">
+
+        <view class="r" wx:if="{{item.status == 1 && (orderType == 2 || orderType == 3)}}">
           <button class="btn" data-order-id="{{item.order_id}}" data-index="{{index}}" catchtap="refundOrder">申请退货</button>
         </view>
 

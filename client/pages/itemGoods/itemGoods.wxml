@@ -14,18 +14,16 @@
   </view>
 
   <view class='goods'>
-    <view class="three" wx:for="{{goods}}" wx:for-item="item" wx:key="index">
+    <view class="two" wx:for="{{goods}}" wx:for-item="item" wx:key="index">
       <view>
         <navigator url="../goodsDetail/detail?id={{item.id}}">
-          <image mode="widthFix" src='{{item.cover}}?x-oss-process=image/resize,w_120'></image>
+          <image src='{{item.cover}}?x-oss-process=image/resize,w_120'></image>
         </navigator>
       </view>
       <view class='text'>
         <text>{{item.tag}}</text>
       </view>
-      <view class='text'>
-        <text>{{item.title}}</text>
-      </view>
+      <view class='text'>{{item.title}}</view>
       <view class='text'>
         <text>￥{{item.price}}</text>
       </view>

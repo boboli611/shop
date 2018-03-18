@@ -16,7 +16,9 @@ use Yii;
  * @property integer $item_id
  * @property string $tag
  * @property integer $count
+ * @property integer $carriage
  * @property integer $sort
+ * @property integer $type
  * @property string $update_time
  * @property string $create_time
  */
@@ -36,12 +38,12 @@ class CommProduct extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['title', 'desc', 'tag', 'status', 'item_id', 'cover'], 'required'],
+            [['title', 'desc', 'tag', 'status', 'item_id','cover'], 'required'],
             [[], 'file', 'skipOnEmpty' => false],
             [['tag'], 'string', "max" => 4, "message" => "标签过长"],
             [['desc'], 'string'],
             [['item_id', 'sort'], 'integer', 'min' => 1, "message" => "请选择类目"],
-            [['price', 'sell', 'count', 'status', 'item_id'], 'integer'],
+            [['price', 'sell', 'count', 'status', 'item_id', 'carriage', 'type'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
             [['title'], 'string', 'max' => 128, "message" => "标题过长"],
             [['cover'], 'string'],
@@ -63,6 +65,7 @@ class CommProduct extends \common\models\BaseModel
             'count' => '库存',
             'item_id' => '类别',
             'tag' => '标签',
+            'carriage' => "运费",
             'status' => '下架',
             'sort' => '排序',
             'updated_at' => '修改时间',
@@ -73,7 +76,10 @@ class CommProduct extends \common\models\BaseModel
     public function load($data, $formName = null){
 
         //$data['CommProduct']['cover'] = $data['cover_path'];
+        
+        $data['CommProduct']['carriage'] = intval($data['CommProduct']['carriage'] * 100);
         $data['CommProduct']['price'] = intval($data['storage_price'][0] * 100);
+        $data["CommProduct"]['cover'] = json_encode($data['cover']);
 
         return parent::load($data);
     }

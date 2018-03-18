@@ -31,9 +31,10 @@ class CommOrder extends \common\models\BaseModel {
     const status_pay_fail = 9; //支付失败
     
     const status_refund_no = 1; // '未申请',
-    const status_refund_waiting = 2; // '退货中',
-    const status_refund_ok = 3; // '已退货',
-    const status_refund_fail = 4; // '未退货',
+    const status_refund_checking = 2; // '审核中',
+    const status_refund_waiting = 3; // '退货中',
+    const status_refund_ok = 4; // '已退货',
+    const status_refund_fail = 5; // '未退货',
 
     public static $payName = [
         self::status_waiting_pay => "待付款",
@@ -43,6 +44,7 @@ class CommOrder extends \common\models\BaseModel {
     ];
     public static $refund = [
         self::status_refund_no => '未申请',
+        self::status_refund_checking => '审核中',
         self::status_refund_waiting => '退货中',
         self::status_refund_ok => '已退货',
         self::status_refund_fail => '不退货',

@@ -28,6 +28,7 @@ Page({
         that.setData({
           orderList: list,
           empty: list.length > 0 ? 1 : 0,
+          orderType: that.data.orderType,
         });
       }
     });

@@ -126,7 +126,7 @@
 .address{
   width: 600rpx;
   font-size: 20rpx;
-  margin: 130rpx 0 30rpx 0; 
+  margin: 30rpx 0 30rpx 0; 
 }
 
 .address image{

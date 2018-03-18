@@ -45,6 +45,8 @@ class ShopController extends Controller {
             $price += $val['price'];
             $val['price'] = $val['price'] / 100;
             $val['carriage'] = $val['carriage'] / 100;
+            $cover = json_decode($val['cover'], true);
+            $val['cover'] = $cover[0];
         }
 
         $out["info"] = $info;
@@ -82,6 +84,8 @@ class ShopController extends Controller {
             $price += $val['price'];
             $val['price'] = $val['price'] / 100;
             $val['carriage'] = $val['carriage'] / 100;
+            $cover = json_decode($val['cover'], true);
+            $val['cover'] = $cover[0];
         }
 
         $out["info"] = $info;
@@ -117,6 +121,8 @@ class ShopController extends Controller {
             $price += $val['price'];
             $val['price'] = $val['price'] / 100;
             $val['carriage'] = $val['carriage'] / 100;
+            $cover = json_decode($val['cover'], true);
+            $val['cover'] = $cover[0];
         }
 
         $out["info"] = $info;

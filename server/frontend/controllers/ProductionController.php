@@ -39,7 +39,11 @@ class ProductionController extends Controller {
         $lastId = (int) Yii::$app->request->post("last_id");
 
         $products = \frontend\service\Product::search([], "", $orderField, $order, $page);
-        $products = $products ? $products : [];       
+        $products = $products ? $products : []; 
+        foreach ($products as &$val){
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
+        }
 
         $out['list'] = $products;
         return $this->asJson(widgets\Response::sucess($out));
@@ -73,6 +77,11 @@ class ProductionController extends Controller {
             $searchStatus = false;
             $products = \frontend\service\Product::search([], "", $orderField, $order, $page, 10);
         }
+        
+        foreach ($products as &$val){
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
+        }
       
 
         $out['list'] = $products;
@@ -98,6 +107,10 @@ class ProductionController extends Controller {
         $info = $info->toArray();
         $products = \frontend\service\Product::search([], "", 2, 1, 1, 2);
         $products = $products ? $products : [];
+        foreach ($products as &$val){
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
+        }
 
         $modelStorage = new \common\models\comm\CommProductionStorage();
         $modelStorageList = $modelStorage->getAllBPid($id);
@@ -107,6 +120,7 @@ class ProductionController extends Controller {
             $storage[$val->style][$val->size] = $val;
         }
 
+        $info['cover'] = json_decode($info['cover'], true);
         $info['price'] = $modelStorageList[0]->price;
         $info['storage'] = $storage;
         $out["info"] = $info;

@@ -72,8 +72,11 @@
         <view>
           <text>预计运费</text>
         </view>
-        <view>
-          <text>￥{{order.carriage}}</text>
+        <view wx:if="{{order.carriage === 0}}">
+          <text>包邮</text>
+        </view>
+        <view  wx:else>
+        <text>￥{{order.carriage}}</text>
         </view>
       </view>
       <!--<view class='buy-line'>

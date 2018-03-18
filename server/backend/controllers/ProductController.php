@@ -154,7 +154,6 @@ class ProductController extends Controller {
             $data = Yii::$app->request->post();
             $transaction = CommProduct::getDb()->beginTransaction();
             $data["CommProduction"]['price'] = $data['storage_price'][0];
-
             $model->load($data);
             $status = 0;
             foreach ($data['storage_status'] as $k => $val) {

@@ -88,6 +88,13 @@ class FileController extends Controller {
         ]);
         return;
     }
+    
+    public function actionInputDelete() {
+        echo json_encode([
+         
+        ]);
+        return;
+    }
 
     public function actionAdd() {
 

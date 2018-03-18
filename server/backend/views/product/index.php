@@ -24,7 +24,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
-            'title',
+            [
+                'attribute' => 'title',
+                'headerOptions' => [
+                    'width' => '50px'
+                ],
+                'format' => 'raw',
+                'value' =>
+                function($model) {
+                    return mb_substr($model->title, 0, 10);
+                },
+            ],
             [
                 'attribute' => 'cover',
                 'format' => 'raw',
@@ -38,27 +48,27 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return $str;
                 },
-            ],
-            [
-                'attribute' => 'price',
-                'value' => 
-                function($model) {
-                    return $model->price / 100;
-                }
-            ],
-            'sell',
-            'count',
-            [
-                'attribute' => 'status',
-                'value' =>
-                function($model) {
-                    return $model->status ? "上架" : "下架";
-                }
-            ],
-            'updated_at',
-            'created_at',
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+                    ],
+                    [
+                        'attribute' => 'price',
+                        'value' =>
+                        function($model) {
+                            return $model->price / 100;
+                        }
+                    ],
+                    'sell',
+                    'count',
+                    [
+                        'attribute' => 'status',
+                        'value' =>
+                        function($model) {
+                            return $model->status ? "上架" : "下架";
+                        }
+                    ],
+                    'updated_at',
+                    'created_at',
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
             ]);
             ?>
 
