@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\UserBackend */
+/* @var $model common\models\comm\CommBanner */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'User Backends', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Comm Banners', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-backend-view">
+<div class="comm-banner-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,12 +29,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'username',
-            'auth_key',
-            'password_hash',
-            'email:email',
-            'created_at',
+            'img',
+            'position',
             'updated_at',
+            'created_at',
         ],
     ]) ?>
 

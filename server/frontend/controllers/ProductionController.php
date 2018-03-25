@@ -45,7 +45,9 @@ class ProductionController extends Controller {
             $val['cover'] = $val['cover'][0];
         }
 
+        
         $out['list'] = $products;
+        $out['banner'] = \frontend\service\Banner::get(\common\models\comm\CommBanner::index_page_one);
         return $this->asJson(widgets\Response::sucess($out));
     }
     
