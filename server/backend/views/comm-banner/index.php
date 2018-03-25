@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $imgs = [];
                     $model->img = json_decode($model->img, true);
                     foreach ($model->img as $val) {
-                        $imgs[] = "<a href='{$val}'>查看图片</a>";
+                        $imgs[] = "<a href='{$val}' target='_blank'>查看图片</a>";
                     }
                     return implode("&nbsp;", $imgs);
                 },

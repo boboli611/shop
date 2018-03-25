@@ -12,19 +12,18 @@ use common\constant\App;
 
 $postions = \common\models\comm\CommBanner::$postions;
 array_unshift($postions, "选择广告位");
-$model->position = (int)$model->position;
+$model->position = (int) $model->position;
 
 $imgModel = new common\models\Img();
 $imgs = json_decode($model->img, true);
 $imgs = is_array($imgs) ? $imgs : [];
 $model->img = array_shift($imgs);
-
 ?>
 
 <div class="comm-banner-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    
+
     <?php echo $form->field($model, 'img')->hiddenInput(['name' => 'img']); ?>
 
     <?php
@@ -34,7 +33,7 @@ $model->img = array_shift($imgs);
         echo yii\bootstrap\Html::hiddenInput("img[]", $model->img, ["id" => "commbanner-img"]);
         echo "</div>";
     }
-    
+
     foreach ($imgs as $img) {
         //echo $form->field($imgModel, 'image')->hiddenInput(['name' => 'cover']);
         echo "<div id='coverList'>";
@@ -85,19 +84,19 @@ $model->img = array_shift($imgs);
         ],
     ]);
     ?>
-    
+
     <?php
-    if ($model->id){
-        
-        echo $form->field($model, 'position')->hiddenInput(["readonly"=>"readonly", 'style' => 'width:120px']);
+    if ($model->id) {
+
+        echo $form->field($model, 'position')->hiddenInput(["readonly" => "readonly", 'style' => 'width:120px']);
         $position = $postions[$model->position];
-        echo \yii\helpers\BaseHtml::input('text', 'position', $position, ["readonly"=>"readonly", 'style' => 'width:120px','class' => "form-control"]);
+        echo \yii\helpers\BaseHtml::input('text', 'position', $position, ["readonly" => "readonly", 'style' => 'width:120px', 'class' => "form-control"]);
         echo "<br/>";
-    }else{
-         echo $form->field($model, 'position')->dropDownList($postions, ['style' => 'width:120px', "value" => $model->position]) ;
+    } else {
+        echo $form->field($model, 'position')->dropDownList($postions, ['style' => 'width:120px', "value" => $model->position]);
     }
-   ?>  
-    
+    ?>  
+
 
     <?= $form->field($model, 'status')->dropDownList([App::APP_UNVAILD_STATUS => '下架', App::APP_VAILD_STATUS => '上架'], ['style' => 'width:120px', "value" => $model->status]) ?>  
 
@@ -114,20 +113,20 @@ $model->img = array_shift($imgs);
 
     function addImgHiden(url) {
         var val = $("#commbanner-img").val()
-        if (!val){
+        if (!val) {
             $("#commbanner-img").val(url)
         }
-        
+
         var str = "<div id='coverList'>" + "<a href='" + url + "' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>"
         str = str + '<input type="hidden" name="img[]" value="' + url + '"></div>'
         $(".file-caption-main").before(str)
-        
-       
+
+
     }
     function remove(event) {
         $(event).parent().remove();
         //alert(jQuery.isEmptyObject($("#coverList")))
-        if(!$("#coverList").html()){
+        if (!$("#coverList").html()) {
             $("#commbanner-img").val(null)
         }
     }

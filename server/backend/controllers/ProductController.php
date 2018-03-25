@@ -64,13 +64,15 @@ class ProductController extends Controller {
 
         $model = new CommProduct();
         $modelStorage = new \common\models\comm\CommProductionStorage();
-        //var_dump(Yii::$app->request->post());exit;
-        $status = false;
+        $recommend = new \common\models\comm\CommProductRecommend();
 
+        $status = false;
         if (!Yii::$app->request->post()) {
+
             return $this->render('create', [
                         'model' => $model,
                         'modelStorage' => $modelStorage,
+                            //'modelRecommend' => $recommend,
             ]);
             return;
         }
@@ -125,7 +127,7 @@ class ProductController extends Controller {
         } catch (\Exception $ex) {
             return $this->render('create', [
                         'model' => $model,
-                        'modelStorage' => $modelStorage,
+                            // 'modelRecommend' => $recommend,
             ]);
         }
     }
@@ -139,12 +141,15 @@ class ProductController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
         $modelStorage = new \common\models\comm\CommProductionStorage();
+        $recommend = \common\models\comm\CommProductRecommend::find()->where(['product_id' => $id])->one();
+        $recommend = $recommend ? $recommend : new \common\models\comm\CommProductRecommend();
         $modelStorageList = $modelStorage->getAllBPid($id);
 
         if (!Yii::$app->request->post()) {
             return $this->render('update', [
                         'model' => $model,
                         'modelStorage' => $modelStorageList,
+                        'modelRecommend' => $recommend,
             ]);
             return;
         }
@@ -154,6 +159,7 @@ class ProductController extends Controller {
             $data = Yii::$app->request->post();
             $transaction = CommProduct::getDb()->beginTransaction();
             $data["CommProduction"]['price'] = $data['storage_price'][0];
+
             $model->load($data);
             $status = 0;
             foreach ($data['storage_status'] as $k => $val) {
@@ -196,11 +202,12 @@ class ProductController extends Controller {
             }
 
             $transaction->commit();
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['update', 'id' => $model->id]);
         } catch (\Exception $ex) {
-            return $this->render('create', [
+            return $this->render('update', [
                         'model' => $model,
                         'modelStorage' => $modelStorageList,
+                        'modelRecommend' => $recommend,
             ]);
         }
     }
@@ -212,6 +219,7 @@ class ProductController extends Controller {
      * @return mixed
      */
     public function actionDelete($id) {
+        return;
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

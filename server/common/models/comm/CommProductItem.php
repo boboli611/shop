@@ -61,13 +61,19 @@ class CommProductItem extends \common\models\BaseModel
     }
     
     public function getList(){
-        $list = self::find()->all();
+        $list = self::find()->orderBy("sort desc")->all();
         $out = [];
         foreach($list as $v){
             $out[$v['id']] = $v['title'];
         }
         
         return $out;
+    }
+    
+    public function getListBySort(){
+        $list = self::find()->orderBy("sort desc")->all();
+        
+        return $list;
     }
     
     public static function getByTitle($title){

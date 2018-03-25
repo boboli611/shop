@@ -32,8 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' =>
                 function($model) {
-                    return mb_substr($model->title, 0, 10);
-                },
+            return mb_substr($model->title, 0, 10);
+        },
             ],
             [
                 'attribute' => 'cover',
@@ -66,8 +66,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     ],
                     'updated_at',
-                    'created_at',
-                    ['class' => 'yii\grid\ActionColumn'],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{update} ',
+                        'buttons' => [],
+                        'header' => '操作',
+                    ],
                 ],
             ]);
             ?>

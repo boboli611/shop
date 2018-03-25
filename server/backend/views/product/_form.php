@@ -18,6 +18,7 @@ $covers = json_decode($model->cover, true);
 $covers = is_array($covers) ? $covers : [];
 $model->cover = array_shift($covers);
 
+$modelRecommend->id = $modelRecommend->id ? 1 : 0;
 $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
 ?>
 
@@ -104,11 +105,11 @@ $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
     <?= $form->field($model, 'carriage')->dropDownList($carriageList, ['style' => 'width:120px', "value" => $modelStorage->carriage]) ?>  
     <?= $form->field($model, 'tag')->textInput(['style' => 'width:100px'])->label("标签(最大4个字)") ?> 
 
-    <?php //echo $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态")   ?>  
+    <?php echo $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态")   ?>  
 
     <?php echo $form->field($model, 'item_id')->dropDownList($items, ['style' => 'width:120px', "value" => $model->item_id])->label("类别") ?>  
 
-    <?= $form->field($model, 'type')->dropDownList(['2' => '不置顶', '1' => "置顶"], ['style' => 'width:120px', "value" => $modelStorage->type])->label("置顶") ?>  
+    <?= $form->field($model, 'type')->dropDownList(['2' => '否', '1' => "是"], ['style' => 'width:120px', "value" => $modelStorage->type])->label("首页推荐") ?>  
 
     <?php
     foreach ($storageList as $k => $modelStorage) {

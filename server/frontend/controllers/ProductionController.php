@@ -38,15 +38,21 @@ class ProductionController extends Controller {
         $order = (int) Yii::$app->request->post("order");
         $lastId = (int) Yii::$app->request->post("last_id");
 
-        $products = \frontend\service\Product::search([], "", $orderField, $order, $page);
+        $products = \frontend\service\Product::search(["type" => 2], "", $orderField, $order, $page);
         $products = $products ? $products : []; 
         foreach ($products as &$val){
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
         }
-
+        //类目
+        $items = (new \common\models\comm\CommProductItem())->getListBySort();
         
+        $ticket = ['money' => 50, "description" => "满499使用"];
+        
+        $out['ticket'] = [$ticket,$ticket,$ticket,$ticket];
+        $out['item'] = $items;
         $out['list'] = $products;
+        $out['recommend'] = \frontend\service\Product::getRecommond();
         $out['banner'] = \frontend\service\Banner::get(\common\models\comm\CommBanner::index_page_one);
         return $this->asJson(widgets\Response::sucess($out));
     }

@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\comm\CommBanner;
-use common\models\comm\commBannerSearch;
+use common\models\comm\CommBannerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,7 +33,7 @@ class CommBannerController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $searchModel = new commBannerSearch();
+        $searchModel = new CommBannerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

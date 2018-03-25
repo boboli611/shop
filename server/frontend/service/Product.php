@@ -7,7 +7,7 @@ class Product {
     private static $orderField = [1 => "sell", 2 => "type"];
     private static $order = [1 => "desc", 2 => "asc"];
     
-    public static function search($condiction, $key, $orderField, $orderType, $page = 0, $limit = 10){
+    public static function search($condiction, $key = "", $orderField = "", $orderType = "", $page = 0, $limit = 10){
         
        $condiction = !is_array($condiction) ? [] : $condiction;
        $orderField = isset(self::$orderField[$orderField]) ? self::$orderField[$orderField] : self::$orderField[2];
@@ -21,6 +21,11 @@ class Product {
        return $out;
     }
     
+    /**
+     * 库存id查询商品信息
+     * @param type $storageId
+     * @return type
+     */
     public static function getByStorageid($storageId){
         
         if (!is_array($storageId) || !$storageId){
@@ -38,5 +43,22 @@ class Product {
         }else{
             return [];
         }
+    }
+    
+    /**
+     * 推荐商品
+     */
+    public static function getRecommond(){
+        
+        $recommends = \common\models\comm\CommProductRecommend::find()->orderBy("id desc")->all(); 
+        $ids = [];
+        foreach ($recommends as $val){
+            $ids[] = $val->product_id;
+        }
+        if (!$ids){
+            return [];
+        }
+
+        return self::search(["type" => 1]);
     }
 }

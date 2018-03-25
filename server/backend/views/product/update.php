@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = '编辑';
     echo $this->render('_form', [
         'model' => $model,
         'storageList' => $modelStorage,
+        'modelRecommend' => $modelRecommend,
     ]) ?>
 
 </div>

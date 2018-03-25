@@ -5,12 +5,11 @@ namespace common\models\comm;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\comm\CommBanner;
 
 /**
- * commBannerSearch represents the model behind the search form about `common\models\comm\CommBanner`.
+ * CommProductRecommendSearch represents the model behind the search form about `common\models\comm\CommProductRecommend`.
  */
-class commBannerSearch extends CommBanner
+class CommProductRecommendSearch extends CommProductRecommend
 {
     /**
      * @inheritdoc
@@ -18,8 +17,8 @@ class commBannerSearch extends CommBanner
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['img', 'position', 'updated_at', 'created_at'], 'safe'],
+            [['id', 'product_id', 'sort'], 'integer'],
+            [['updated_at', 'created_at'], 'safe'],
         ];
     }
 
@@ -41,7 +40,7 @@ class commBannerSearch extends CommBanner
      */
     public function search($params)
     {
-        $query = CommBanner::find();
+        $query = CommProductRecommend::find();
 
         // add conditions that should always apply here
 
@@ -60,12 +59,11 @@ class commBannerSearch extends CommBanner
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'product_id' => $this->product_id,
+            'sort' => $this->sort,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ]);
-
-        $query->andFilterWhere(['like', 'img', $this->img])
-            ->andFilterWhere(['like', 'position', $this->position]);
 
         return $dataProvider;
     }
