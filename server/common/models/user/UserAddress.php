@@ -14,6 +14,9 @@ use Yii;
  * @property integer $full_region
  * @property string $address
  * @property integer $status
+ * @property string province
+ * @property string city
+ * @property string county
  * @property string $updated_at
  * @property string $created_at
  */
@@ -34,7 +37,7 @@ class UserAddress extends \common\models\BaseModel
     {
         return [
             [['user_id', 'status', 'mobile'], 'integer'],
-            [['name','full_region','address', 'updated_at', 'created_at'], 'string', 'max' => 255],
+            [['name','province','city','county', 'address', 'updated_at', 'created_at'], 'string', 'max' => 255],
         ];
     }
 

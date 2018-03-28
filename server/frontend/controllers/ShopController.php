@@ -93,7 +93,7 @@ class ShopController extends Controller {
         $out["order"]["carriage"] = $carriage / 100;
         $out["order"]["discount"] = 0;
         $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = $address['full_region'] . $address['address'];
+        $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
 
         return $this->asJson(widgets\Response::sucess($out));
     }
@@ -130,7 +130,7 @@ class ShopController extends Controller {
         $out["order"]["carriage"] = $carriage / 100;
         $out["order"]["discount"] = 0;
         $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = $address['full_region'] . $address['address'];
+        $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
 
         return $this->asJson(widgets\Response::sucess($out));
     }

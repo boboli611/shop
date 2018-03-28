@@ -80,6 +80,7 @@ Page({
   },
   chooseRegion(event) {
     let address = this.data.address;
+    console.log("address" , event.detail.value)
     address.full_region = event.detail.value;
     this.setData({
       address: address

@@ -20,19 +20,19 @@ class AddressController extends Controller {
         $id = (int) Yii::$app->request->post("id");
         $name = Yii::$app->request->post("name");
         $mobile = (int) Yii::$app->request->post("mobile");
-        $full_region = Yii::$app->request->post("full_region");
+        $province = Yii::$app->request->post("province");
+        $city = Yii::$app->request->post("city");
+        $county = Yii::$app->request->post("county");
         $address = Yii::$app->request->post("address");
         $status = (int) Yii::$app->request->post("status");
+        
 
-        if (!$name || !$mobile || !$full_region || !$address) {
+        if (!$name || !$mobile || !$address ||!$province || !$city || !$county) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
 
-
-
         $uid = widgets\User::getUid();
-
         try {
 
             if ($id) {
@@ -48,7 +48,9 @@ class AddressController extends Controller {
             $addressModel->user_id = $uid;
             $addressModel->name = $name;
             $addressModel->mobile = $mobile;
-            $addressModel->full_region = $full_region;
+            $addressModel->province = $province;
+            $addressModel->city = $city;
+            $addressModel->county = $county;
             $addressModel->address = $address;
             $addressModel->status = $status;
 

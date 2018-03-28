@@ -178,7 +178,7 @@ class ProductionController extends Controller {
         $out["order"]["carriage"] = $info['carriage'];
         $out["order"]["discount"] = 50;
         $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = $address['full_region'].$address['address'];
+        $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
         return $this->asJson(widgets\Response::sucess($out));
     }
 
