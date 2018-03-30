@@ -57,6 +57,26 @@ class ProductionController extends Controller {
         return $this->asJson(widgets\Response::sucess($out));
     }
     
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionList() {
+
+        $page = (int) Yii::$app->request->get("page");
+
+        $products = \frontend\service\Product::search(["type" => 2], "", "", "", $page);
+        $products = $products ? $products : []; 
+        foreach ($products as &$val){
+            $val['cover'] = json_decode($val['cover'], true);
+            $val['cover'] = $val['cover'][0];
+        }
+
+        $out['list'] = $products;
+        return $this->asJson(widgets\Response::sucess($out));
+    }
+    
     
     
     /**
