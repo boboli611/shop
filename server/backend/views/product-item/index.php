@@ -19,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
@@ -32,9 +31,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     return    $str .= Html::a('图片', $model->icon, ["target" => "_blank"]);
                 },
             ],
+            [
+                'attribute' => 'info',
+                'format' => 'raw',
+                'value' =>
+                function($model) {
+                    $info = json_decode($model->info, true);
+                    return implode(',', $info);
+                },
+            ],
             'sort',
             'updated_at',
-            'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

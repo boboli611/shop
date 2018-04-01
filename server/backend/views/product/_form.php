@@ -9,8 +9,16 @@ use yii\helpers\Url;
 /* @var $model common\models\comm\CommProduct */
 /* @var $form yii\widgets\ActiveForm */
 
-$items = (new \common\models\comm\CommProductItem())->getList();
+$items = $itemInfos = [];
+$itemList = \common\models\comm\CommProductItem::find()->orderBy("sort desc")->all();
 array_unshift($items, "选择类别");
+foreach ($itemList as $val){
+    $items[$val->id] = $val->title;
+    $itemInfos[$val->id] = json_decode($val->info, TRUE);
+}
+
+$itemInfos = json_encode($itemInfos);
+
 $model->price = $model->price / 100;
 $model->carriage = $model->carriage / 100;
 $imgModel = new common\models\Img();
@@ -18,7 +26,10 @@ $covers = json_decode($model->cover, true);
 $covers = is_array($covers) ? $covers : [];
 $model->cover = array_shift($covers);
 
-$modelRecommend->id = $modelRecommend->id ? 1 : 0;
+$productInfo[$model->item_id] = json_decode($model->info, true);
+$productInfo = json_encode($productInfo);
+
+//$modelRecommend->id = $modelRecommend ? 1 : 0;
 $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
 ?>
 
@@ -108,7 +119,7 @@ $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
     <?php echo $form->field($model, 'status')->dropDownList(['0'=>'下架','1'=>'上架'], ['style'=>'width:120px', "value" => $model->status])->label("状态")   ?>  
 
     <?php echo $form->field($model, 'item_id')->dropDownList($items, ['style' => 'width:120px', "value" => $model->item_id])->label("类别") ?>  
-
+    <div id="item_info"></div>
     <?= $form->field($model, 'type')->dropDownList(['2' => '否', '1' => "是"], ['style' => 'width:120px', "value" => $modelStorage->type])->label("首页推荐") ?>  
 
     <?php
@@ -154,6 +165,8 @@ $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
 </div>
 <script src="/assets/4d7e46b8/jquery.js"></script>
 <script>
+     var iteamsInfo = <?php echo $itemInfos;?>;
+     var productInfo = <?php echo $productInfo;?>;
 
     function addImgHiden(url) {
         var val = $("#commproduct-cover").val()
@@ -164,8 +177,6 @@ $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
         var str = "<div id='coverList'>" + "<a href='" + url + "' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>"
         str = str + '<input type="hidden" name="cover[]" value="' + url + '"></div>'
         $(".file-caption-main").before(str)
-        
-       
     }
 
     function clearImg() {
@@ -183,6 +194,34 @@ $carriageList = ["0" => "包邮", "5" => "5元", "10" => "10元"]
         if(!$("#coverList").html()){
             $("#commproduct-cover").val(null)
         }
+    }
+    
+    function addItemInfo(id){
+          var info = productInfo[id]
+          var itemV = ""
+        console.log(iteamsInfo[id], id)  
+        $("#item_info").html("")
+        iteamsInfo[id].forEach(function(value, index, array) {
+            if (info && info[index]){
+                itemV = info[index].value;
+            }
+
+            var input = "<p>" +value +  ':<input type="text" style="width:200px;display:inline;" class="form-control" name="item_info['+index+'][value]" value="'+itemV+'" ></p>'
+            input += '<input type="hidden"  class="form-control" name="item_info['+index+'][name]" value="'+value+'" >';
+            $("#item_info").append(input)
+         });
+        //commproduct-item_id
+    }
+    
+   
+    $("#commproduct-item_id").change(function(){
+        var id = $(this).val();
+        addItemInfo(id);
+    });
+    
+    var item_id = <?php echo  intval($model->item_id);?>;
+    if (item_id > 0){
+        addItemInfo(item_id);
     }
 
 

@@ -42,7 +42,7 @@ class CommProductItemSearch extends CommProductItem
     public function search($params)
     {
         $query = CommProductItem::find();
-
+        $query->orderBy("sort asc");
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

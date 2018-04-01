@@ -33,7 +33,7 @@ class CommProductItem extends \common\models\BaseModel
             [['sort','title','icon'], 'required'],
             [['sort'], 'integer'],
             [['title'], 'string', 'max' => 32],
-            [['icon'], 'string', 'max' => 255],
+            [['icon', "info"], 'string', 'max' => 255],
             [['updated_at', 'created_at'], 'string', 'max' => 20],
         ];
     }
@@ -48,6 +48,7 @@ class CommProductItem extends \common\models\BaseModel
             'title' => '类名',
             'icon' => '图片',
             'sort' => '排序',
+            'info' => '商品信息',
             'updated_at' => '更新时间',
             'created_at' => '创建时间',
         ];
@@ -55,7 +56,8 @@ class CommProductItem extends \common\models\BaseModel
     
     public function load($data, $formName = null){
 
-        $data['CommProductItem']['icon'] = $data['icon_path'];
+        //$data['CommProductItem']['icon'] = $data['icon_path'];
+        $data['CommProductItem']['info'] = json_encode($data['name']);
 
         return parent::load($data);
     }

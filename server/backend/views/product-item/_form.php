@@ -8,6 +8,11 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommProductItem */
 /* @var $form yii\widgets\ActiveForm */
+
+$imgModel = new common\models\Img();
+
+$info = json_decode($model->info, TRUE);
+$data = empty($info) ? [""] : $info;
 ?>
 
 <div class="comm-product-item-form" style="width: 1000px;">
@@ -15,9 +20,9 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
+    <?= $form->field($model, 'icon')->hiddenInput() ?>
     <?php
-    echo $form->field($model, 'icon')->label('icon')->widget(FileInput::classname(), [
+    echo $form->field($imgModel, 'img')->label('icon')->widget(FileInput::classname(), [
        'options' => ['multiple' => false],
     'pluginOptions' => [
         // 需要预览的文件格式
@@ -62,7 +67,6 @@ use yii\helpers\Url;
         'pluginEvents' => [
             // 上传成功后的回调方法，需要的可查看data后再做具体操作，一般不需要设置
             "fileuploaded" => "function (event, data, id, index) {
-            console.log(data);
            addImgHiden(data.response.initialPreview)
         }",
         ],
@@ -73,11 +77,22 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'sort')->textInput() ?>
 
-    <?php //$form->field($model, 'updated_at')->textInput(['maxlength' => true]) ?>
+    <div class="form-group field-commproductitem-title required">
+        <label class="control-label" for="commproductitem-title">商品信息</label>
+    </div>
+    <?php
+    foreach ($data as $k => $val) {
+        ?>
+        <div class="row">
+            <div class="col-lg-2">
+                <?php echo yii\helpers\BaseHtml::input("text", "name[]", $val)?>
+            </div>
+        </div>
+    <?php } ?>
+    <h5> <a href="javascript:void(0)" onclick="add()">增加</a></h5>
 
-    <?php //$form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
-    
-    
+    <br/>
+   <br/>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '保存' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -91,11 +106,16 @@ use yii\helpers\Url;
 <script>
 
 function addImgHiden(url){
-    //$("form").append('<input type="hidden" name="icon_path" value="'+url+'">');
-    $("input[name='CommProductItem[icon]']").attr("id", "commproductitem-icon");       
+    //$("form").append('<input type="hidden" name="icon_path" value="'+url+'">');   
     $("input[name='CommProductItem[icon]']").attr("value", url);
-    $("input[name='icon_path']").attr("value", url);
-    $(".kv-upload-progress").hide();
 }
+
+function add() {
+        console.log($(".row:last").clone())
+        
+        var input = $(".row:last").clone()
+        input.find("input").val("")
+        $(".row:last").after(input)
+    }
 
 </script>

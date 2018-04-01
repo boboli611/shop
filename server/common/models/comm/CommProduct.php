@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $title
  * @property string $desc
+ * @property string $info
  * @property string $cover
  * @property integer $price
  * @property integer $sell
@@ -41,7 +42,7 @@ class CommProduct extends \common\models\BaseModel
             [['title', 'desc', 'tag', 'status', 'item_id','cover'], 'required'],
             [[], 'file', 'skipOnEmpty' => false],
             [['tag'], 'string', "max" => 4, "message" => "标签过长"],
-            [['desc'], 'string'],
+            [['desc', 'info'], 'string'],
             [['item_id', 'sort'], 'integer', 'min' => 1, "message" => "请选择类目"],
             [['price', 'sell', 'count', 'status', 'item_id', 'carriage', 'type'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
@@ -80,6 +81,7 @@ class CommProduct extends \common\models\BaseModel
         $data['CommProduct']['carriage'] = intval($data['CommProduct']['carriage'] * 100);
         $data['CommProduct']['price'] = intval($data['storage_price'][0] * 100);
         $data["CommProduct"]['cover'] = json_encode($data['cover']);
+        $data["CommProduct"]['info'] = json_encode($data['item_info']);
 
         return parent::load($data);
     }
