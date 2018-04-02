@@ -145,7 +145,10 @@ class ProductionController extends Controller {
 
         $storage = [];
         foreach ($modelStorageList as $val) {
-            $storage[$val->style][$val->size] = $val;
+            $arr['style'] = $val['style'];
+            $arr['size'] = $val['size'];
+            $arr['num'] = $val['num'];
+            $storage[] = $arr;
         }
 
         $info['cover'] = json_decode($info['cover'], true);

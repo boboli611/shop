@@ -29,7 +29,7 @@ class WxController extends Controller {
         $code = $_SERVER['HTTP_X_WX_CODE'];
         $encryptedData = $_SERVER["HTTP_X_WX_ENCRYPTED_DATA"];
         $iv = $_SERVER["HTTP_X_WX_IV"];
-     
+
         if (!$code || !$encryptedData || !$iv) {
             $this->asJson(widgets\Response::error("登录失败1"));
             return;
@@ -105,14 +105,14 @@ class WxController extends Controller {
         $pids = Yii::$app->request->post("ids");
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
+        $ticketId = Yii::$app->request->post("ticket_id");
         $pids = explode(',', $pids);
-        
+
         if (!$pids || !$addressId) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
 
-        
         $uid = widgets\User::getUid();
         $addres = \common\models\user\UserAddress::findOne($addressId);
         if (!$addres || $addres->user_id != $uid) {
@@ -126,8 +126,8 @@ class WxController extends Controller {
         $addresData['user_id'] = $addres->user_id;
         $addresData['mobile'] = $addres->mobile;
         $address = json_encode($addresData);
-        
-        $openid = \common\models\user\UserWxSession::findOne($uid);       
+
+        $openid = \common\models\user\UserWxSession::findOne($uid);
         if (!$openid) {
             $this->asJson(widgets\Response::error("未登录"));
             return;
@@ -137,7 +137,7 @@ class WxController extends Controller {
         foreach ($pids as $pid) {
             $shop[$pid] ++;
         }
-        
+
         $product = \common\models\comm\CommProductionStorage::getByids(array_keys($shop));
         if (!$product || count($product) != count($shop)) {
             $this->asJson(widgets\Response::error("商品不存在"));
@@ -147,27 +147,24 @@ class WxController extends Controller {
         $orderId = \common\models\comm\CommOrder::createOrderId($uid);
         $countPrice = 0;
         try {
+            
+            $orderModel = \common\models\comm\CommOrder::getDb()->beginTransaction();
+            
             foreach ($product as $item) {
 
                 $item->price = $item->price * 100;
                 $num = $item->num - $item->sell;
                 if ($num <= 0) {
-                    //$this->asJson(widgets\Response::error("已售罄"));
                     throw new Exception("已售罄");
                 }
 
                 if ($shop[$item->id] > $num) {
-                    //$this->asJson(widgets\Response::error("库存不足"));
-                    //return;
                     throw new Exception("库存不足");
                 }
 
                 if (!$item->status) {
-                    //$this->asJson(widgets\Response::error("已下架"));
-                    //return;
                     throw new Exception("已下架");
                 }
-
 
                 $model = new \common\models\comm\CommOrder();
                 $model->user_id = $uid;
@@ -182,15 +179,36 @@ class WxController extends Controller {
                 $model->refund = \common\models\comm\CommOrder::status_refund_no;
 
                 $ret = $model->save();
+
+
                 $countPrice += $model->price;
             }
+
+            //抵扣优惠券
+            $ticketPrice = (new \frontend\service\Ticket())->subTicket($uid, $ticketId, $product, $orderId);
+            
+            //微信下单
+            $userInfo = \common\models\user\User::findOne($uid);
+            $product = (object) [];
+            $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
+            $product->order_id = $orderId;
+            $product->price = $countPrice - $ticketPrice;
+
+            $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
+            if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
+                $this->asJson(widgets\Response::error("下单失败"));
+                return;
+            }
+            
+            $orderModel->commit();
         } catch (Exception $ex) {
+            $orderModel->rollBack();
             $this->asJson(widgets\Response::error($ex->getMessage()));
         }
 
         $userInfo = \common\models\user\User::findOne($uid);
-        $product = (object)[];
-        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}"; 
+        $product = (object) [];
+        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
         $product->order_id = $orderId;
         $product->price = $countPrice;
 
@@ -199,22 +217,19 @@ class WxController extends Controller {
             $this->asJson(widgets\Response::error("下单失败"));
             return;
         }
-        //var_dump($order);exit;
+
         $out['id'] = $model->getPrimaryKey();
         $out['nonceStr'] = $order['nonce_str'];
         $out['package'] = "prepay_id={$order['prepay_id']}";
         $out['sign'] = $order['paySign'];
-        $out["timeStamp"] = (string)time();
+        $out["timeStamp"] = (string) time();
         $this->asJson(widgets\Response::sucess($out));
     }
-    
-    
-    
-    
+
     public function actionOrder() {
 
         $order_id = Yii::$app->request->get("order_id");
-       
+
         if (!$order_id) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -226,17 +241,17 @@ class WxController extends Controller {
             $this->asJson(widgets\Response::error("非法参数"));
             return;
         }
-        
+
         $openid = \common\models\user\UserWxSession::findOne($uid);
-        
+
         if (!$openid) {
             $this->asJson(widgets\Response::error("未登录"));
             return;
         }
-        
+
         $userInfo = \common\models\user\User::findOne($uid);
-        $product = (object)[];
-        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}"; 
+        $product = (object) [];
+        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
         $product->order_id = $order->id;
         $product->price = $order->pay_price;
 
@@ -250,7 +265,7 @@ class WxController extends Controller {
         $out['nonceStr'] = $order['nonce_str'];
         $out['package'] = "prepay_id={$order['prepay_id']}";
         $out['sign'] = $order['paySign'];
-        $out["timeStamp"] = (string)time();
+        $out["timeStamp"] = (string) time();
         $this->asJson(widgets\Response::sucess($out));
     }
 
@@ -262,7 +277,7 @@ class WxController extends Controller {
         try {
             $wx = new \frontend\components\WxpayAPI\PayNotify();
             $wx->Handle(false);
-        } catch(\Exception $exc) {
+        } catch (\Exception $exc) {
             echo $exc->getMessage();
             \frontend\service\Error::addLog($userId, $exc->getMessage(), json_encode($exc->errorInfo));
             exit;
