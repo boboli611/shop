@@ -11,7 +11,6 @@ use Yii;
  * @property integer $user_id
  * @property integer $name
  * @property integer $mobile
- * @property integer $full_region
  * @property string $address
  * @property integer $status
  * @property string province
