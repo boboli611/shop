@@ -133,6 +133,7 @@ class ProductionController extends Controller {
 
         $info = \common\models\comm\CommProduct::findOne($id);
         $info = $info->toArray();
+        $info['info'] = json_decode($info['info'], true);
         $products = \frontend\service\Product::search([], "", 2, 1, 1, 2);
         $products = $products ? $products : [];
         foreach ($products as &$val){
