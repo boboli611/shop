@@ -149,6 +149,7 @@ class ProductionController extends Controller {
             $arr['style'] = $val['style'];
             $arr['size'] = $val['size'];
             $arr['num'] = $val['num'];
+            $arr['id'] = $val['id'];
             $storage[] = $arr;
         }
 

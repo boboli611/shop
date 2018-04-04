@@ -66,7 +66,8 @@ class ShopController extends Controller {
         $limit = 10;
         $offset = $page * $limit;
         $uid = widgets\User::getUid();
-
+        
+    
         $sql = "select a.id as shop_id, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
                 . " inner join comm_production_storage b on a.storage_id = b.id"
                 . " inner join comm_product c on b.product_id = c.id"
@@ -74,10 +75,11 @@ class ShopController extends Controller {
                 . " order by id desc limit {$offset}, {$limit}";
         $info = \common\models\user\UserShop::findBySql($sql)->asArray()->all();
    
-        $address = \common\models\user\UserAddress::getByUserAuto($uid);
+        //$address = \common\models\user\UserAddress::getByUserAuto($uid);
 
         $carriage = 0;
         $price = 0;
+        $pIds = [];
         foreach ($info as &$val) {
             
             $carriage += $val['carriage'];
@@ -86,15 +88,32 @@ class ShopController extends Controller {
             $val['carriage'] = $val['carriage'] / 100;
             $cover = json_decode($val['cover'], true);
             $val['cover'] = $cover[0];
+            $pIds[$val['id']] = 1;
         }
-
+        
+        $pIds = array_keys($pIds);
+        $storages = \common\models\comm\CommProductionStorage::find()->where(['in', 'product_id', $pIds])->all();
+        $storagesList = [];
+        foreach ($storages as $v){
+            $v = $v->toArray();
+            $arr['id'] = $v['id'];
+            $arr['size'] = $v['size'];
+            $arr['style'] = $v['style'];
+            $arr['num'] = $v['num'];
+            $storagesList[$v['product_id']][] = $arr;
+        }
+         foreach ($info as &$val) {
+             $val['storage'] = $storagesList[$val['id']];
+         }
+        //var_dump($storages);
         $out["info"] = $info;
+        /*
         $out["order"]["price"] = $price / 100;
         $out["order"]["carriage"] = $carriage / 100;
         $out["order"]["discount"] = 0;
         $out["address"]['id'] = $address['id'];
         $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
-
+*/
         return $this->asJson(widgets\Response::sucess($out));
     }
     
@@ -102,7 +121,8 @@ class ShopController extends Controller {
 
         $ids =  Yii::$app->request->get("ids");
         $uid = widgets\User::getUid();
-
+        
+    
         $sql = "select a.id as shop_id, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
                 . " inner join comm_production_storage b on a.storage_id = b.id"
                 . " inner join comm_product c on b.product_id = c.id"

@@ -102,7 +102,7 @@ class WxController extends Controller {
     //创建订单
     public function actionCreateOrder() {
 
-        $pids = Yii::$app->request->post("ids");
+        $pids = Yii::$app->request->post("id");
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
         $ticketId = Yii::$app->request->post("ticket_id");
@@ -120,7 +120,7 @@ class WxController extends Controller {
             return;
         }
 
-        $addresData['full_region'] = $addres->full_region;
+        $addresData['region'] = sprintf("%s,%s,%s", $addres->province,$addres->city,$addres->county);
         $addresData['address'] = $addres->address;
         $addresData['name'] = $addres->name;
         $addresData['user_id'] = $addres->user_id;
