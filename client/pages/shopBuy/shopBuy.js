@@ -89,7 +89,7 @@ Page({
       ids.push(item.storage_id)
     })
 
-    var url = api.Createorder
+    var url = api.CreateShoporder
     var content = this.data.content
     var param = { "ids": ids, "address_id": this.data.address.id, "content": content }
     util.request(url, param, "POST").then(function (res) {

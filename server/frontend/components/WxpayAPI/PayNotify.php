@@ -1,7 +1,7 @@
 <?php
 
 namespace frontend\components\WxpayAPI;
-
+use yii\log\Logger;
 require_once "lib/WxPay.Api.php";
 require_once 'lib/WxPay.Notify.php';
 
@@ -24,7 +24,6 @@ class PayNotify extends \WxPayNotify {
 
         $notfiyOutput = array();
         
-
         if (!array_key_exists("transaction_id", $data)) {
             $msg = "输入参数不正确";
             return false;

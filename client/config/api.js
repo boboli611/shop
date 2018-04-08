@@ -15,7 +15,8 @@ module.exports = {
     ShopDrop: NewApiRootUrl + 'shop/delete',//购物车列表
     GoodsInfo: NewApiRootUrl + 'production/buy-info',  //获得商品的详情
     Createorder:NewApiRootUrl + 'wx/create-order', //创建订单
-    GetOrder: NewApiRootUrl + 'wx/order', //获取订单
+    CreateShoporder: NewApiRootUrl + 'pay/shop-pay', //创建订单
+    GetOrder: NewApiRootUrl + 'pay/order', //获取订单
     AddressSave: NewApiRootUrl + 'address/save',  //保存收货地址
     AddressList: NewApiRootUrl + 'address/list',  //收货地址列表
     AddressDefault: NewApiRootUrl + 'address/default',  //收货地址列表

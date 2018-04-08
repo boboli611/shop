@@ -14,6 +14,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\widgets;
+use yii\log\Logger;
 use \yii\db\Exception as Exception;
 
 /**
@@ -101,15 +102,18 @@ class WxController extends Controller {
 
     //创建订单
     public function actionCreateOrder() {
-
         $pids = Yii::$app->request->post("id");
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
         $ticketId = Yii::$app->request->post("ticket_id");
-        $pids = explode(',', $pids);
 
-        if (!$pids || !$addressId) {
-            $this->asJson(widgets\Response::error("参数错误"));
+        if (!$pids) {
+            $this->asJson(widgets\Response::error("商品id错误"));
+            return;
+        }
+
+        if (!$addressId) {
+            $this->asJson(widgets\Response::error("请选择地址"));
             return;
         }
 
@@ -120,160 +124,37 @@ class WxController extends Controller {
             return;
         }
 
-        $addresData['region'] = sprintf("%s,%s,%s", $addres->province,$addres->city,$addres->county);
-        $addresData['address'] = $addres->address;
-        $addresData['name'] = $addres->name;
-        $addresData['user_id'] = $addres->user_id;
-        $addresData['mobile'] = $addres->mobile;
-        $address = json_encode($addresData);
-
-        $openid = \common\models\user\UserWxSession::findOne($uid);
-        if (!$openid) {
-            $this->asJson(widgets\Response::error("未登录"));
-            return;
-        }
-
-        $shop = [];
-        foreach ($pids as $pid) {
-            $shop[$pid] ++;
-        }
-
-        $product = \common\models\comm\CommProductionStorage::getByids(array_keys($shop));
-        if (!$product || count($product) != count($shop)) {
-            $this->asJson(widgets\Response::error("商品不存在"));
-            return;
-        }
-
-        $orderId = \common\models\comm\CommOrder::createOrderId($uid);
-        $countPrice = 0;
         try {
-            
-            $orderModel = \common\models\comm\CommOrder::getDb()->beginTransaction();
-            
-            foreach ($product as $item) {
-
-                $item->price = $item->price * 100;
-                $num = $item->num - $item->sell;
-                if ($num <= 0) {
-                    throw new Exception("已售罄");
-                }
-
-                if ($shop[$item->id] > $num) {
-                    throw new Exception("库存不足");
-                }
-
-                if (!$item->status) {
-                    throw new Exception("已下架");
-                }
-
-                $model = new \common\models\comm\CommOrder();
-                $model->user_id = $uid;
-                $model->order_id = $orderId;
-                $model->product_id = $item->id;
-                $model->num = $shop[$item->id];
-                $model->price = $item->price * $shop[$item->id];
-                $model->pay_price = $item->price;
-                $model->content = $content;
-                $model->address = $address;
-                $model->status = \common\models\comm\CommOrder::status_waiting_pay;
-                $model->refund = \common\models\comm\CommOrder::status_refund_no;
-
-                $ret = $model->save();
-
-
-                $countPrice += $model->price;
-            }
-
-            //抵扣优惠券
-            $ticketPrice = (new \frontend\service\Ticket())->subTicket($uid, $ticketId, $product, $orderId);
-            
-            //微信下单
-            $userInfo = \common\models\user\User::findOne($uid);
-            $product = (object) [];
-            $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
-            $product->order_id = $orderId;
-            $product->price = $countPrice - $ticketPrice;
-
-            $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
-            if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
-                $this->asJson(widgets\Response::error("下单失败"));
-                return;
-            }
-            
-            $orderModel->commit();
+            $pids = [$pids => 1];
+            $order = (new \frontend\service\Pay())->add($uid, $pids, $addressId, $ticketId, $content);
         } catch (Exception $ex) {
-            $orderModel->rollBack();
             $this->asJson(widgets\Response::error($ex->getMessage()));
-        }
-
-        $userInfo = \common\models\user\User::findOne($uid);
-        $product = (object) [];
-        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
-        $product->order_id = $orderId;
-        $product->price = $countPrice;
-
-        $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
-        if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
-            $this->asJson(widgets\Response::error("下单失败"));
             return;
         }
 
-        $out['id'] = $model->getPrimaryKey();
         $out['nonceStr'] = $order['nonce_str'];
         $out['package'] = "prepay_id={$order['prepay_id']}";
         $out['sign'] = $order['paySign'];
         $out["timeStamp"] = (string) time();
         $this->asJson(widgets\Response::sucess($out));
     }
-
-    public function actionOrder() {
-
-        $order_id = Yii::$app->request->get("order_id");
-
-        if (!$order_id) {
-            $this->asJson(widgets\Response::error("参数错误"));
-            return;
-        }
-
-        $uid = widgets\User::getUid();
-        $order = \common\models\comm\CommOrder::find()->where(['order_id' => $order_id])->one();
-        if (!$order || $order->user_id != $uid) {
+    
+    public function actionOrderPay(){
+        
+        $orderId = Yii::$app->request->post("id");
+        if ($orderId){
             $this->asJson(widgets\Response::error("非法参数"));
             return;
         }
-
-        $openid = \common\models\user\UserWxSession::findOne($uid);
-
-        if (!$openid) {
-            $this->asJson(widgets\Response::error("未登录"));
-            return;
-        }
-
-        $userInfo = \common\models\user\User::findOne($uid);
-        $product = (object) [];
-        $product->title = "Lipze订单-购买用户:{{$userInfo->username}}";
-        $product->order_id = $order->id;
-        $product->price = $order->pay_price;
-
-        $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
-        if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
-            $this->asJson(widgets\Response::error("下单失败"));
-            return;
-        }
-
-
-        $out['nonceStr'] = $order['nonce_str'];
-        $out['package'] = "prepay_id={$order['prepay_id']}";
-        $out['sign'] = $order['paySign'];
-        $out["timeStamp"] = (string) time();
-        $this->asJson(widgets\Response::sucess($out));
+        
+        $info = \common\models\comm\CommOrder::find()->where(['order_id' => $orderId])->one();
     }
 
+    
     /**
      * 付款通知
      */
     public function actionNotice() {
-
         try {
             $wx = new \frontend\components\WxpayAPI\PayNotify();
             $wx->Handle(false);

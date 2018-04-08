@@ -8,9 +8,9 @@ use Yii;
  * This is the model class for table "comm_ticket".
  *
  * @property integer $id
+ * @property integer $title
  * @property integer $condition
  * @property integer $money
- * @property integer $type
  * @property integer $index_show
  * @property string $duration
  * @property integer $status
@@ -19,7 +19,7 @@ use Yii;
  * @property string $updated_at
  * @property string $created_at
  */
-class CommTicket extends \yii\db\ActiveRecord
+class CommTicket extends \common\models\BaseModel
 {
     /**
      * @inheritdoc
@@ -35,10 +35,18 @@ class CommTicket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['condition', 'money', 'type', 'index_show', 'status', 'count', 'num'], 'integer'],
+            [['title','condition', 'money','duration'], 'required'],
+            [['condition', 'money', 'index_show', 'status', 'count', 'num'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
-            [['duration'], 'string', 'max' => 255],
-        ];
+            [['title','duration'], 'string', 'max' => 255],
+        ];  
+    }
+    
+    public function load($data,$formName = null){
+      
+        $data['CommTicket']['money'] = $data['CommTicket']['money'] * 100;
+        $data['CommTicket']['condition'] = $data['CommTicket']['condition'] * 100;
+        return parent::load($data);
     }
 
     /**
@@ -48,16 +56,15 @@ class CommTicket extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'condition' => 'Condition',
-            'money' => 'Money',
-            'type' => 'Type',
-            'index_show' => 'Index Show',
-            'duration' => 'Duration',
-            'status' => 'Status',
-            'count' => 'Count',
-            'num' => 'Num',
-            'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'title' => '标题',
+            'condition' => '使用条件(金额)',
+            'money' => '抵扣额度',
+            'index_show' => '首页显示',
+            'duration' => '有效期',
+            'status' => '状态',
+            'count' => '发行数量',
+            'num' => '领取数量',
+            'updated_at' => '更新时间',
         ];
     }
     

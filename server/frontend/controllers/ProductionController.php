@@ -48,8 +48,9 @@ class ProductionController extends Controller {
         $items = (new \common\models\comm\CommProductItem())->getListBySort();
         
         $ticket = ['money' => 50, "description" => "满499使用"];
+        $tickets = (new \frontend\service\Ticket())->getIndex();
         
-        $out['ticket'] = [$ticket,$ticket,$ticket,$ticket];
+        $out['ticket'] = $tickets;
         $out['item'] = $items;
         $out['list'] = $products;
         $out['recommend'] = \frontend\service\Product::getRecommond();

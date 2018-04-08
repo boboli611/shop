@@ -5,6 +5,20 @@ use \yii\db\Exception as Exception;
 
 class Ticket {
     
+    public function getIndex(){
+        $list = \common\models\comm\CommTicket::find()->where(['index_show' => 1])->andWhere(['status' => 1])->orderBy("id desc")->all();
+        $out = [];
+        foreach ($list as $k =>$val){
+            $val = $val->toArray();
+            $arr['id'] = $val['id'];
+            $arr['description'] = sprintf("满%d使用", $val['condition']);
+            $arr['money'] = $val['money'];
+            $out[] = $arr;
+        }
+        
+        return $out;
+    }
+    
     public function subTicket($userId, $ticketId, $products, $orderId){
        
         $tieket = \common\models\comm\CommTicket::findOne($ticketId);

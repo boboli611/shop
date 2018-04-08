@@ -210,5 +210,46 @@ class ShopController extends Controller {
         
         return $this->asJson(widgets\Response::error("删除失败"));
     }
+    
+    public function actionUpdate(){
+        $id = (int) Yii::$app->request->post("id");
+        $num = (int) Yii::$app->request->post("num");
+        $storage_id = (int) Yii::$app->request->post("storage_id");
+        
+        if (!$id){
+            $this->asJson(widgets\Response::error("选择购物车Id"));
+            return;
+        }
+        if (!$num){
+            $this->asJson(widgets\Response::error("选择数量"));
+            return;
+        }
+        if (!$storage_id){
+            $this->asJson(widgets\Response::error("选择商品ID"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        $userShop = \common\models\user\UserShop::findOne($id);
+        if (!$userShop || $userShop->user_id != $uid){
+            $this->asJson(widgets\Response::error("信息不存在"));
+            return;
+        }
+        
+        $product = \common\models\comm\CommProductionStorage::find()->where(["id"=>$storage_id])->andWhere(["status" => 1])->one();
+        if (!$product){
+            $this->asJson(widgets\Response::error("商品不存在"));
+            return;
+        }
+        
+        $userShop->storage_id = $storage_id;
+        $userShop->num = $num;
+        if (!$userShop->save()){
+            $this->asJson(widgets\Response::error("修改失败"));
+            return;
+        }
+        $this->asJson(widgets\Response::sucess("成功"));
+        
+    }
 
 }

@@ -12,7 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comm-product-index" style="width: 80%">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('新商品', ['create'], ['class' => 'btn btn-success']) ?>

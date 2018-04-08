@@ -11,8 +11,6 @@ use Yii;
  * @property integer $user_id
  * @property integer $order_id
  * @property integer $product_id
- * @property integer $price
- * @property integer $pay_price
  * @property integer $num
  * @property integer $adress
  * @property integer $status
@@ -26,15 +24,16 @@ class CommOrder extends \common\models\BaseModel {
 
     const status_waiting_pay = 1; //待付款
     const status_goods_waiting_send = 2; //代发货
-    const status_goods_waiting_receve = 3; //代收货
+    const status_goods_waiting_receve = 3; //待收货
     const status_goods_receve = 4; //已收货
     const status_pay_fail = 9; //支付失败
     
     const status_refund_no = 1; // '未申请',
     const status_refund_checking = 2; // '审核中',
     const status_refund_waiting = 3; // '退货中',
-    const status_refund_ok = 4; // '已退货',
-    const status_refund_fail = 5; // '未退货',
+    const status_refund_ok = 4; // '同意退货',
+    const status_refund_sucess = 5; //'退货完成',
+    const status_refund_fail = 9; // '退货未批准',
 
     public static $payName = [
         self::status_waiting_pay => "待付款",
@@ -46,8 +45,9 @@ class CommOrder extends \common\models\BaseModel {
         self::status_refund_no => '未申请',
         self::status_refund_checking => '审核中',
         self::status_refund_waiting => '退货中',
-        self::status_refund_ok => '已退货',
-        self::status_refund_fail => '不退货',
+        self::status_refund_ok => '同意退货',
+        self::status_refund_sucess => '退货完成',
+        self::status_refund_fail => '退货未批准',
     ];
     public $sumPayPrice;
     public $username;
@@ -65,7 +65,7 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
-            [['user_id', 'product_id', 'price', 'pay_price', 'num'], 'integer'],
+            [['user_id', 'product_id', 'num'], 'integer'],
             [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 256],
             [['address'], 'string', 'max' => 512],
@@ -81,8 +81,6 @@ class CommOrder extends \common\models\BaseModel {
             'user_id' => '用户[ID]',
             'order_id' => '订单号',
             'product_id' => 'Product ID',
-            'price' => '金额',
-            'pay_price' => '支付金额',
             'num' => '数量',
             'username' => '用户',
             'sumPayPrice' => "支付金额",
@@ -137,6 +135,44 @@ class CommOrder extends \common\models\BaseModel {
         return $model->andWhere(["user_id" => $userId])->groupBy("order_id")->orderBy("id desc")->offset($offset)->limit($limit)->all();
 
     }
+    
+     /**
+     * @inheritdoc
+     * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
+     */
+    public static function getListInfo($userId, $type, $page, $limit = 10) {
+
+        $page = $page > 0 ? $page - 1 : $page;
+        $offset = $page * $limit;
+        
+        $model = self::find();
+        $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total", "address", "status","refund", "expressage","content", "comm_order_product.*"]);
+        if ($type){
+            $model->where(['comm_order.status' => $type]);
+        }
+        $model->join("inner join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id");
+        
+
+        return $model->andWhere(["comm_order.user_id" => $userId])->orderBy("comm_order.id desc")->offset($offset)->limit($limit)->all();
+
+    }
+    
+     /**
+     * @inheritdoc
+     * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
+     */
+    public static function getInfoByOrder($orderId, $userId) {
+
+        
+        $model = self::find();
+        $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total", "address", "status","refund", "expressage","content", "comm_order_product.*"]);
+
+        $model->join("inner join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id");
+        $model->where(['comm_order.order_id' => $orderId]);
+        return $model->andWhere(["comm_order.user_id" => $userId])->orderBy("comm_order.id desc")->all();
+
+    }
+    
 
     public static function createOrderId($userId) {
 
