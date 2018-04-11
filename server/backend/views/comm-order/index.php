@@ -113,7 +113,7 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    return $model->updated_at;
+                    return "<a href='/comm-order/refund?id={$model->order_id}' target='_blank'>退款</>";
                 },
             ],
             [

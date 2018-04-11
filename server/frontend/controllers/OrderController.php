@@ -109,13 +109,25 @@ class OrderController extends Controller {
     //退货
     public function actionRefund(){
         
-        $orderId = Yii::$app->request->get("order_id");
+        $orderId = Yii::$app->request->post("order_id");
+        $recive = Yii::$app->request->post("recive");
+        $content = Yii::$app->request->post("content");
+        
         if (!$orderId){
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("订单不能为空"));
             return;
         }
         
-        //$uid = 7;
+        if (!$recive){
+            $this->asJson(widgets\Response::error("收货状态不能为空"));
+            return;
+        }
+        
+        if ($recive != CommOrder::status_goods_waiting_receve && $recive != CommOrder::status_goods_receve){
+            $this->asJson(widgets\Response::error("收货状态错误"));
+            return;
+        }
+        
         $uid = widgets\User::getUid();
         $order = \common\models\comm\CommOrder::getByOrderId($orderId);
         if ($order->user_id != $uid){
@@ -129,7 +141,12 @@ class OrderController extends Controller {
         }
         
         $order->refund = \common\models\comm\CommOrder::status_refund_waiting;
-        $ret = \common\models\comm\CommOrder::updateAll(['refund' => \common\models\comm\CommOrder::status_refund_waiting], "order_id='{$orderId}'");
+        $data = [
+                'refund' => \common\models\comm\CommOrder::status_refund_waiting,
+                'content' => $content,
+                'refund_status' => $recive,
+                ];
+        $ret = \common\models\comm\CommOrder::updateAll($data, "order_id='{$orderId}'");
         if (!$ret){
             $this->asJson(widgets\Response::error("申请失败"));
             return;

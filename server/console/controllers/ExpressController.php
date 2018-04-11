@@ -58,7 +58,7 @@ class ExpressController extends Controller
             }
             
             $express->no  = $val->expressage;
-            $express->content  = $result;
+            $express->content  = json_encode($data['data']);
             $express->company  = $comCode;
             $express->save();
             

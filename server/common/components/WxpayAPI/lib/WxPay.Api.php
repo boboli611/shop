@@ -533,11 +533,12 @@ class WxPayApi
 	 * @throws WxPayException
 	 */
 	private static function postXmlCurl($xml, $url, $useCert = false, $second = 30)
-	{		
+	{	
+
 		$ch = curl_init();
 		//设置超时
 		curl_setopt($ch, CURLOPT_TIMEOUT, $second);
-		
+
 		//如果有配置代理这里就设置代理
 		if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0" 
 			&& WxPayConfig::CURL_PROXY_PORT != 0){
@@ -565,6 +566,7 @@ class WxPayApi
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		//运行curl
 		$data = curl_exec($ch);
+
 		//返回结果
 		if($data){
 			curl_close($ch);

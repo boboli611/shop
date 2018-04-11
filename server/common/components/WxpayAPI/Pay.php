@@ -1,12 +1,13 @@
 <?php
 
-namespace frontend\components\WxpayAPI;
+namespace common\components\WxpayAPI;
 
 require_once "lib/WxPay.Api.php";
+
 //require_once "WxPay.JsApiPay.php";
 
 class Pay {
-    
+
     private static $notifyUrl = "https://www.ttyouhiu.com/wx/notice";
 
     public static function pay($openId, $product) {
@@ -31,9 +32,8 @@ class Pay {
 
         return $order;
     }
-    
-    
-     public static function query($product) {
+
+    public static function query($product) {
 
         $appid = \yii::$app->params["wx"]['appId'];
         $mchId = \yii::$app->params["wx"]['mchId'];
@@ -45,6 +45,20 @@ class Pay {
         $order = \WxPayApi::orderQuery($input);
 
         return $order;
+    }
+
+    public static function refund($out_trade_no, $total_fee, $refund_fee) {
+
+        $appid = \yii::$app->params["wx"]['appId'];
+        $mchId = \yii::$app->params["wx"]['mchId'];
+        
+        $input = new \WxPayRefund();
+        $input->SetOut_trade_no($out_trade_no);
+        $input->SetTotal_fee($total_fee);
+        $input->SetRefund_fee($refund_fee);
+        $input->SetOut_refund_no($mchId . date("YmdHis"));
+        $input->SetOp_user_id($mchId);
+        var_dump($mchId,\WxPayApi::refund($input));
     }
 
 }

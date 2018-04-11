@@ -81,6 +81,24 @@ class CommOrderController extends Controller {
             ]);
         }
     }
+    
+    public function actionRefund(){
+        
+        $out_trade_no = "20180405152289680546119";
+        $total_fee = 2;
+        $refund_fee = 1;
+                
+                
+        $openid = \common\models\user\UserWxSession::findOne(7);
+        $product = (object) [];
+        $product->title = "Lipze";
+        $product->order_id = $out_trade_no;
+        $product->price = $total_fee;
+        //$order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
+        //var_dump($order);exit;
+        
+        \common\components\WxpayAPI\Pay::refund($out_trade_no, $total_fee, $refund_fee);
+    }
 
     /**
      * Finds the CommOrder model based on its primary key value.
