@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $order_id
- * @property integer $refound_id
+ * @property integer $refound
  * @property integer $price
  * @property integer $admin_id
  * @property integer $admin_nickname
@@ -33,7 +33,7 @@ class CommOrderRefundLog extends \yii\db\ActiveRecord
     {
         return [
             [[ 'price'], 'required'],
-            [['order_id', 'refound_id', 'price', 'admin_id', 'admin_nickname'], 'integer'],
+            [['order_id', 'refound', 'price', 'admin_id', 'admin_nickname'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -46,7 +46,7 @@ class CommOrderRefundLog extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'order_id' => 'Order ID',
-            'refound_id' => 'Refound ID',
+            'refound' => 'Refound ID',
             'price' => '退款金额',
             'admin_id' => 'Admin ID',
             'admin_nickname' => 'Admin Nickname',

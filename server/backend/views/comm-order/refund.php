@@ -27,7 +27,14 @@ $this->params['breadcrumbs'][] = '订单';
 
     <?= $form->field($model, 'status')->textInput(["readonly" => true]); ?>
 
-    <?= $form->field($refundModle, 'price')->textInput(['style' => 'width:120px']); ?>
+    <?php
+        if ($model->refund = common\models\comm\CommOrder::status_refund_sucess){
+            $form->field($refundModle, 'price')->textInput(['style' => 'width:120px', ["readonly" => true]]);
+        }else{
+             $form->field($refundModle, 'price')->textInput(['style' => 'width:120px']);
+        }
+     ?>
+        
     <?php
     if ($model->refund == 1) {
         $model->refund = common\models\comm\CommOrder::$refund[$model->refund];
