@@ -30,6 +30,10 @@ class WxController extends Controller {
         $code = $_SERVER['HTTP_X_WX_CODE'];
         $encryptedData = $_SERVER["HTTP_X_WX_ENCRYPTED_DATA"];
         $iv = $_SERVER["HTTP_X_WX_IV"];
+        
+        $code = \yii::$app->request->post('code');
+        $encryptedData = \yii::$app->request->post('encrypted_data');
+        $iv = \yii::$app->request->post('iv');
 
         if (!$code || !$encryptedData || !$iv) {
             $this->asJson(widgets\Response::error("登录失败1"));
@@ -40,13 +44,12 @@ class WxController extends Controller {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=$appid&secret=$secret&js_code=$code&grant_type=$grant_type";
         $result = widgets\Http::Get($url);
         $result = json_decode($result, true);
-
         if (isset($result['errcode'])) {
             $this->asJson(widgets\Response::error("登录失败2"));
             return;
         }
 
-        $pc = new \frontend\components\WxpayAPI\WXBizDataCrypt($appid, $result['session_key']);
+        $pc = new \common\components\WxpayAPI\WXBizDataCrypt($appid, $result['session_key']);
         $errCode = $pc->decryptData($encryptedData, $iv, $data);
         $data = json_decode($data, true);
         if ($errCode != 0 || !$data) {

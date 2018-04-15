@@ -8,8 +8,7 @@ class User extends \yii\bootstrap\Widget
 {
    public static function getUid(){
        
-       //var_dump($_SERVER);exit;
-       $token = $_SERVER['HTTP_X_LIPZ_TOKEN'];
+       $token = $_SERVER['HTTP_USER_TOKEN'];
        if (!$token){
            echo Response::encode(Response::error('未登录'));
            exit;

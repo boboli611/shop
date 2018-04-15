@@ -44,16 +44,21 @@ class ProductionController extends Controller {
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
         }
+        
+        $recommend = \frontend\service\Product::getRecommond();
+        foreach ($recommend as $val){
+            $img = json_decode($val->cover, TRUE);
+            $val->cover = $img[0];
+        }
         //类目
         $items = (new \common\models\comm\CommProductItem())->getListBySort();
         
-        $ticket = ['money' => 50, "description" => "满499使用"];
         $tickets = (new \frontend\service\Ticket())->getIndex();
         
         $out['ticket'] = $tickets;
         $out['item'] = $items;
         $out['list'] = $products;
-        $out['recommend'] = \frontend\service\Product::getRecommond();
+        $out['recommend'] = $recommend;
         $out['banner'] = \frontend\service\Banner::get(\common\models\comm\CommBanner::index_page_one);
         return $this->asJson(widgets\Response::sucess($out));
     }
@@ -65,7 +70,7 @@ class ProductionController extends Controller {
      */
     public function actionList() {
 
-        $page = (int) Yii::$app->request->get("page");
+        $page = (int) Yii::$app->request->get("p");
 
         $products = \frontend\service\Product::search(["type" => 2], "", "", "", $page);
         $products = $products ? $products : []; 
@@ -170,6 +175,7 @@ class ProductionController extends Controller {
     public function actionBuyInfo() {
 
         $id = (int) Yii::$app->request->get("id");
+        $buyNum = (int) Yii::$app->request->get("buy_num");
         if (!$id) {
             $this->asJson(widgets\Response::error("参数错误1"));
             return;
@@ -192,19 +198,23 @@ class ProductionController extends Controller {
 
         $address = \common\models\user\UserAddress::getByUserAuto($uid);
 
+        $cover = json_decode($info['cover'], true);
+
+        $info['cover'] = $cover[0];
         $info['style'] = $storage->style;
         $info['size'] = $storage->size;
-        $info['price'] = $storage->price / 100;
+        $info['price'] = $storage->price * $buyNum / 100;
         $info['storage_id'] = $storage->id;
+        $info['buy_num'] = $buyNum;
       
-        
+        $address = isset($address) ? $address->toArray() : [];
+        $address["full_addres"] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
         //postage
         $out["info"] = $info;
-        $out["order"]["price"] = $storage->price;
+        $out["order"]["price"] = $storage->price * $buyNum / 100;
         $out["order"]["carriage"] = $info['carriage'];
         $out["order"]["discount"] = 50;
-        $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
+        $out["address"] = $address;
         return $this->asJson(widgets\Response::sucess($out));
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\components\WxpayAPI;
+namespace common\components\WxpayAPI;
 use yii\log\Logger;
 require_once "lib/WxPay.Api.php";
 require_once 'lib/WxPay.Notify.php';
