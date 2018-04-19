@@ -26,7 +26,6 @@ class AddressController extends Controller {
         $address = Yii::$app->request->post("address");
         $status = (int) Yii::$app->request->post("status");
         
-
         if (!$name || !$mobile || !$address ||!$province || !$city || !$county) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -70,10 +69,14 @@ class AddressController extends Controller {
         $out['id'] = $addressModel->id;
         $this->asJson(widgets\Response::sucess($out));
     }
+    
+    public function actionSaveStatus() {
+        $this->asJson(widgets\Response::sucess($out));
+    }
 
     public function actionDelete() {
 
-        $id = (int) Yii::$app->request->post("id");
+        $id = (int) Yii::$app->request->get("id");
         if (!$id) {
             $this->asJson(widgets\Response::error("id错误"));
             return;
