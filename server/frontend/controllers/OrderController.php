@@ -27,7 +27,7 @@ class OrderController extends Controller {
             $this->asJson(widgets\Response::sucess($out));
             return;
         }
-        
+
         foreach ($info as $val) {
             $val = $val->toArray();
             $price = $val['total'];
@@ -37,10 +37,11 @@ class OrderController extends Controller {
             $pids[] = $id;
             $address = $val['address'];
             $status = $val['status'];
+            $content = $val['content'];
         }
      
         $pList = \frontend\service\Product::getByStorageid($pids);
-        foreach ($pList as &$val) {
+        foreach ($pList as $key => &$val) {
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
             $id = $val['storage_id'];
@@ -54,10 +55,11 @@ class OrderController extends Controller {
         $out['info'] = ['order_id' => $order, 
             'total' => $price / 100,
             'status'=> (int)$status,
+            'content'=> $content,
             'created_at' => $create_time,
             'order_status_text' =>  \common\models\comm\CommOrder::$payName[$status],
             'consignee' => $address->name, 'mobile' => $address->mobile,
-            'address' => $address->full_region .' '. $address->address,
+            'address' => $address->region .' '. $address->address,
         ];
         $this->asJson(widgets\Response::sucess($out));
     }

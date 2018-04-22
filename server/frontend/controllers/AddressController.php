@@ -43,6 +43,10 @@ class AddressController extends Controller {
             } else {
                 $addressModel = new \common\models\user\UserAddress();
             }
+            
+            if ($status == 1) {
+                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid} and id != {$id}");
+            }
 
             $addressModel->user_id = $uid;
             $addressModel->name = $name;
@@ -52,11 +56,7 @@ class AddressController extends Controller {
             $addressModel->county = $county;
             $addressModel->address = $address;
             $addressModel->status = $status;
-
-            if ($status == 1) {
-                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid}");
-            }
-
+            
             $res = $addressModel->save();
             if (!$res) {
                 throw new \Exception("保存失败");

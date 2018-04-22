@@ -135,6 +135,7 @@ class WxController extends Controller {
             return;
         }
 
+        $out['order_id'] = $order['order_id'];
         $out['nonceStr'] = $order['nonce_str'];
         $out['package'] = "prepay_id={$order['prepay_id']}";
         $out['sign'] = $order['paySign'];
@@ -159,7 +160,7 @@ class WxController extends Controller {
      */
     public function actionNotice() {
         try {
-            $wx = new \frontend\components\WxpayAPI\PayNotify();
+            $wx = new \common\components\WxpayAPI\PayNotify();
             $wx->Handle(false);
         } catch (\Exception $exc) {
             echo $exc->getMessage();
