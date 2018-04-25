@@ -91,13 +91,16 @@ class OrderController extends Controller {
             $products[$id] = $val;
         }
 
+        $out = [];
         foreach ($list as $val) {
             $id = $val->order_id;
             $sid = $val->product_id;
             $status = $val->status;
             $product = $products[$sid];
             $product['num'] = $val->num;
-            $out[$id]['total'] = $val->total / 100;
+            $product['price'] = $product['price']/ 100;
+            $out[$id]['total'] = ($val->total + (int)$val->freight) / 100;
+            $out[$id]['num'] += $val->num;
             $out[$id]['order_id'] = $id;
             $out[$id]['status'] = $status;
             $out[$id]['order_status_text'] = $val->refund == CommOrder::status_refund_no ? CommOrder::$payName[$status] : CommOrder::$refund[$val->refund];
