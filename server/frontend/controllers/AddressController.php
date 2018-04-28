@@ -43,6 +43,10 @@ class AddressController extends Controller {
             } else {
                 $addressModel = new \common\models\user\UserAddress();
             }
+            
+            if ($status == 1) {
+                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid} and id != {$id}");
+            }
 
             $addressModel->user_id = $uid;
             $addressModel->name = $name;
@@ -52,11 +56,7 @@ class AddressController extends Controller {
             $addressModel->county = $county;
             $addressModel->address = $address;
             $addressModel->status = $status;
-
-            if ($status == 1) {
-                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid}");
-            }
-
+            
             $res = $addressModel->save();
             if (!$res) {
                 throw new \Exception("保存失败");
@@ -71,6 +71,44 @@ class AddressController extends Controller {
     }
     
     public function actionSaveStatus() {
+        
+        $id = (int) Yii::$app->request->post("id");
+        if (!$id) {
+            $this->asJson(widgets\Response::error("参数错误"));
+            return;
+        }
+
+        $uid = widgets\User::getUid();
+        try {
+
+            $addressModel = \common\models\user\UserAddress::findOne($id);
+            if ($addressModel->user_id != $uid) {
+                $this->asJson(widgets\Response::error("只能修改自己的地址"));
+                return;
+            }
+            
+            if (!$addressModel){
+                $this->asJson(widgets\Response::error("参数错误"));
+                return;
+            }
+            
+            if ($addressModel->status == 0) {
+                \common\models\user\UserAddress::updateAll(['status' => 0], "user_id = {$uid} and id != {$id}");
+                $addressModel->status = 1;
+            }else{
+                $addressModel->status = 0;
+            }
+
+            $res = $addressModel->save();
+            if (!$res) {
+                throw new \Exception("保存失败");
+            }
+        } catch (\Exception $ex) {
+            $this->asJson(widgets\Response::error($ex->getMessage()));
+            return;
+        }
+
+        $out['id'] = $addressModel->id;
         $this->asJson(widgets\Response::sucess($out));
     }
 

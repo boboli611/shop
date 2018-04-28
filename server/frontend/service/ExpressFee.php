@@ -1,26 +1,10 @@
 <?php
-
+namespace frontend\service;
 class ExpressFee {
 
     //首重
-    static $first_price = [
-        "青海" => 15,
-        "新疆" => 15,
-        "西藏" => 15,
-        "内蒙" => 15,
-        "台湾" => 36,
-        "香港" => 30,
-        "澳门" => 30,
-    ];
-    static $renew = [
-        "青海" => 13,
-        "新疆" => 13,
-        "西藏" => 13,
-        "内蒙" => 13,
-        "台湾" => 28,
-        "香港" => 12,
-        "澳门" => 12,
-    ];
+    static $first_price = [];
+    static $renew = [];
 
     public static function sumPrice($address, $num) {
         
@@ -30,8 +14,12 @@ class ExpressFee {
 
     private static function getFirstPrice($address) {
         
+        if(!self::$first_price){
+            self::init();
+        }
+        
         //海外300;
-        return isset(self::$first_price[$address]) ? self::$first_price[$address] : 300;
+        return isset(self::$first_price[$address]) ? self::$first_price[$address] : 30000;
     }
     
     private static function getRenewPrice($address, $num) {
@@ -40,9 +28,22 @@ class ExpressFee {
             return 0;
         }
         
-        //海外300;
-        $price =  isset(self::$renew[$address]) ? self::$renew[$address] : 150;
+        if(!self::$first_price){
+            self::init();
+        }
+        
+        //海外;
+        $price =  isset(self::$renew[$address]) ? self::$renew[$address] : 15000;
         return $price * $num;
+    }
+    
+    private static function init(){
+        
+        $list = \common\models\comm\CommRegion::find()->all();
+        foreach ($list as $val){
+            self::$first_price[$val->name] = $val->price;
+            self::$renew[$val->name] = $val->renew;
+        }
     }
 
 }

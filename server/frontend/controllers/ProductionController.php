@@ -12,7 +12,7 @@ use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use frontend\models\ContactForm; 
 use common\widgets;
 
 /**
@@ -212,8 +212,8 @@ class ProductionController extends Controller {
         //postage
         $out["info"] = $info;
         $out["order"]["price"] = $storage->price * $buyNum / 100;
-        $out["order"]["carriage"] = $info['carriage'];
-        $out["order"]["discount"] = 50;
+        $out["order"]["carriage"] = \frontend\service\ExpressFee::sumPrice($address['province'], $buyNum) / 100;
+        //$out["order"]["discount"] = 50;
         $out["address"] = $address;
         return $this->asJson(widgets\Response::sucess($out));
     }

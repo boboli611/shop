@@ -39,8 +39,10 @@ class ShopController extends Controller {
 
         $carriage = 0;
         $price = 0;
+        $buyNum = 0;
         foreach ($info as &$val) {
             
+            $buyNum += $val['num'];
             $carriage += $val['carriage'];
             $price += $val['price'];
             $val['price'] = $val['price'] / 100;
@@ -51,8 +53,7 @@ class ShopController extends Controller {
 
         $out["info"] = $info;
         $out["order"]["price"] = $price;
-        $out["order"]["carriage"] = $carriage;
-        $out["order"]["discount"] = 0;
+        $out["order"]["carriage"] = \frontend\service\ExpressFee::sumPrice($address['province'], $buyNum) / 100;
         $out["address"]['id'] = $address['id'];
         $out["address"]['address'] = $address['full_region'] . $address['address'];
 

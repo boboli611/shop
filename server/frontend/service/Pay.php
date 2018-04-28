@@ -23,7 +23,8 @@ class Pay {
 
             //抵扣优惠券
             $ticketPrice = (new \frontend\service\Ticket())->subTicket($uid, $ticketId, $pInfo["price"], $orderId);
-            $freight = $this->getfreightPrice();
+            //物流费
+            $freight = $this->getfreightPrice($address['province'], $pInfo['countProduct']);
             $countPrice = $pInfo["price"] - $ticketPrice + $freight;
             $userInfo = \common\models\user\User::findOne($uid);
             $product = (object) [];
@@ -43,7 +44,7 @@ class Pay {
             $orderModel->ticket = $ticketPrice;
             $orderModel->content = $content;
             $orderModel->prepay_id = $order['prepay_id'];
-            $orderModel->address = $address;
+            $orderModel->address = json_encode($address);
             $orderModel->total = $pInfo["price"];
             $orderModel->status = \common\models\comm\CommOrder::status_waiting_pay;
             $orderModel->refund = \common\models\comm\CommOrder::status_refund_no;
@@ -58,6 +59,7 @@ class Pay {
             throw new Exception($ex->getMessage());
         }
 
+        $order['order_id'] = $orderId;
         return $order;
     }
 
@@ -127,13 +129,16 @@ class Pay {
         }
 
         $addresData['region'] = sprintf("%s,%s,%s", $addres->province, $addres->city, $addres->county);
+        $addresData['province'] = $addres->province;
+        $addresData['city'] = $addres->city;
+        $addresData['county'] = $addres->county;
         $addresData['address'] = $addres->address;
         $addresData['name'] = $addres->name;
         $addresData['user_id'] = $addres->user_id;
         $addresData['mobile'] = $addres->mobile;
-        $address = json_encode($addresData);
+        //$address = json_encode($addresData);
 
-        return $address;
+        return $addresData;
     }
 
     private function getCountProduct($uid, $pIds, $address, $content, $orderId) {
@@ -179,11 +184,12 @@ class Pay {
         }
 
         $out['price'] = $countPrice;
+        $out['countProduct'] = $countProduct;
         return $out;
     }
     
     //运费
-    public function getfreightPrice(){
-        return 0;
+    public function getfreightPrice($address, $num){
+        return ExpressFee::sumPrice($address, $num);
     }
 }
