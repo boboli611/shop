@@ -213,10 +213,10 @@ class ShopController extends Controller {
     }
     
     public function actionUpdate(){
+        
         $id = (int) Yii::$app->request->post("id");
         $num = (int) Yii::$app->request->post("num");
         $storage_id = (int) Yii::$app->request->post("storage_id");
-        
         if (!$id){
             $this->asJson(widgets\Response::error("选择购物车Id"));
             return;
@@ -240,6 +240,11 @@ class ShopController extends Controller {
         $product = \common\models\comm\CommProductionStorage::find()->where(["id"=>$storage_id])->andWhere(["status" => 1])->one();
         if (!$product){
             $this->asJson(widgets\Response::error("商品不存在"));
+            return;
+        }
+        
+        if ($product['num'] < $num){
+            $this->asJson(widgets\Response::error("库存不足"));
             return;
         }
         

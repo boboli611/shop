@@ -9,14 +9,18 @@ use Yii;
  *
  * @property integer $id
  * @property integer $order_id
+ * @property integer $storage_id
+ * @property integer $content
  * @property integer $refound
+ * @property integer $expressage_status
+ * @property integer $expressage_num
  * @property integer $price
  * @property integer $admin_id
  * @property integer $admin_nickname
  * @property string $updated_at
  * @property string $created_at
  */
-class CommOrderRefundLog extends \yii\db\ActiveRecord
+class CommOrderRefundLog extends \common\models\BaseModel
 {
     /**
      * @inheritdoc

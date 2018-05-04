@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="x-ua-compatible" content="IE=edge" >
+<meta name="viewport"   content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+<title>ddd</title>
+<script type="text/javascript" src="http://zqmfcdn.huanhuba.com/hhb/static/pc/js/jquery.min.js"></script>
+</head>
+<body>
+ <div id="table"></div>
+ <script>
+    var json = [{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1}];
+	var data = {};
+	var table = "<table>"
+	
+	var title = {"style":"样式", "size":"尺寸", "num":"数量", "status":"状态"}
+	json.forEach(function(val, i){
+		if (!data["style"]){
+			data["style"] = [];
+		}
+		if (!data["size"]){
+			data["size"] = [];
+		}
+		if (!data["num"]){
+			data["num"] = [];
+		}
+		if (!data["status"]){
+			data["status"] = [];
+		}
+
+		data["style"].push(val.style);
+		data["size"].push(val.size);
+		data["num"].push(val.num);
+		data["status"].push(val.status);
+		
+	})
+
+	console.log(data)
+	for (var k in data )
+	{
+		var val = data[k]
+		table += "<tr><td>" + title[k] + "</td>";
+		console.log(val)
+		val.forEach(function(item, index){
+			if (k == "num")
+			{
+				table += "<td><input name='num' value='"+item+"'></td>";
+			}else{
+				table += "<td>" + item + "</td>";
+			}
+			
+		})
+		table += "</tr>";
+	}
+	table += "</table>"
+	$("#table").html(table)
+	alert(table)
+
+  </script>
+</body>
