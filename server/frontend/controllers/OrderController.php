@@ -115,11 +115,17 @@ class OrderController extends Controller {
     public function actionRefund(){
         
         $orderId = Yii::$app->request->post("order_id");
+        $storageId = Yii::$app->request->post("storage_id");
         $recive = Yii::$app->request->post("recive");
         $content = Yii::$app->request->post("content");
-        
+$storageId = [140,138];
         if (!$orderId){
             $this->asJson(widgets\Response::error("订单不能为空"));
+            return;
+        }
+        
+        if (!$storageId || !is_array($storageId)){
+            $this->asJson(widgets\Response::error("商品ID不为空"));
             return;
         }
         
@@ -133,24 +139,55 @@ class OrderController extends Controller {
             return;
         }
         
-        $uid = widgets\User::getUid();
+        //$uid = widgets\User::getUid();
+        $uid = 7;
         $order = \common\models\comm\CommOrder::getByOrderId($orderId);
         if ($order->user_id != $uid){
             $this->asJson(widgets\Response::error("不能退换别人的货物"));
             return;
         }
         
-        if ($order->refund != \common\models\comm\CommOrder::status_refund_no){
+        $refund = \common\models\comm\CommOrderRefundLog::find()->where(['=','order_id', $orderId])->andWhere(['in', 'storage_id' , $storageId])->one();
+        if ($refund){
             $this->asJson(widgets\Response::error("已申请退货"));
             return;
         }
         
+        $trans = \common\models\comm\CommOrderRefundLog::getDb()->beginTransaction();
+        try {
+            
+            foreach ($storageId as $id){
+                $model = new \common\models\comm\CommOrderRefundLog();
+                $storage  = \common\models\comm\CommOrderProduct::find()->where(['=','order_id', $orderId])->andWhere(['product_id' => $id])->one();
+                if (!$storage){
+                    throw new \Exception("商品未购买");
+                }
+                $model->order_id = $orderId;
+                $model->storage_id = $id;
+                $model->content = $content;
+                $model->refound = CommOrder::status_refund_checking;
+                $model->expressage_status = $recive;
+                $model->price = $storage->pay_price;
+                if (!$model->save()){
+                    throw new \Exception("申请失败");
+                }
+            }
+            $trans->commit();
+        } catch (\Exception $exc) {
+            $trans->rollBack();
+            $this->asJson(widgets\Response::error($exc->getMessage()));
+            return;
+        }
+
+
+
         $order->refund = \common\models\comm\CommOrder::status_refund_waiting;
         $data = [
                 'refund' => \common\models\comm\CommOrder::status_refund_waiting,
                 'content' => $content,
                 'refund_status' => $recive,
                 ];
+        
         $ret = \common\models\comm\CommOrder::updateAll($data, "order_id='{$orderId}'");
         if (!$ret){
             $this->asJson(widgets\Response::error("申请失败"));
