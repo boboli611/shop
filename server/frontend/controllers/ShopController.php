@@ -69,7 +69,7 @@ class ShopController extends Controller {
         $uid = widgets\User::getUid();
         
     
-        $sql = "select a.id as shop_id, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
+        $sql = "select a.id as shop_id,a.num, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
                 . " inner join comm_production_storage b on a.storage_id = b.id"
                 . " inner join comm_product c on b.product_id = c.id"
                 . " where a.user_id = {$uid} and b.status = 1 and c.status = 1"
@@ -124,7 +124,7 @@ class ShopController extends Controller {
         $uid = widgets\User::getUid();
         
     
-        $sql = "select a.id as shop_id, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
+        $sql = "select a.id as shop_id,a.num, c.*,c.price as p, b.size,b.style,b.id as storage_id, b.price from user_shop a "
                 . " inner join comm_production_storage b on a.storage_id = b.id"
                 . " inner join comm_product c on b.product_id = c.id"
                 . " where a.id in({$ids}) and a.user_id = {$uid} and b.status = 1"
@@ -213,6 +213,8 @@ class ShopController extends Controller {
     }
     
     public function actionUpdate(){
+        $this->asJson(widgets\Response::error("信息不存在"));
+            return;
         $id = (int) Yii::$app->request->post("id");
         $num = (int) Yii::$app->request->post("num");
         $storage_id = (int) Yii::$app->request->post("storage_id");
