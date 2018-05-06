@@ -23,7 +23,7 @@ use Yii;
 class CommOrder extends \common\models\BaseModel {
 
     const status_waiting_pay = 1; //待付款
-    const status_goods_waiting_send = 2; //代发货
+    const status_goods_waiting_send = 2; //待发货
     const status_goods_waiting_receve = 3; //待收货
     const status_goods_receve = 4; //已收货
     const status_pay_fail = 9; //支付失败
@@ -164,10 +164,22 @@ class CommOrder extends \common\models\BaseModel {
     public static function getInfoByOrder($orderId, $userId) {
 
         
+        
+        $sql = "select comm_order.id,comm_order.order_id,comm_order.user_id,total,address,status,comm_order.refund,expressage,comm_order.content,pay_time,send_time,
+            end_time,comm_order_product.*,comm_order_refund_log.refound as refound_status, comm_order_refund_log.id as refound_id from comm_order
+            inner join comm_order_product on comm_order.order_id = comm_order_product.order_id
+            left join comm_order_refund_log on comm_order_product.order_id = comm_order_refund_log.order_id and comm_order_product.product_id = comm_order_refund_log.storage_id
+            where comm_order.order_id = {$orderId} and comm_order.user_id = {$userId} 
+            order by comm_order.id desc    
+            ";
+        return self::findBySql($sql)->asArray()->all();
+        
         $model = self::find();
-        $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total", "address", "status","refund", "expressage","content", "comm_order_product.*"]);
+        $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total", "address", "status","comm_order.refund", "expressage","comm_order.content","pay_time","send_time",
+            "end_time", "comm_order_product.*", "comm_order_refund_log.refound as refound_status"]);
 
         $model->join("inner join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id");
+        $model->join("left join", "comm_order_refund_log", "comm_order_product.order_id = comm_order_refund_log.order_id and comm_order_product.product_id = comm_order_refund_log.storage_id");
         $model->where(['comm_order.order_id' => $orderId]);
         return $model->andWhere(["comm_order.user_id" => $userId])->orderBy("comm_order.id desc")->all();
 

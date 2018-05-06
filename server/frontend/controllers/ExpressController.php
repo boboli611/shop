@@ -32,4 +32,16 @@ class ExpressController extends Controller {
         
         $this->asJson($info);
     }
+    
+    public function actionCompanyList(){
+        $companys = \common\models\comm\CommExpressLog::$company;
+        
+        $names = array_values($companys);
+        $ids = array_keys($companys);
+        
+        $out['name'] = $names;
+        $out['id'] = $ids;
+        
+        $this->asJson(widgets\Response::sucess($out));
+    }
 }

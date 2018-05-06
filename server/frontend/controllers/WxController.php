@@ -126,11 +126,14 @@ class WxController extends Controller {
             $this->asJson(widgets\Response::error("非法参数"));
             return;
         }
-
+        
+        $trans = \common\models\comm\CommOrder::getDb()->beginTransaction();
         try {
             $pids = [$pids => 1];
             $order = (new \frontend\service\Pay())->add($uid, $pids, $addressId, $ticketId, $content);
+            $trans->commit();
         } catch (Exception $ex) {
+            $trans->rollBack();
             $this->asJson(widgets\Response::error($ex->getMessage()));
             return;
         }

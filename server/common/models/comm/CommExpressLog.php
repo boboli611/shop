@@ -17,7 +17,7 @@ use Yii;
 class CommExpressLog extends \common\models\BaseModel
 {
     
-    static $company = ['shunfeng' => '顺丰','yuantong' => "圆通", 'shentong' => '申通'];
+    static $company = ['shunfeng' => '顺丰','yuantong' => "圆通", 'shentong' => '申通', 'zhongtong'=>'中通'];
     
     /**
      * @inheritdoc
