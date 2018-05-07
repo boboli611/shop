@@ -265,6 +265,11 @@ class OrderController extends Controller {
             return;
         }
         
+        if ($refund->expressage_num){
+            $this->asJson(widgets\Response::error("已上传快递单号"));
+            return;
+        }
+        
         $uid = widgets\User::getUid();
         if ($orderProduct->user_id != $uid){
             $this->asJson(widgets\Response::error("不是自己的订单"));
@@ -272,6 +277,8 @@ class OrderController extends Controller {
         }
         
         $refund->expressage_num = $expressage;
+        $refund->expre_company = $expre_company;
+        $refund->mobile = $mobile;
         if (!$refund->save()){
             $this->asJson(widgets\Response::error("提交失败"));
             return;
