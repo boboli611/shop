@@ -8,9 +8,25 @@
 <script type="text/javascript" src="http://zqmfcdn.huanhuba.com/hhb/static/pc/js/jquery.min.js"></script>
 </head>
 <body>
+<div>
+<span>样式:<input name="styles" value="" style="width:50px"><a class="styleadd" href="javascript:void(null)">+</a></span>
+</div>
+
+<div>
+<span>尺码:<input name="sizes" value="" style="width:50px"><a class="styleadd" href="javascript:void(null)">+</a></span>
+</div>
+
+<div>
+<span>数量:<input name="num" value="" style="width:50px"> </span>
+<span><button type="button" id="createTable">生成表格</button></span>
+</div>
  <div id="table"></div>
  <script>
-    var json = [{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1},{"id":111, "style":"aa", "size":"bb","num":11,"status":1}];
+    var json = [{"id":111, "style":"aa", "size":"1","num":11,"status":1},{"id":111, "style":"bb", "size":"2","num":11,"status":1},{"id":111, "style":"cc", "size":"3","num":11,"status":1},{"id":111, "style":"dd", "size":"4","num":11,"status":1},{"id":111, "style":"ee", "size":"5","num":11,"status":1}];
+	
+	run();
+
+	function run(){
 	var data = {};
 	var table = "<table>"
 	
@@ -37,7 +53,15 @@
 	})
 
 	console.log(data)
+	table += "<tr>";
 	for (var k in data )
+	{
+		var val = data[k]
+		table += "<td>" + title[k] + "</td>";
+	}
+	table += "</tr>";
+
+	for (var k in data['size'] )
 	{
 		var val = data[k]
 		table += "<tr><td>" + title[k] + "</td>";
@@ -53,9 +77,52 @@
 		})
 		table += "</tr>";
 	}
+
 	table += "</table>"
 	$("#table").html(table)
-	alert(table)
+	//alert(table)
+
+	}
+	$(".styleadd").click(function(){
+		var input = $(this).prev().clone()
+		$(this).before(input)
+	})
+
+	$("#createTable").click(function(){
+		var style = []
+		var size = []
+		var num = $("input[name=num]").val()
+
+		var datas = []
+		
+		$("input[name=styles]").each(function(){
+			style.push($(this).val())
+		})
+
+		$("input[name=sizes]").each(function(){
+			size.push($(this).val())
+		})
+
+		style.forEach(function(style, index){
+			size.forEach(function(size, k){
+				var storage = {}
+				storage.style = style
+				storage.size = size
+				storage.num = num
+				storage.status = 1
+
+				datas.push(storage)
+			})
+
+			
+		})
+		
+		console.log(datas)
+		json = datas
+
+		run()
+	})
+
 
   </script>
 </body>
