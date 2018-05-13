@@ -26,6 +26,7 @@ class CommOrder extends \common\models\BaseModel {
     const status_goods_waiting_send = 2; //待发货
     const status_goods_waiting_receve = 3; //待收货
     const status_goods_receve = 4; //已收货
+    const status_goods_close = 5; //订单关闭
     const status_pay_fail = 9; //支付失败
     
     const status_refund_no = 1; // '未申请',

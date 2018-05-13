@@ -48,6 +48,7 @@ class OrderController extends Controller {
             $pay_time = $val['pay_time'];
             $send_time = $val['send_time'];
             $end_time = $val['end_time'];
+            $expressage = $val['expressage'];
         }
         $pList = \frontend\service\Product::getByStorageid($pids);
         foreach ($pList as $key => &$val) {
@@ -76,6 +77,7 @@ class OrderController extends Controller {
             'pay_time' => $pay_time,
             'send_time' => $send_time,
             'end_time' => $end_time,
+            'expressage' =>$expressage,
         ];
         $this->asJson(widgets\Response::sucess($out));
     }
@@ -115,6 +117,7 @@ class OrderController extends Controller {
             $product = $products[$sid];
             $product['num'] = $val->num;
             $product['price'] = $product['price']/ 100;
+            $out[$id]['expressage'] = $val->expressage;
             $out[$id]['total'] = ($val->total + (int)$val->freight) / 100;
             $out[$id]['num'] += $val->num;
             $out[$id]['order_id'] = $id;
@@ -184,7 +187,7 @@ class OrderController extends Controller {
         
         $id = Yii::$app->request->post("id");
         if (!$id){
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("参数不能为空"));
             return;
         }
        
@@ -193,10 +196,10 @@ class OrderController extends Controller {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
         }
-        
+
         $orderProduct = \common\models\comm\CommOrderProduct::find()->where(['order_id' => $refund->order_id])->one();
         if (!$orderProduct){
-            $this->asJson(widgets\Response::error("参数错误"));
+            $this->asJson(widgets\Response::error("商品不存在"));
             return;
         }
         
@@ -276,6 +279,7 @@ class OrderController extends Controller {
             return;
         }
         
+        $refund->expressage_status = CommOrder::status_goods_receve;
         $refund->expressage_num = $expressage;
         $refund->expre_company = $expre_company;
         $refund->mobile = $mobile;
@@ -354,7 +358,7 @@ class OrderController extends Controller {
         }
 
 
-
+/*
         $order->refund = \common\models\comm\CommOrder::status_refund_waiting;
         $data = [
                 'refund' => \common\models\comm\CommOrder::status_refund_waiting,
@@ -368,10 +372,105 @@ class OrderController extends Controller {
             return;
         }
         
-        $order = $order->toArray();
+ * 
+ */       
+        $order = [];
+        $order['refund_id'] = $model->getPrimaryKey();
         $order['order_status_text'] = \common\models\comm\CommOrder::$refund[\common\models\comm\CommOrder::status_refund_waiting];
         $this->asJson(widgets\Response::sucess($order));
     }
+    
+    
+    //删除订单
+    public function actionDelete(){
+        
+        $orderId = Yii::$app->request->post("orderId");
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("订单不能为空"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不能删除别人的订单"));
+            return;
+        }
+        
+        if ($order->status != CommOrder::status_goods_close){
+            //$this->asJson(widgets\Response::error("未关闭的订单不能删除"));
+            //return;
+        }
+        
+        $trans = \common\models\comm\CommOrderRefundLog::getDb()->beginTransaction();
+        try {
+            
+            $orderData = $order->toArray();
+            $orderLog = new \common\models\comm\CommOrderDeleteLog();
+            $orderLog->load(['CommOrderDeleteLog' => $orderData]);
+            if(!$orderLog->save()){
+                throw new \Exception("操作失败");
+            }
+            
+            $order->delete();
+            $trans->commit();
+        } catch (\Exception $exc) {
+            $trans->rollBack();
+            $this->asJson(widgets\Response::error($exc->getMessage()));
+            return;
+        }
+    
+        $this->asJson(widgets\Response::sucess([]));
+    }
+    
+    //提醒发货
+    public function actionNotice(){
+        
+        $orderId = Yii::$app->request->post("orderId");
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("订单不能为空"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不是自己的订单"));
+            return;
+        }
+        
+        if ($order->status == CommOrder::status_waiting_pay){
+            $this->asJson(widgets\Response::error("请付款先"));
+            return;
+        }
+        
+        if ($order->status > CommOrder::status_goods_waiting_send){
+            $this->asJson(widgets\Response::error("已发货"));
+            return;
+        }
+        
+        if ($order->notice){
+            $this->asJson(widgets\Response::error("已提醒"));
+            return;
+        }
+        
+        try {
+            
+            $order->notice = 1;
+            if (!$order->save()){
+                $this->asJson(widgets\Response::error("操作失败"));
+                return;
+            }
+
+        } catch (\Exception $exc) {
+    
+            $this->asJson(widgets\Response::error($exc->getMessage()));
+            return;
+        }
+    
+        $this->asJson(widgets\Response::sucess());
+    }
+    
     
     //退单快递号
     public function actionRetunExpressage(){

@@ -75,7 +75,7 @@ class PayController extends Controller {
 
     public function actionOrder() {
 
-        $order_id = Yii::$app->request->get("order_id");
+        $order_id = Yii::$app->request->post("id");
         if (!$order_id) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -122,7 +122,7 @@ class PayController extends Controller {
         $product->order_id = $order->id;
         $product->price = $order->total;
 
-        $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
+        $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
         if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
             $this->asJson(widgets\Response::error("下单失败"));
             return;

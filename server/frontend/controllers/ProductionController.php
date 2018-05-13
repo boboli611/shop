@@ -106,10 +106,11 @@ class ProductionController extends Controller {
             $condition['item_id'] = $item->id;
         }
 
-        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page, 10);
+        $products = \frontend\service\Product::search($condition, $title, $orderField, $order, $page);
         if (!$products){
             $searchStatus = false;
-            $products = \frontend\service\Product::search([], "", $orderField, $order, $page, 10);
+            $products = \frontend\service\Product::search([], "", $orderField, $order, $page);
+           
         }
         
         foreach ($products as &$val){
@@ -140,11 +141,14 @@ class ProductionController extends Controller {
         $info = \common\models\comm\CommProduct::findOne($id);
         $info = $info->toArray();
         $info['info'] = json_decode($info['info'], true);
-        $products = \frontend\service\Product::search([], "", 2, 1, 1, 2);
+        $products = \frontend\service\Product::search([], "", 2, 1, 1, 4);
+
         $products = $products ? $products : [];
-        foreach ($products as &$val){
-            $val['cover'] = json_decode($val['cover'], true);
-            $val['cover'] = $val['cover'][0];
+        //var_dump($products);exit;
+        foreach ($products as &$v){
+    
+            $v['cover'] = json_decode($v['cover'], true);
+            $v['cover'] = $v['cover'][0];
         }
 
         $modelStorage = new \common\models\comm\CommProductionStorage();
