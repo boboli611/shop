@@ -18,7 +18,7 @@ class CommOrderSearch extends CommOrder
     public function rules()
     {
         return [
-            [['id', 'user_id', 'product_id', 'price', 'pay_price', 'num', 'status', 'refund'], 'integer'],
+            [['id', 'user_id', 'product_id', 'num', 'status', 'refund'], 'integer'],
             [['order_id', 'address', 'expressage', 'content', 'updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class CommOrderSearch extends CommOrder
      */
     public function search($params)
     {
-        $query = CommOrder::find()->select(['comm_order.*','user.username', 'sum(comm_order.pay_price) as sumPayPrice']);
+        $query = CommOrder::find()->select(['comm_order.*','user.username']);
         $query->groupBy("order_id");
         $query->join('inner join', "user", "user.id = comm_order.user_id");
         //$query->join('inner join', "comm_production_storage", "comm_production_storage.id = comm_order.product_id");
@@ -70,8 +70,6 @@ class CommOrderSearch extends CommOrder
             'comm_order.id' => $this->id,
             'comm_order.user_id' => $this->user_id,
             'comm_order.product_id' => $this->product_id,
-            'comm_order.price' => $this->price,
-            'comm_order.pay_price' => $this->pay_price,
             'comm_order.num' => $this->num,
             'comm_order.status' => $this->status,
             'comm_order.refund' => $this->refund,

@@ -226,10 +226,11 @@ class OrderController extends Controller {
         $out['order']['content'] = $refund->content;
         $out['order']['expressage_status'] = $refund->expressage_status;
         $out['order']['expressage_num'] = $refund->expressage_num;
+        $out['order']['order_id'] = $refund->order_id;
         $this->asJson(widgets\Response::sucess($out));
     }
     
-    //退货详情
+    //上传单号
     public function actionUploadExpressage(){
         
         $id = Yii::$app->request->post("id");
@@ -380,6 +381,38 @@ class OrderController extends Controller {
         $this->asJson(widgets\Response::sucess($order));
     }
     
+    //取消退款
+    public function actionCancelRefund(){
+        
+        $orderId = Yii::$app->request->post("order_id");
+        $storageId = Yii::$app->request->post("storage_id");
+
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("订单不能为空"));
+            return;
+        }
+       
+        $uid = widgets\User::getUid();
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不能取消别人的申请"));
+            return;
+        }
+        
+       $refundLogModel =  \common\models\comm\CommOrderRefundLog::find()->where(['order_id' => $orderId])->andWhere(['storage_id' => $storageId])->one();
+       if (!$refundLogModel){
+            $this->asJson(widgets\Response::error("未申请退款"));
+            return;
+        }
+        
+        if(!$refundLogModel->delete()){
+            $this->asJson(widgets\Response::error("取消失败"));
+            return;
+        }
+        
+        $this->asJson(widgets\Response::sucess([]));
+    }
+    
     
     //删除订单
     public function actionDelete(){
@@ -398,8 +431,8 @@ class OrderController extends Controller {
         }
         
         if ($order->status != CommOrder::status_goods_close){
-            //$this->asJson(widgets\Response::error("未关闭的订单不能删除"));
-            //return;
+            $this->asJson(widgets\Response::error("未关闭的订单不能删除"));
+            return;
         }
         
         $trans = \common\models\comm\CommOrderRefundLog::getDb()->beginTransaction();
@@ -468,7 +501,7 @@ class OrderController extends Controller {
             return;
         }
     
-        $this->asJson(widgets\Response::sucess());
+        $this->asJson(widgets\Response::sucess([]));
     }
     
     

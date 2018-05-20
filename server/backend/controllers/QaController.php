@@ -124,4 +124,38 @@ class QaController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    public function actionAdd() {
+        $model = new \backend\models\UserBackend();
+        $data = Yii::$app->request->post();
+        $uid = \Yii::$app->user->getId();
+        $sql = "select * from auth_assignment where user_id = {$uid} and item_name = '人员管理'";
+        $role = \backend\models\UserBackend::findBySql($sql)->asArray()->one();
+        if(!$role){
+            return $this->redirect('/admin/site/index', [ 'model' => $model, ]);
+        }
+        if ($data) {
+            $pwd = $data['UserBackend']['password_hash'];
+
+            // 实例化登录模型 common\models\LoginForm
+           $model->setPassword($pwd);
+            $pwd = $model->password_hash;
+            $model->generateAuthKey();
+            $authKey = $model->getAuthKey();
+            $data['UserBackend']['password_hash'] = $pwd;
+            $data['UserBackend']['auth_key'] = $authKey;
+            $data['UserBackend']['created_at'] = date("Y-m-d H:i:s");
+            $data['UserBackend']['updated_at'] = date("Y-m-d H:i:s");
+            $model->load($data);
+            if ($model->save()){
+                return $this->redirect('/admin/assignment/index');
+            }
+            
+            return $this->render('create', [ 'model' => $model, ]);
+        } else {
+            return $this->render('create', [
+                        'model' => $model,
+            ]);
+        }
+    }
 }

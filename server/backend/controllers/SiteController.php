@@ -75,6 +75,7 @@ class SiteController extends Controller {
         }
         // 实例化登录模型 common\models\LoginForm
         $model = new LoginForm();
+
         // 接收表单数据并调用LoginForm的login方法
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();

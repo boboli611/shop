@@ -152,7 +152,13 @@ class Oss extends Component {
      * @throws \OSS\Core\OssException
      */
     public function upload($fileName, $filePath) {
-        return $this->getClient()->uploadFile($this->bucket, $fileName, $filePath);
+
+        $data =  $this->getClient()->uploadFile($this->bucket, $fileName, $filePath);
+        if (isset($data['info']['url'])){
+            $data['info']['url'] = str_replace("https://lipz-shop.oss-cn-hangzhou.aliyuncs.com/", \yii::$app->params['static_domain'], $data['info']['url'] );
+        }
+        
+        return $data;
     }
 
     /**

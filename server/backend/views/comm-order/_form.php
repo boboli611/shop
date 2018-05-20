@@ -6,8 +6,10 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\CommOrder */
 /* @var $form yii\widgets\ActiveForm */
-
+$status = $model->status;
 $model->status = common\models\comm\CommOrder::$payName[$model->status];
+
+$model->total = $model->total / 100;
 ?>
 
 <div class="comm-order-form">
@@ -22,15 +24,16 @@ $model->status = common\models\comm\CommOrder::$payName[$model->status];
 
     <?php //echo $form->field($model, 'price')->textInput() ?>
 
-    <?php echo $form->field($model, 'sumPayPrice')->textInput(["readonly" => true]) ?>
+    <?php echo $form->field($model, 'total')->textInput(["readonly" => true]) ?>
 
     <?php //echo $form->field($model, 'num')->textInput() ?>
 
-    <?php echo $form->field($model, 'address')->textInput(['maxlength' => true, "readonly" => true]) ?>
+    <?php //$form->field($model, 'address')->textInput(['maxlength' => true, "readonly" => true]) ?>
 
     <?= $form->field($model, 'status')->textInput(["readonly" => true]); ?>
 
     <?php
+    /*
     if ($model->refund == 1) {
         $model->refund = common\models\comm\CommOrder::$refund[$model->refund];
         echo $form->field($model, 'refund')->textInput(["readonly" => true]);
@@ -39,9 +42,14 @@ $model->status = common\models\comm\CommOrder::$payName[$model->status];
         unset($refund[common\models\comm\CommOrder::status_refund_no]);
         echo $form->field($model, 'refund')->dropDownList($refund, ['style' => 'width:120px', "value" => $model->refund]);
     }
+     * */
     ?> 
 
-    <?= $form->field($model, 'expressage')->textInput(['maxlength' => true]) ?>
+    <?php
+    if ($status == \common\models\comm\CommOrder::status_goods_waiting_send){
+        echo $form->field($model, 'expressage')->textInput(['maxlength' => true]);
+    }
+     ?>
 
     <?= $form->field($model, 'content')->textarea(['maxlength' => true, "readonly" => true]) ?>
 

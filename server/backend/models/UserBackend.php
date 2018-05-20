@@ -16,7 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $created_at
  * @property string $updated_at
  */
-class UserBackend extends \yii\db\ActiveRecord implements IdentityInterface {
+class UserBackend extends \common\models\BaseModel implements IdentityInterface {
 
     /**
      * @inheritdoc

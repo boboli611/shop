@@ -38,7 +38,7 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'format' => 'raw',
                 'value' =>
                 function($model) {
-            return $model->order_id;
+                return $model->order_id;
         },
             ],
             [
@@ -51,12 +51,12 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 },
             ],
             [
-                'attribute' => 'pay_price',
+                'attribute' => 'total',
                 'format' => 'raw',
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    return $model->sumPayPrice / 100;
+                    return $model->total / 100;
                 },
             ],
             [
@@ -65,7 +65,7 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    return $model->expressage;
+                    return $model->expressage ? $model->expressage : "";
                 },
             ],
             // 'num',
@@ -77,16 +77,9 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'value' => function($model) {
                     return common\models\comm\CommOrder::$payName[$model->status];
                     },
-            ],
-            [
-                'attribute' => 'refund',
-                'format' => 'raw',
-                'filter' => Html::dropDownList("CommOrderSearch[refund]", $params['refund'], common\models\comm\CommOrder::$refund, ['prompt' => '全部', "class" => "form-control", 'style' => "width:100px;"]),
-                'value' => function($model) {
-                    return common\models\comm\CommOrder::$refund[$model->refund];
-                    },
-            ],                
+            ],              
             // 'expressage',
+                            /*
             [
                 'attribute' => 'content',
                 'format' => 'raw',
@@ -98,6 +91,7 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                     return strlen($model->content) == strlen($str) ? $str : $str . "...";
                 },
             ],
+                             */
             [
                 'attribute' => 'updated_at',
                 'format' => 'raw',
@@ -113,7 +107,7 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    return "<a href='/comm-order/refund?id={$model->order_id}' target='_blank'>退款</>";
+                    return $model->created_at;
                 },
             ],
             [
@@ -124,10 +118,10 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
                 'urlCreator' => function ($action, $model, $key, $index) {
                     switch ($action) {
                         case 'view':
-                            return '/comm-order/view?id=' . $model->order_id;
+                            return '/comm-order/view?id=' . $model->id;
                             break;
                         case 'update':
-                            return '/comm-order/update?id=' . $model->order_id;
+                            return '/comm-order/update?id=' . $model->id;
                             break;
                     }
                 },
