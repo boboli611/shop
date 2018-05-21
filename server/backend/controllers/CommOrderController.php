@@ -35,6 +35,7 @@ class CommOrderController extends Controller {
     public function actionIndex() {
 
         $searchModel = new CommOrderSearch();
+   
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,8 +50,16 @@ class CommOrderController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
+        $model = $this->findModel($id);
+        
+        //$product = CommOrder::getInfoByOrder($model->order_id, $model->user_id);
+        
+        $searchModel = new \common\models\comm\CommOrderProductSeatch();
+        $params['CommOrderProductSeatch'] = ['order_id' => $model->order_id];
+        $dataProvider = $searchModel->search($params);
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+                    'model' => $model,
+                    'product' => $dataProvider,
         ]);
     }
 
@@ -66,9 +75,13 @@ class CommOrderController extends Controller {
         if (Yii::$app->request->post()) {
             $patams = Yii::$app->request->post();
             $data['expressage'] = $patams['CommOrder']['expressage'];
-            $data['status'] = CommOrder::status_goods_waiting_receve;
-
-            if (CommOrder::updateAll($data, ['order_id' => $id])) {
+            
+            
+            if($model->status == CommOrder::status_goods_waiting_send && $data['expressage']){
+                $data['status'] = CommOrder::status_goods_waiting_receve;
+            }
+ 
+            if (CommOrder::updateAll($data, ['id' => $id])) {
                 return $this->redirect(['view', 'id' => $id]);
             } else {
                 return $this->render('update', [
@@ -124,13 +137,13 @@ class CommOrderController extends Controller {
             $RefundLogModel = new \common\models\comm\CommOrderRefundLog();
             $RefundLogModel->order_id = $model->order_id;
             $RefundLogModel->refound = $refund;
-            $RefundLogModel->price = $price;
+      
             $RefundLogModel->admin_id = yii::$app->user->identity->id;
             $RefundLogModel->admin_nickname = yii::$app->user->identity->username;
             if (!$RefundLogModel->save()) {
                 throw new Exception("操作失败");
             }
- var_dump(__LINE__);exit;
+
             $ret = \common\components\WxpayAPI\Pay::refund($out_trade_no, $total_fee, $refund_fee);
             if (!$ret){
                 //throw new Exception("退款失败");

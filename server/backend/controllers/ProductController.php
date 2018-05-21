@@ -80,20 +80,10 @@ class ProductController extends Controller {
         try {
 
             $data = Yii::$app->request->post();
+   
             $transaction = CommProduct::getDb()->beginTransaction();
             $model->load(Yii::$app->request->post());
 
-            $status = 0;
-            foreach ($data['storage_status'] as $k => $val) {
-                if (!$val) {
-                    continue;
-                }
-
-                $status = $val;
-                break;
-            }
-
-            $model->status = $status;
             $result = $model->save();
             if (!$result) {
                 throw new \yii\db\Exception("save error");
@@ -112,16 +102,16 @@ class ProductController extends Controller {
                 $storageData["CommProductionStorage"]['num'] = $data['storage_num'][$k];
                 $storageData["CommProductionStorage"]['price'] = $data['storage_price'][$k];
                 $storageData["CommProductionStorage"]['product_id'] = $model->getPrimaryKey();
-                $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
-
+                $storageData["CommProductionStorage"]['status'] = $model->status;
+   
                 $modelStorage->load($storageData);
                 $result = $modelStorage->save();
                 if (!$result) {
-                    var_dump($modelStorage->getErrors());
                     throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
                 //var_dump($storageData, $modelStorage->getPrimaryKey());exit;
             }
+            
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
@@ -161,23 +151,13 @@ class ProductController extends Controller {
             $data["CommProduction"]['price'] = $data['storage_price'][0];
 
             $model->load($data);
-            $status = 0;
-            foreach ($data['storage_status'] as $k => $val) {
-                if (!$val) {
-                    continue;
-                }
-
-                $status = $val;
-                break;
-            }
-
-            $model->status = $status;
             $result = $model->save();
             if (!$result) {
                 throw new \yii\db\Exception("错误11");
             }
 
             $storageData = [];
+           
             foreach ($data['storage_style'] as $k => $val) {
 
                 if (!$data['storage_style'][$k]) {
@@ -190,20 +170,25 @@ class ProductController extends Controller {
                 $storageData["CommProductionStorage"]['price'] = $data['storage_price'][$k];
                 $storageData["CommProductionStorage"]['product_id'] = $model->getPrimaryKey();
                 $storageData["CommProductionStorage"]["id"] = $data['storage_id'][$k];
-                $storageData["CommProductionStorage"]['status'] = $data['storage_status'][$k];
-                //var_dump($storageData);exit;
+                $storageData["CommProductionStorage"]['status'] = $model->status;
+
                 $modelStorage = \common\models\comm\CommProductionStorage::findOne($data['storage_id'][$k]);
+                if (!$modelStorage){
+                    $modelStorage = new \common\models\comm\CommProductionStorage();
+                }
+                
                 $modelStorage->load($storageData);
                 $result = $modelStorage->save();
 
                 if (!$result) {
+                    var_dump($modelStorage->getErrors());exit;
                     throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
             }
-
             $transaction->commit();
             return $this->redirect(['update', 'id' => $model->id]);
         } catch (\Exception $ex) {
+            var_dump($ex->getMessage());exit;
             return $this->render('update', [
                         'model' => $model,
                         'modelStorage' => $modelStorageList,

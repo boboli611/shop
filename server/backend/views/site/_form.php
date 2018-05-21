@@ -12,11 +12,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'username')->textInput()->label("账号") ?>
+    <?= $form->field($model, 'username')->textInput() ?>
 
-    <?= $form->field($model, 'password_hash')->textInput(['maxlength' => true])->label("密码") ?>
+    <?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'email')->textInput()->label("邮箱地址") ?>
+    <?= $form->field($model, 'email')->textInput() ?>
 
 
     <div class="form-group">

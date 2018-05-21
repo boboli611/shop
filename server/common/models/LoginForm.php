@@ -61,6 +61,15 @@ class LoginForm extends Model
         
         return false;
     }
+    
+    public function setPwd($password){
+        return $this->getUser()->setPassword($password);
+    }
+    
+    public function setAuthKey($password){
+        return $this->getUser()->getAuthKey($password);
+    }
+    
 
     /**
      * Finds user by [[username]]

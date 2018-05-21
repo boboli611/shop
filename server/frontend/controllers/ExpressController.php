@@ -20,41 +20,51 @@ class ExpressController extends Controller {
         $id =  Yii::$app->request->get("id");
         if (!$id){
             $this->asJson(widgets\Response::error("单号不能为空"));
-            return false;
+            return;
         }
         
         $order = \common\models\comm\CommOrder::find()->where(["order_id" => $id])->one();
         if (!$order){
             $this->asJson(widgets\Response::error("单号错误"));
-            return false;
+            return;
         }
-                echo "aaa";exit;
         $uid = widgets\User::getUid();
         if ($order->user_id != $uid){
             $this->asJson(widgets\Response::error("不是自己订单"));
-            return false;
+            return;
         }
         
         $orderProduct = \common\models\comm\CommOrderProduct::find()->where(["order_id" => $id])->one();
         if (!$orderProduct){
             $this->asJson(widgets\Response::error("订单商品错误"));
-            return false;
+            return;
         }
-        
-        $product = \common\models\comm\CommProduct::findOne($orderProduct->product_id);
+        $product = \common\models\comm\CommProductionStorage::getInfoById($orderProduct->product_id);
         if (!$product){
             $this->asJson(widgets\Response::error("商品不存在"));
-            return false;
+            return;
         }
         
         $info = \common\models\comm\CommExpressLog::find()->where(['no' => $order->expressage])->one();
         if (!$info){
             $this->asJson(widgets\Response::error("数据为空"));
-            return false;
+            return;
         }
-        
+
+        $info = $info->toArray();
+        $product['cover'] = json_decode($product['cover'], TRUE);
         $info['content'] = json_decode($info['content'], TRUE);
-        
-        $this->asJson($info);
+        foreach ($info['content'] as $k => $v){
+            $info['content'][$k]['date'] = substr($v['time'], 5, 5);
+            $info['content'][$k]['hour'] = substr($v['time'], 11, 5);
+        }
+
+        $out['product']['status'] = $product['status'];
+        $out['product']['cover'] = $product['cover'][0];
+        $out['product']['address'] = json_decode($order->address, true);
+        $out['express']['content'] = $info['content'];
+        $out['express']['company_name'] = \common\models\comm\CommExpressLog::$company[$info['company']];
+        $out['express']['no'] = $info['no'];
+        $this->asJson(widgets\Response::sucess($out));
     }
 }

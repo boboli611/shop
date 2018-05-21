@@ -27,10 +27,7 @@ class PayController extends Controller {
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
         $ticketId = Yii::$app->request->post("ticket_id");
-//        $addressId = 23;
-        $ids = "32, 27";
         $ids = explode(',', $ids);
-
         if (!$ids) {
             $this->asJson(widgets\Response::error("商品不为空"));
             return;
@@ -44,7 +41,7 @@ class PayController extends Controller {
         $pIds = [];
         $uid = widgets\User::getUid();
         $shopList = \common\models\user\UserShop::find()->where(['user_id' => $uid])->andWhere(['in', "id", $ids])->all();
-        if (!$shopList) {
+        if (!$shopList || count($shopList) != count($ids)) {
             $this->asJson(widgets\Response::error("商品数据错误"));
             return;
         }
@@ -53,14 +50,22 @@ class PayController extends Controller {
             $pIds[$val->storage_id] = $val->num;
         }
 
+        $trans = \common\models\comm\CommOrder::getDb()->beginTransaction();
+        
         try {
             $order = (new \frontend\service\Pay())->add($uid, $pIds, $addressId, $ticketId, $content);
-            //\common\models\user\UserShop::deleteAll(['in', "id", $ids]);
+            $ret = \common\models\user\UserShop::deleteAll(['in', "id", $ids]);
+            if (!$ret){
+                throw new Exception("下单失败");
+            }
+            $trans->commit();
         } catch (Exception $ex) {
+            $trans->rollBack();
             $this->asJson(widgets\Response::error($ex->getMessage()));
             return;
         }
 
+        $out['order_id'] = $order['order_id'];
         $out['nonceStr'] = $order['nonce_str'];
         $out['package'] = "prepay_id={$order['prepay_id']}";
         $out['sign'] = $order['paySign'];
@@ -70,7 +75,7 @@ class PayController extends Controller {
 
     public function actionOrder() {
 
-        $order_id = Yii::$app->request->get("order_id");
+        $order_id = Yii::$app->request->post("id");
         if (!$order_id) {
             $this->asJson(widgets\Response::error("参数错误"));
             return;
@@ -117,7 +122,7 @@ class PayController extends Controller {
         $product->order_id = $order->id;
         $product->price = $order->total;
 
-        $order = \frontend\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
+        $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
         if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
             $this->asJson(widgets\Response::error("下单失败"));
             return;

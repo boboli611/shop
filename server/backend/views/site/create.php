@@ -6,11 +6,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommQa */
 
-$this->title = '添加用户';
-$this->params['breadcrumbs'][] = ['label' => '首页', 'url' => ['index']];
+$this->title = '新增用户';
+$this->params['breadcrumbs'][] = ['label' => 'Comm Qas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comm-qa-create">
+
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

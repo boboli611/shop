@@ -83,9 +83,9 @@ $data = empty($info) ? [""] : $info;
     <?php
     foreach ($data as $k => $val) {
         ?>
-        <div class="row">
-            <div class="col-lg-2">
-                <?php echo yii\helpers\BaseHtml::input("text", "name[]", $val)?>
+    <div class="row" style="margin-top: 10px;">
+            <div class="col-lg-3">
+                <?php echo yii\helpers\BaseHtml::input("text", "name[]", $val)?> &nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>
             </div>
         </div>
     <?php } ?>
@@ -118,4 +118,7 @@ function add() {
         $(".row:last").after(input)
     }
 
+function remove(obj){
+    $(obj).parent().parent().remove()
+}
 </script>

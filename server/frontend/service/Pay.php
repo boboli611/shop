@@ -8,7 +8,7 @@ class Pay {
 
     public function add($uid, $pIds, $addressId, $ticketId, $content) {
 
-        $model = \common\models\comm\CommOrder::getDb()->beginTransaction();
+        //$model = \common\models\comm\CommOrder::getDb()->beginTransaction();
         try {
             $openid = \common\models\user\UserWxSession::findOne($uid);
             if (!$openid) {
@@ -46,6 +46,7 @@ class Pay {
             $orderModel->prepay_id = $order['prepay_id'];
             $orderModel->address = json_encode($address);
             $orderModel->total = $pInfo["price"];
+            $orderModel->pay_time = date("Y-m-d H:i:s");
             $orderModel->status = \common\models\comm\CommOrder::status_waiting_pay;
             $orderModel->refund = \common\models\comm\CommOrder::status_refund_no;
 
@@ -53,9 +54,9 @@ class Pay {
                 throw new Exception("下单失败");
             }
 
-            $model->commit();
+            //$model->commit();
         } catch (Exception $ex) {
-            $model->rollBack();
+            //$model->rollBack();
             throw new Exception($ex->getMessage());
         }
 
