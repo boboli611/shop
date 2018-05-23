@@ -30,8 +30,8 @@ class CommBanner extends \common\models\BaseModel {
     }
 
     public function load($data, $formName = NULL) {
-        $data['CommBanner']['img'] = json_encode($data['img']);
-        //var_dump($data);exit;
+        //$data['CommBanner']['img'] = json_encode($data['img']);
+
         return parent::load($data);
     }
 
@@ -40,10 +40,10 @@ class CommBanner extends \common\models\BaseModel {
      */
     public function rules() {
         return [
-            [['img', 'position'], 'required'],
+            [['img', 'position', 'product_id'], 'required'],
             [['img'], 'string'],
-            [['status'], 'integer'],
-            [['position'], 'integer', 'min' => 1, "message" => "选择广告位"],
+            [['status', 'product_id'], 'integer'],
+            [['position','product_id'], 'integer', 'min' => 1, "message" => "选择广告位"],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }

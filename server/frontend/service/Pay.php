@@ -107,12 +107,14 @@ class Pay {
             $order->status = \common\models\comm\CommOrder::status_goods_waiting_send;
             $product->num--;
             $product->sell++;
-
+            
+            $pro = \common\models\comm\CommProduct::findOne($product->product_id);
+            $pro->sell++;
             if (!$order->save() || !$product->save()) {
                 throw new Exception("保存失败", ["product_id" => $order->product_id, "order_id" => $orderId]);
             }
 
-            $product->save();
+            $pro->save();
             $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -155,7 +157,7 @@ class Pay {
         foreach ($product as $item) {
 
             $item->price = $item->price * 100;
-            $num = $item->num - $item->sell;
+            $num = $item->num;
             if ($num <= 0) {
                 throw new Exception("已售罄");
             }

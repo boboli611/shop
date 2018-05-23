@@ -43,12 +43,14 @@ class ProductionController extends Controller {
         foreach ($products as &$val){
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
+            $val['price'] = $val['price']/ 100;
         }
         
         $recommend = \frontend\service\Product::getRecommond();
-        foreach ($recommend as $val){
-            $img = json_decode($val->cover, TRUE);
-            $val->cover = $img[0];
+        foreach ($recommend as &$recom){
+            $img = json_decode($recom->cover, TRUE);
+            $recom->cover = $img[0];
+            $recom->price = $recom->price / 100;
         }
         //类目
         $items = (new \common\models\comm\CommProductItem())->getListBySort();

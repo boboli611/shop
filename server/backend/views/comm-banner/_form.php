@@ -15,32 +15,29 @@ array_unshift($postions, "选择广告位");
 $model->position = (int) $model->position;
 
 $imgModel = new common\models\Img();
-$imgs = json_decode($model->img, true);
-$imgs = is_array($imgs) ? $imgs : [];
-$model->img = array_shift($imgs);
+
+$products = [0 => "请选择"];
+$product = common\models\comm\CommProduct::find()->where(['status' => 1])->orderBy("id desc")->all();
+
+foreach ($product as $p){
+    $products[$p->id] = $p->title;
+}
+
 ?>
 
 <div class="comm-banner-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?php echo $form->field($model, 'img')->hiddenInput(['name' => 'img']); ?>
+    <?php echo $form->field($model, 'img')->hiddenInput(); ?>
 
     <?php
-    if ($model->img) {
-        echo "<div id='coverList'>";
-        echo "<a href='{$model->img}' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>";
-        echo yii\bootstrap\Html::hiddenInput("img[]", $model->img, ["id" => "commbanner-img"]);
-        echo "</div>";
-    }
 
-    foreach ($imgs as $img) {
-        //echo $form->field($imgModel, 'image')->hiddenInput(['name' => 'cover']);
         echo "<div id='coverList'>";
-        echo "<a href='{$img}' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>";
-        echo yii\bootstrap\Html::hiddenInput("img[]", $img, ["id" => "commbanner-img"]);
+        echo "<a href='{$model->img}' target='_blank'><img src='{$model->img}' width='200px'></a>";
         echo "</div>";
-    }
+    
+
     ?>
     <?php
     echo $form->field($imgModel, 'img')->label(false)->widget(FileInput::classname(), [
@@ -100,6 +97,7 @@ $model->img = array_shift($imgs);
 
     <?= $form->field($model, 'status')->dropDownList([App::APP_UNVAILD_STATUS => '下架', App::APP_VAILD_STATUS => '上架'], ['style' => 'width:120px', "value" => $model->status]) ?>  
 
+    <?= $form->field($model, 'product_id')->dropDownList($products, ['style' => 'width:120px', "value" => $model->product_id]) ?>  
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '保存' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -112,14 +110,11 @@ $model->img = array_shift($imgs);
 <script>
 
     function addImgHiden(url) {
-        var val = $("#commbanner-img").val()
-        if (!val) {
-            $("#commbanner-img").val(url)
-        }
-
-        var str = "<div id='coverList'>" + "<a href='" + url + "' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>"
-        str = str + '<input type="hidden" name="img[]" value="' + url + '"></div>'
-        $(".file-caption-main").before(str)
+        $("#coverList img").attr("src", url);
+        $("#commbanner-img").val(url);
+        //var str = "<div id='coverList'>" + "<a href='" + url + "' target='_blank'>查看图片</a>&nbsp;&nbsp;<a href='javascript:;' onclick='remove(this)'>删除</a>"
+        //str = str + '<input type="hidden" name="img[]" value="' + url + '"></div>'
+        //$(".file-caption-main").before(str)
 
 
     }
