@@ -49,6 +49,7 @@ class Pay {
             $orderModel->pay_time = date("Y-m-d H:i:s");
             $orderModel->status = \common\models\comm\CommOrder::status_waiting_pay;
             $orderModel->refund = \common\models\comm\CommOrder::status_refund_no;
+            $orderModel->prepay_id = $order['prepay_id'];
 
             if (!$orderModel->save()) {
                 throw new Exception("下单失败");

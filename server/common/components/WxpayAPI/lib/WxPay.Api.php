@@ -74,6 +74,12 @@ class WxPayApi
 		
 		return $result;
 	}
+        
+        public static function paySignEncode($appId, $nonceSstr, $prepayId){
+                        $paystr = sprintf("appId=%s&nonceStr=%s&package=prepay_id=%s&signType=MD5&timeStamp=%d&key=%s", 
+                        $appId, $nonceSstr,$prepayId, time(),WxPayConfig::KEY);
+                        return md5($paystr);
+        } 
 	
 	/**
 	 * 

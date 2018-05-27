@@ -13,7 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php 
-    $storageList = [$modelStorage,$modelStorage,$modelStorage,$modelStorage];
+    //$storageList = [$modelStorage,$modelStorage,$modelStorage,$modelStorage];
+    $storageList = [];
     echo $this->render('_form', [
         'model' => $model,
         'storageList' => $storageList,

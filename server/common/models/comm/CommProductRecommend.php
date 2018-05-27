@@ -15,6 +15,8 @@ use Yii;
  */
 class CommProductRecommend extends \common\models\BaseModel
 {
+    
+    public static $location = [1 => "首页新品推荐", "详情页推荐商品"];
     /**
      * @inheritdoc
      */
@@ -29,7 +31,7 @@ class CommProductRecommend extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['product_id', 'sort'], 'integer'],
+            [['product_id', 'type'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -41,10 +43,10 @@ class CommProductRecommend extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'product_id' => 'Product ID',
-            'sort' => 'Sort',
+            'product_id' => '商品',
+            'type' => '推荐位置',
             'updated_at' => 'Updated At',
-            'created_at' => 'Created At',
+            'created_at' => '创建时间',
         ];
     }
 }

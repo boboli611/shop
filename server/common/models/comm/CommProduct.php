@@ -39,7 +39,7 @@ class CommProduct extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['title', 'desc', 'tag', 'status', 'item_id','cover'], 'required'],
+            [['title', 'desc', 'status', 'item_id','cover'], 'required'],
             [[], 'file', 'skipOnEmpty' => false],
             [['tag'], 'string', "max" => 4, "message" => "标签过长"],
             [['desc', 'info'], 'string'],
@@ -67,7 +67,7 @@ class CommProduct extends \common\models\BaseModel
             'item_id' => '类别',
             'tag' => '标签',
             'carriage' => "运费",
-            'status' => '下架',
+            'status' => '状态',
             'sort' => '排序',
             'updated_at' => '修改时间',
             'created_at' => '创建时间',

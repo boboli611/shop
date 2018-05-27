@@ -22,6 +22,8 @@ use Yii;
  */
 class CommOrderRefundLog extends \common\models\BaseModel
 {
+    
+    public static $expressage_status = ['2' => '未发货', '3' => '待收货', '4' => '已收货'];
     /**
      * @inheritdoc
      */
@@ -49,12 +51,13 @@ class CommOrderRefundLog extends \common\models\BaseModel
     {
         return [
             'id' => 'ID',
-            'order_id' => 'Order ID',
-            'refound' => 'Refound ID',
+            'order_id' => '订单号',
+            'refound' => '退单状态',
             'price' => '退款金额',
-            'admin_id' => 'Admin ID',
-            'admin_nickname' => 'Admin Nickname',
-            'updated_at' => 'Updated At',
+            'expressage_status' => '快递状态',
+            'Storage Id' => '商品名称',
+            'content' => '留言',
+            'expressage_num' => '退货快递单号',
             'created_at' => 'Created At',
         ];
     }

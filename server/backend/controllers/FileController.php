@@ -62,22 +62,39 @@ class FileController extends Controller {
         // 如果没有商品图或者商品id非真，返回空
         if (!$tmp_name || !$name) {
             //$this->asJson(\common\widgets\Response::error("没有参数"));
-            echo "参数错误";
+            echo json_encode([
+                //'initialPreviewConfig' => $p2,
+                'error_msg' => "参数错误",
+                'append' => false,
+            ]);
             return;
         }
-        
+
         $oss = \Yii::$app->get('oss');
         $day = date("Ymd");
         list(, $suffix) = explode('.', $name);
+
+        if (!in_array($suffix, ['jpg', 'png', 'gif'])) {
+            echo json_encode([
+                //'initialPreviewConfig' => $p2,
+                'error_msg' => "只能上传图片",
+                'append' => false,
+            ]);
+            return;
+        }
         $fileName = md5($name . time()) . '.' . $suffix;
         $fh = \Yii::$app->params['uploadPath'] . "/image/{$day}/{$fileName}";
         $ret = $oss->upload($fh, $tmp_name); // 会自动创建文件夹
         if (!$ret) {
             //$this->asJson(\common\widgets\Response::error("上传失败"));
-            echo "上传失败";
+            echo json_encode([
+                //'initialPreviewConfig' => $p2,
+                'error_msg' => "上传失败",
+                'append' => false,
+            ]);
             return;
         }
-        
+
         $p1 = $ret["info"]["url"];
         //$p1 = \Yii::$app->params['static_domain'].$fh;  
         // 返回上传成功后的商品图信息
@@ -88,10 +105,9 @@ class FileController extends Controller {
         ]);
         return;
     }
-    
+
     public function actionInputDelete() {
         echo json_encode([
-         
         ]);
         return;
     }

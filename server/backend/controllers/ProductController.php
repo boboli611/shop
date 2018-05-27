@@ -86,14 +86,14 @@ class ProductController extends Controller {
 
             $result = $model->save();
             if (!$result) {
-                throw new \yii\db\Exception("save error");
+                throw new \yii\db\Exception("save error:".$model->getErrors());
             }
 
             $storageData = [];
             foreach ($data['storage_style'] as $k => $val) {
 
                 if (!$data['storage_style'][$k]) {
-                    continue;
+                    //continue;
                 }
 
                 $modelStorage = new \common\models\comm\CommProductionStorage();
@@ -115,6 +115,7 @@ class ProductController extends Controller {
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
+            //var_dump($ex->getMessage());exit;
             return $this->render('create', [
                         'model' => $model,
                             // 'modelRecommend' => $recommend,

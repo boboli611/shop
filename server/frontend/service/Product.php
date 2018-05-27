@@ -6,6 +6,7 @@ class Product {
     
     private static $orderField = [1 => "sell", 2 => "id"];
     private static $order = [1 => "desc", 2 => "asc"];
+    public static $recommendIds = [];
     
     public static function search($condiction, $key , $orderField, $orderType, $page = 0, $limit = 10){
         
@@ -15,7 +16,7 @@ class Product {
        $order = "{$orderField} {$orderType}";
        $page = (int) $page >0 ?$page - 1 : 0;
        
-       $out = \common\models\comm\CommProduct::getList([], $key, $order, $page,$limit);
+       $out = \common\models\comm\CommProduct::getList($condiction, $key, $order, $page,$limit);
        
        return $out;
     }
@@ -47,9 +48,9 @@ class Product {
     /**
      * 推荐商品
      */
-    public static function getRecommond(){
+    public static function getRecommond($type = 1){
         
-        $recommends = \common\models\comm\CommProductRecommend::find()->orderBy("id desc")->all(); 
+        $recommends = \common\models\comm\CommProductRecommend::find()->where(['type' => $type])->orderBy("id desc")->all(); 
         $ids = [];
         foreach ($recommends as $val){
             $ids[] = $val->product_id;
@@ -57,6 +58,8 @@ class Product {
         if (!$ids){
             return [];
         }
-        return self::search(["type" => 1], "", "", "");
+        
+        return $ids;
+        return self::search(["in" , 'id', $ids], "", "", "");
     }
 }

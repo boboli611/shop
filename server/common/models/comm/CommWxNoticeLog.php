@@ -12,7 +12,7 @@ use Yii;
  * @property string $updated_at
  * @property string $created_at
  */
-class CommWxNoticeLog extends \yii\db\ActiveRecord
+class CommWxNoticeLog extends \common\models\BaseModel
 {
     /**
      * @inheritdoc
