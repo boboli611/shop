@@ -56,8 +56,8 @@ class ProductionController extends Controller {
         
         //类目
         $items = (new \common\models\comm\CommProductItem())->getListBySort();
-        
-        $tickets = (new \frontend\service\Ticket())->getIndex();
+        $uid = widgets\User::getUid();
+        $tickets = (new \frontend\service\Ticket())->getIndex($uid);
         
         $out['ticket'] = $tickets;
         $out['item'] = $items;
