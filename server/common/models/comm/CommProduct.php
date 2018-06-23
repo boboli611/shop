@@ -106,6 +106,8 @@ class CommProduct extends \common\models\BaseModel
         if ($key){
             $model->andWhere("title like '%{$key}%'");
         }
+
+        $model->andWhere("status = 1");
         
         $page = $page * $limit;
 

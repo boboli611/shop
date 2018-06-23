@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use common\models\comm\CommTicket;
+use common\models\user\UserTicket;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -28,7 +30,7 @@ class TicketController extends Controller {
 
     public function actionAdd() {
 
-        $ticketId = (int) Yii::$app->request->post("ticket_id");
+        $ticketId = (int) Yii::$app->request->post("id");
         if (!$ticketId) {
             $this->asJson(widgets\Response::error("优惠券id不为空"));
             return;
@@ -51,11 +53,11 @@ class TicketController extends Controller {
         }
 
         $uid = widgets\User::getUid();
-
         if (\common\models\user\UserTicket::find()->Where(['user_id' => $uid])->andWhere(['ticket_id' => $ticketId])->one()) {
             $this->asJson(widgets\Response::error("不能重复领取"));
             return;
         }
+
 
         $userTicketModel = new \common\models\user\UserTicket();
         $userTicketModel->user_id = $uid;
@@ -63,13 +65,15 @@ class TicketController extends Controller {
         $userTicketModel->money = $ticket->money;
         $userTicketModel->status = 1;
         $userTicketModel->end_time =  $ticket->duration;
+
+        var_dump($userTicketModel->save());
         if (!$userTicketModel->save()) {
-            
+            $userTicketModel->
             $this->asJson(widgets\Response::error('领取失败'));
             return;
         }
 
-        $this->asJson(widgets\Response::sucess(['id' => $userTicketModel->getPrimaryKey()]));
+        //$this->asJson(widgets\Response::sucess(['id' => $userTicketModel->getPrimaryKey()]));
     }
 
 }

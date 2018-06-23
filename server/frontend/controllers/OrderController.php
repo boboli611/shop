@@ -116,6 +116,9 @@ class OrderController extends Controller {
             $id = $val->order_id;
             $sid = $val->product_id;
             $status = $val->status;
+            if (!$products[$sid]){
+                continue;
+            }
             $product = $products[$sid];
             $product['num'] = $val->num;
             $product['price'] = $product['price']/ 100;

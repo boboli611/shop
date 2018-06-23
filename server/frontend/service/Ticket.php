@@ -11,8 +11,8 @@ class Ticket {
         foreach ($list as $k =>$val){
             $val = $val->toArray();
             $arr['id'] = $val['id'];
-            $arr['description'] = sprintf("满%d使用", $val['condition']);
-            $arr['money'] = $val['money'];
+            $arr['description'] = sprintf("满%d使用", $val['condition'] / 100);
+            $arr['money'] = $val['money'] / 100;
             $out[] = $arr;
         }
         
