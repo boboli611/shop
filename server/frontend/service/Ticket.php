@@ -16,22 +16,22 @@ class Ticket {
             $val = $val->toArray();
             $ticketId[] = $val['id'];
             $arr['id'] = $val['id'];
-            $arr['description'] = sprintf("满%d使用", $val['condition']);
-            $arr['money'] = $val['money'];
+            $arr['description'] = sprintf("满%d使用", $val['condition'] / 100);
+            $arr['money'] = $val['money'] / 100;
             $arr['get'] = 0;
             $out[$val['id']] = $arr;
         }
-        
-        $userTickets = \common\models\user\UserTicket::find()->where("user_id", $uid)->where("in", 'ticket_id', $ticketId)->all();
+
+
+        $userTickets = \common\models\user\UserTicket::find()->where(["user_id" => $uid])->andWhere(['in', "ticket_id", $ticketId])->all();
         $userTickets = is_array($userTickets) ? $userTickets : [];
         foreach ($userTickets as $val){
             $val = $val->toArray();
             $out[$val['ticket_id']]['get'] = 1;
         }
 
-        
-        
-        return $out;
+       
+        return array_values($out);
     }
     
     public function subTicket($userId, $ticketId, $products, $orderId){

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c68afa47-39b4-4e7a-963b-51ee47004d2e" name="lipez_dev" url="http://47.94.246.149">
+        <fileTransfer host="47.94.246.149" port="22" rootFolder="/data/web/ttyouhiu" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

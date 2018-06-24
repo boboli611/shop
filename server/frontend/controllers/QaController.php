@@ -15,18 +15,27 @@ use common\widgets;
  */
 class QaController extends Controller {
     
-    public function actionCreate()
+    public function actionAdd()
     {
         $content = Yii::$app->request->post('content');
+        $phone = Yii::$app->request->post('phone');
         if (!$content){
             $this->asJson(widgets\Response::error("内容不能为空"));
             return;
         }
+        
+        if (!$phone){
+            $this->asJson(widgets\Response::error("联系方式不能为空"));
+            return;
+        }
+        
+        
         $model = new \common\models\comm\CommQa();
         
         $uid = widgets\User::getUid();
         $model->content = $content;
         $model->user_id = $uid;
+        $model->phone = $phone;
 
         $id = $model->save();
         if (!$id) {

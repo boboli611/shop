@@ -54,8 +54,8 @@ class TicketController extends Controller {
 
         $uid = widgets\User::getUid();
         if (\common\models\user\UserTicket::find()->Where(['user_id' => $uid])->andWhere(['ticket_id' => $ticketId])->one()) {
-            $this->asJson(widgets\Response::error("不能重复领取"));
-            return;
+            //$this->asJson(widgets\Response::error("不能重复领取"));
+            //return;
         }
 
         $userTicketModel = new \common\models\user\UserTicket();
@@ -65,8 +65,8 @@ class TicketController extends Controller {
         $userTicketModel->status = 1;
         $userTicketModel->end_time =  $ticket->duration;
 
-        if (!$userTicketModel->save()) {
 
+        if (!$userTicketModel->save()) {
             $this->asJson(widgets\Response::error('领取失败'));
             return;
         }

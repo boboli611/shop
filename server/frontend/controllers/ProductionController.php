@@ -56,7 +56,7 @@ class ProductionController extends Controller {
         
         //类目
         $items = (new \common\models\comm\CommProductItem())->getListBySort();
-        $uid = widgets\User::getUid();
+        $uid = widgets\User::getUidUncheck();
         $tickets = (new \frontend\service\Ticket())->getIndex($uid);
         
         $out['ticket'] = $tickets;
@@ -146,6 +146,10 @@ class ProductionController extends Controller {
         $info = \common\models\comm\CommProduct::findOne($id);
         $info = $info->toArray();
         $info['info'] = json_decode($info['info'], true);
+        $pattern='/<img((?!src).)*src[\s]*=[\s]*[\'"](?<src>[^\'"]*)[\'"]/i';
+
+        preg_match_all($pattern,$info['desc'],$desc);
+        $info['desc'] = is_array($desc['src']) ? $desc['src'] : [];
 
         $recommendIds = \frontend\service\Product::getRecommond(2);
         $products = \frontend\service\Product::search(['in', "id", $recommendIds], "", "", "", 1);
