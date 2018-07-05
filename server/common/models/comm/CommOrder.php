@@ -41,6 +41,7 @@ class CommOrder extends \common\models\BaseModel {
         self::status_goods_waiting_send => "待发货",
         self::status_goods_waiting_receve => "待收货",
         self::status_goods_receve => "已收货",
+        self::status_goods_close => "已关闭",
     ];
     public static $refund = [
         self::status_refund_no => '未申请',

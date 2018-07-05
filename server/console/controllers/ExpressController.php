@@ -19,7 +19,7 @@ use common\models\comm\CommOrder;
  */
 class ExpressController extends Controller
 {
-    
+    //官网地址 https://www.kuaidi100.com/
     //快递公司名称 参数 num
     private static $companyUrl = "https://m.kuaidi100.com/autonumber/auto";
     
@@ -59,6 +59,7 @@ class ExpressController extends Controller
             
             $express->no  = $val->expressage;
             $express->content  = json_encode($data['data']);
+            $express->state  = $data['state'];
             $express->company  = $comCode;
             $express->save();
             
