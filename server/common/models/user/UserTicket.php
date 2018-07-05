@@ -32,7 +32,8 @@ class UserTicket extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'ticket_id', 'money', 'status', 'end_time'], 'integer'],
+            [['user_id', 'ticket_id', 'money', 'status'], 'integer'],
+            [['end_time'], 'string'],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }

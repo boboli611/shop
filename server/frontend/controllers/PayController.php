@@ -119,18 +119,25 @@ class PayController extends Controller {
         }
 
         $product = (object) [];
-        $product->order_id = $order->id;
+        $product->order_id = $order->order_id;
         $product->price = $order->total;
-
+        
+        $ret = \common\components\WxpayAPI\Pay::query($product, $order->prepay_id);
+         if (!$order->prepay_id || $ret['return_code'] == "FAIL") {
+            $this->asJson(widgets\Response::error("下单失败"));
+            return;
+        }
+/*
         $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
         if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
             $this->asJson(widgets\Response::error("下单失败"));
             return;
         }
+ */
 
-        $out['nonceStr'] = $order['nonce_str'];
-        $out['package'] = "prepay_id={$order['prepay_id']}";
-        $out['sign'] = $order['paySign'];
+        $out['nonceStr'] = $ret['nonce_str'];
+        $out['package'] = "prepay_id={$order->prepay_id}";
+        $out['sign'] = $ret['paySign'];
         $out["timeStamp"] = (string) time();
         $this->asJson(widgets\Response::sucess($out));
     }

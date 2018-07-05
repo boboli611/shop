@@ -24,6 +24,11 @@ class PayNotify extends \WxPayNotify {
 
         $notfiyOutput = array();
         
+        $model = new \common\models\comm\CommWxNoticeLog();
+        $model->order_id = $data['out_trade_no'];
+        $model->content = json_encode($data);
+        $model->save();
+        
         if (!array_key_exists("transaction_id", $data)) {
             $msg = "输入参数不正确";
             return false;

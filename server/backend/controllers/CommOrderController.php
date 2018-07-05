@@ -49,8 +49,16 @@ class CommOrderController extends Controller {
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id) {
-        $model = $this->findModel($id);
+    public function actionView() {
+        
+        $id = \Yii::$app->request->get("id");
+        $order_id = \Yii::$app->request->get("order_id");
+
+        if ($id){
+            $model = $this->findModel($id);
+        }else{
+            $model = $this->findModelByOrder($order_id);
+        }
         
         //$product = CommOrder::getInfoByOrder($model->order_id, $model->user_id);
         
@@ -97,6 +105,7 @@ class CommOrderController extends Controller {
 
     public function actionRefund($id) {
 
+        return ;
         $model = $this->findModel($id);
 
         /*
@@ -199,6 +208,16 @@ class CommOrderController extends Controller {
         $model = CommOrder::find()->select(['comm_order.*', 'user.username']);
         $model->join('inner join', "user", "user.id = comm_order.user_id");
         $model->where(["comm_order.id" => $id]);
+        $model = $model->one();
+
+        return $model;
+        
+    }
+    
+    protected function findModelByOrder($orderId) {
+        $model = CommOrder::find()->select(['comm_order.*', 'user.username']);
+        $model->join('inner join', "user", "user.id = comm_order.user_id");
+        $model->where(["comm_order.order_id" => $orderId]);
         $model = $model->one();
 
         return $model;

@@ -33,7 +33,7 @@ class Pay {
         return $order;
     }
 
-    public static function query($product) {
+    public static function query($product,$prepayId) {
 
         $appid = \yii::$app->params["wx"]['appId'];
         $mchId = \yii::$app->params["wx"]['mchId'];
@@ -43,7 +43,7 @@ class Pay {
         $input->SetOut_trade_no($product->order_id);
 
         $order = \WxPayApi::orderQuery($input);
-
+        $order['paySign'] = \WxPayApi::paySignEncode($appid, $order['nonce_str'], $prepayId);
         return $order;
     }
 
@@ -53,10 +53,12 @@ class Pay {
         $mchId = \yii::$app->params["wx"]['mchId'];
         
         $input = new \WxPayRefund();
+        $input->SetAppid($appid);
+        $input->SetMch_id($mchId);
         $input->SetOut_trade_no($out_trade_no);
         $input->SetTotal_fee($total_fee);
         $input->SetRefund_fee($refund_fee);
-        $input->SetOut_refund_no($mchId . date("YmdHis"));
+        $input->SetOut_refund_no($mchId . date("YmdHis").  mt_rand(1000, 9999));
         $input->SetOp_user_id($mchId);
         var_dump($mchId,\WxPayApi::refund($input));
     }

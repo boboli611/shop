@@ -35,6 +35,7 @@ class OrderController extends Controller {
         $orderProduct = [];
         foreach ($info as $val) {
             $price = $val['total'];
+            $freight = (int)$val['freight'];
             $order = $val['order_id'];
             $create_time = $val['created_at'];
             $id = $val['product_id'];
@@ -68,6 +69,7 @@ class OrderController extends Controller {
 
         $out['info'] = ['order_id' => $order, 
             'total' => $price / 100,
+            'freight' => $freight / 100,
             'status'=> (int)$status,
             'content'=> $content,
             'created_at' => $create_time,
@@ -114,6 +116,9 @@ class OrderController extends Controller {
             $id = $val->order_id;
             $sid = $val->product_id;
             $status = $val->status;
+            if (!$products[$sid]){
+                continue;
+            }
             $product = $products[$sid];
             $product['num'] = $val->num;
             $product['price'] = $product['price']/ 100;

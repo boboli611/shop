@@ -5,12 +5,12 @@ namespace common\models\comm;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\comm\CommBanner;
+use common\models\comm\CommOrderRefundLog;
 
 /**
- * commBannerSearch represents the model behind the search form about `common\models\comm\CommBanner`.
+ * CommOrderRefundLogSearch represents the model behind the search form about `common\models\comm\CommOrderRefundLog`.
  */
-class CommBannerSearch extends CommBanner
+class CommOrderRefundLogSearch extends CommOrderRefundLog
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class CommBannerSearch extends CommBanner
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['img', 'position', 'updated_at', 'created_at'], 'safe'],
+            [['id', 'storage_id', 'refound', 'expressage_status', 'price', 'admin_id', 'admin_nickname'], 'integer'],
+            [['order_id', 'expre_company', 'expressage_num', 'mobile', 'content', 'updated_at', 'created_at'], 'safe'],
         ];
     }
 
@@ -41,19 +41,14 @@ class CommBannerSearch extends CommBanner
      */
     public function search($params)
     {
-        $query = CommBanner::find();
+        $query = CommOrderRefundLog::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
         ]);
-
+       
         $this->load($params);
 
         if (!$this->validate()) {
@@ -65,12 +60,21 @@ class CommBannerSearch extends CommBanner
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'storage_id' => $this->storage_id,
+            'refound' => $this->refound,
+            'expressage_status' => $this->expressage_status,
+            'price' => $this->price,
+            'admin_id' => $this->admin_id,
+            'admin_nickname' => $this->admin_nickname,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ]);
 
-        $query->andFilterWhere(['like', 'img', $this->img])
-            ->andFilterWhere(['like', 'position', $this->position]);
+        $query->andFilterWhere(['like', 'order_id', $this->order_id])
+            ->andFilterWhere(['like', 'expre_company', $this->expre_company])
+            ->andFilterWhere(['like', 'expressage_num', $this->expressage_num])
+            ->andFilterWhere(['like', 'mobile', $this->mobile])
+            ->andFilterWhere(['like', 'content', $this->content]);
 
         return $dataProvider;
     }

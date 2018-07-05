@@ -17,7 +17,7 @@ class CommProductRecommendSearch extends CommProductRecommend
     public function rules()
     {
         return [
-            [['id', 'product_id', 'sort'], 'integer'],
+            [['id', 'product_id', 'type'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class CommProductRecommendSearch extends CommProductRecommend
         $query->andFilterWhere([
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'sort' => $this->sort,
+            'type' => $this->type,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ]);

@@ -142,6 +142,10 @@ table td {
         'pluginEvents' => [
             // 上传成功后的回调方法，需要的可查看data后再做具体操作，一般不需要设置
             "fileuploaded" => "function (event, data, id, index) {
+           if (data.response.error_msg){
+                alert(data.response.error_msg)
+                return;
+            }     
            addImgHiden(data.response.initialPreview)
            $('.kv-upload-progress').hide();
         }",
@@ -156,14 +160,14 @@ table td {
     ]);
     ?>
 
-    <?= $form->field($model, 'carriage')->dropDownList($carriageList, ['style' => 'width:120px', "value" => $modelStorage->carriage]) ?>  
-    <?= $form->field($model, 'tag')->textInput(['style' => 'width:100px'])->label("标签(最大4个字)") ?> 
+    <?php //$form->field($model, 'carriage')->dropDownList($carriageList, ['style' => 'width:120px', "value" => $modelStorage->carriage]) ?>  
+    <?php //$form->field($model, 'tag')->textInput(['style' => 'width:100px'])->label("标签(最大4个字)") ?> 
 
     <?php echo $form->field($model, 'status')->dropDownList(['0' => '下架', '1' => '上架'], ['style' => 'width:120px', "value" => $model->status])->label("状态") ?>  
 
     <?php echo $form->field($model, 'item_id')->dropDownList($items, ['style' => 'width:120px', "value" => $model->item_id])->label("类别") ?>  
     <div id="item_info"></div>
-    <?= $form->field($model, 'type')->dropDownList(['2' => '否', '1' => "是"], ['style' => 'width:120px', "value" => $modelStorage->type])->label("首页推荐") ?>  
+    <?php //$form->field($model, 'type')->dropDownList(['2' => '否', '1' => "是"], ['style' => 'width:120px', "value" => $modelStorage->type])->label("首页推荐") ?>  
 
     <?php
     /*
@@ -201,11 +205,11 @@ table td {
 
     <div class="storage">
         <div class="form-group field-commproduct-type">
-            <span><label class="control-label">样式:</label><input name="styles" value="" style="width:100px"><a class="styleadd" href="javascript:void(null)">+</a></span>
+            <span><label class="control-label">样式:</label><input name="styles" value="" style="width:100px"><a class="styleadd" href="javascript:void(null)">添加</a><a class="stylesub" href="javascript:void(null)">删除</a></span>
         </div>
 
        <div class="form-group field-commproduct-type">
-            <span><label class="control-label">尺码:</label><input name="sizes" value="" style="width:100px"><a class="styleadd" href="javascript:void(null)">+</a></span>
+            <span><label class="control-label">尺码:</label><input name="sizes" value="" style="width:100px"><a class="styleadd" href="javascript:void(null)">添加</a><a class="stylesub" href="javascript:void(null)">删除</a></span>
         </div>
 
         <div class="form-group field-commproduct-type">
@@ -379,6 +383,10 @@ table td {
                     var input = $(this).prev().clone()
                     $(input).val("")
                     $(this).before(input)
+                })
+                
+                $(".stylesub").click(function () {
+                    $(this).prev().prev().remove()
                 })
 
                 $("#createTable").click(function () {

@@ -5,18 +5,33 @@ use \yii\db\Exception as Exception;
 
 class Ticket {
     
-    public function getIndex(){
+    public function getIndex($uid){
         $list = \common\models\comm\CommTicket::find()->where(['index_show' => 1])->andWhere(['status' => 1])->orderBy("id desc")->all();
-        $out = [];
-        foreach ($list as $k =>$val){
-            $val = $val->toArray();
-            $arr['id'] = $val['id'];
-            $arr['description'] = sprintf("满%d使用", $val['condition']);
-            $arr['money'] = $val['money'];
-            $out[] = $arr;
+        if (!$list){
+            return [];
         }
         
-        return $out;
+        $out = $ticketId = [];
+        foreach ($list as $k =>$val){
+            $val = $val->toArray();
+            $ticketId[] = $val['id'];
+            $arr['id'] = $val['id'];
+            $arr['description'] = sprintf("满%d使用", $val['condition'] / 100);
+            $arr['money'] = $val['money'] / 100;
+            $arr['get'] = 0;
+            $out[$val['id']] = $arr;
+        }
+
+
+        $userTickets = \common\models\user\UserTicket::find()->where(["user_id" => $uid])->andWhere(['in', "ticket_id", $ticketId])->all();
+        $userTickets = is_array($userTickets) ? $userTickets : [];
+        foreach ($userTickets as $val){
+            $val = $val->toArray();
+            $out[$val['ticket_id']]['get'] = 1;
+        }
+
+       
+        return array_values($out);
     }
     
     public function subTicket($userId, $ticketId, $products, $orderId){

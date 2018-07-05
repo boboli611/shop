@@ -38,12 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false,
                 'value' =>
                 function($model) {
-                    $imgs = [];
-                    $model->img = json_decode($model->img, true);
-                    foreach ($model->img as $val) {
-                        $imgs[] = "<a href='{$val}' target='_blank'>查看图片</a>";
-                    }
-                    return implode("&nbsp;", $imgs);
+                        return "<a href='{$model->img}' target='_blank'>查看图片</a>";
+                   
                 },
                     ],
                     [

@@ -73,6 +73,7 @@ class CommProductionStorage extends \common\models\BaseModel
             return $list;
         }
 
+
         foreach ($list as &$val){
             $val->price = $val->price / 100;
         }

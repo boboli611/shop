@@ -6,18 +6,19 @@ use common\constant\App;
 class Banner {
 
     public static function get($position){
-        $info = \common\models\comm\CommBanner::find()->where(['position' => $position, "status"=> App::APP_VAILD_STATUS])->one();
+        $info = \common\models\comm\CommBanner::find()->where(['position' => $position, "status"=> App::APP_VAILD_STATUS])->all();
+       
         if (!$info){
             return [];
         }
         
-        $out = json_decode($info->img, true);
-       
-        $out = is_array($out) ? $out : [];
-        foreach ($out as &$val){
-            $val = \common\widgets\Oss::getImageUrl($val, 440);
+     
+        $out = [];
+        foreach ($info as $val){
+            $img = \common\widgets\Oss::getImageUrl($val->img, 440);
+            $out[] = ['img' => $img, "product_id" => $val->product_id];
         }
-        
+ 
         return $out;
     } 
 

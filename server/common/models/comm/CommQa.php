@@ -34,6 +34,7 @@ class CommQa extends \common\models\BaseModel
             [['user_id', 'status', 'admin_id'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
             [['content'], 'string', 'max' => 255],
+            [['phone'], 'string', 'max' => 32],
         ];
     }
 

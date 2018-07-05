@@ -109,6 +109,8 @@ class WxController extends Controller {
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
         $ticketId = Yii::$app->request->post("ticket_id");
+        $num = (int)Yii::$app->request->post("buy_num");
+        $num = $num > 0? $num : 1;
 
         if (!$pids) {
             $this->asJson(widgets\Response::error("商品id错误"));
@@ -129,7 +131,7 @@ class WxController extends Controller {
         
         $trans = \common\models\comm\CommOrder::getDb()->beginTransaction();
         try {
-            $pids = [$pids => 1];
+            $pids = [$pids => $num];
             $order = (new \frontend\service\Pay())->add($uid, $pids, $addressId, $ticketId, $content);
             $trans->commit();
         } catch (Exception $ex) {

@@ -21,7 +21,7 @@ class OrderController extends Controller
 {
     
     /**
-     * 关闭无效订单
+     * 关闭无效未付款订单
      * @param string $message the message to be echoed.
      */
     public function actionClosePayStatus()
@@ -38,10 +38,10 @@ class OrderController extends Controller
     public function actionUpdateStatus()
     {
         $list = CommOrder::find()->where(['in', 'status', [2,3,4]])->all();
-        $endTime = date("Y-m-d H:i:s", time() - 3600 * 10);
+        $endTime = date("Y-m-d H:i:s", time() - 3600 * 24 * 10 );
         foreach ($list as $order){
             
-            if ($order->created_at <= $endTime){
+            if ($order->expressage && $order->created_at <= $endTime){
                 $order->status = CommOrder::status_goods_close;
                 $order->save();
                 echo $order->id . " status 5 sucess \n";

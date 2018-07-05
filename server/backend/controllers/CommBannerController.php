@@ -62,14 +62,9 @@ class CommBannerController extends Controller {
         $model = new CommBanner();
         $data = Yii::$app->request->post();
         if ($data) {
-            $position = $data['CommBanner']['position'];
-            $info = $model->find()->where(['position' => $position])->one();
-            if ($info) {
-                throw new \yii\db\Exception("error:" . "广告位已经配置不能重复创建");
-            }
             
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } 
         }
 

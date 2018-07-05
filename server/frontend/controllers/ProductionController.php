@@ -38,22 +38,26 @@ class ProductionController extends Controller {
         $order = (int) Yii::$app->request->post("order");
         $lastId = (int) Yii::$app->request->post("last_id");
 
-        $products = \frontend\service\Product::search(["type" => 2], "", $orderField, $order, $page);
+        $recommendIds = \frontend\service\Product::getRecommond(1);
+        $products = \frontend\service\Product::search(['not in', "id", $recommendIds], "", $orderField, $order, $page);
         $products = $products ? $products : []; 
         foreach ($products as &$val){
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
+            $val['price'] = $val['price']/ 100;
         }
         
-        $recommend = \frontend\service\Product::getRecommond();
-        foreach ($recommend as $val){
-            $img = json_decode($val->cover, TRUE);
-            $val->cover = $img[0];
+        $recommend = \frontend\service\Product::search(['in', "id", $recommendIds], "", $orderField, $order, $page);
+        foreach ($recommend as &$recom){
+            $img = json_decode($recom->cover, TRUE);
+            $recom->cover = $img[0];
+            $recom->price = $recom->price / 100;
         }
+        
         //类目
         $items = (new \common\models\comm\CommProductItem())->getListBySort();
-        
-        $tickets = (new \frontend\service\Ticket())->getIndex();
+        $uid = widgets\User::getUidUncheck();
+        $tickets = (new \frontend\service\Ticket())->getIndex($uid);
         
         $out['ticket'] = $tickets;
         $out['item'] = $items;
@@ -72,7 +76,8 @@ class ProductionController extends Controller {
 
         $page = (int) Yii::$app->request->get("p");
 
-        $products = \frontend\service\Product::search(["type" => 2], "", "", "", $page);
+        $recommendIds = \frontend\service\Product::getRecommond(1);
+        $products = \frontend\service\Product::search(['not in', "id", $recommendIds], "", "", "", $page);
         $products = $products ? $products : []; 
         foreach ($products as &$val){
             $val['cover'] = json_decode($val['cover'], true);
@@ -141,8 +146,13 @@ class ProductionController extends Controller {
         $info = \common\models\comm\CommProduct::findOne($id);
         $info = $info->toArray();
         $info['info'] = json_decode($info['info'], true);
-        $products = \frontend\service\Product::search([], "", 2, 1, 1, 4);
+        $pattern='/<img((?!src).)*src[\s]*=[\s]*[\'"](?<src>[^\'"]*)[\'"]/i';
 
+        preg_match_all($pattern,$info['desc'],$desc);
+        $info['desc'] = is_array($desc['src']) ? $desc['src'] : [];
+
+        $recommendIds = \frontend\service\Product::getRecommond(2);
+        $products = \frontend\service\Product::search(['in', "id", $recommendIds], "", "", "", 1);
         $products = $products ? $products : [];
         //var_dump($products);exit;
         foreach ($products as &$v){

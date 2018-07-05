@@ -86,14 +86,14 @@ class ProductController extends Controller {
 
             $result = $model->save();
             if (!$result) {
-                throw new \yii\db\Exception("save error");
+                throw new \yii\db\Exception("save error:".$model->getErrors());
             }
 
             $storageData = [];
             foreach ($data['storage_style'] as $k => $val) {
 
                 if (!$data['storage_style'][$k]) {
-                    continue;
+                    //continue;
                 }
 
                 $modelStorage = new \common\models\comm\CommProductionStorage();
@@ -115,6 +115,7 @@ class ProductController extends Controller {
             $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
         } catch (\Exception $ex) {
+            //var_dump($ex->getMessage());exit;
             return $this->render('create', [
                         'model' => $model,
                             // 'modelRecommend' => $recommend,
@@ -129,6 +130,7 @@ class ProductController extends Controller {
      * @return mixed
      */
     public function actionUpdate($id) {
+
         $model = $this->findModel($id);
         $modelStorage = new \common\models\comm\CommProductionStorage();
         $recommend = \common\models\comm\CommProductRecommend::find()->where(['product_id' => $id])->one();
@@ -151,13 +153,17 @@ class ProductController extends Controller {
             $data["CommProduction"]['price'] = $data['storage_price'][0];
 
             $model->load($data);
+            echo 666;
             $result = $model->save();
             if (!$result) {
                 throw new \yii\db\Exception("错误11");
             }
 
             $storageData = [];
-           
+            if (!is_array($data['storage_style'])){
+                $data['storage_style'] = [];
+            }
+
             foreach ($data['storage_style'] as $k => $val) {
 
                 if (!$data['storage_style'][$k]) {
@@ -185,6 +191,8 @@ class ProductController extends Controller {
                     throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
             }
+
+
             $transaction->commit();
             return $this->redirect(['update', 'id' => $model->id]);
         } catch (\Exception $ex) {

@@ -42,6 +42,7 @@ class CommOrderSearch extends CommOrder
     public function search($params)
     {
         $query = CommOrder::find()->select(['comm_order.*','user.username']);
+        $query->where('comm_order.status != 9');
         $query->groupBy("order_id");
         $query->join('inner join', "user", "user.id = comm_order.user_id");
         //$query->join('inner join', "comm_production_storage", "comm_production_storage.id = comm_order.product_id");
