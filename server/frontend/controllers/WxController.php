@@ -108,7 +108,7 @@ class WxController extends Controller {
         $pids = Yii::$app->request->post("id");
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
-        $ticketId = Yii::$app->request->post("ticket_id");
+        $ticketId = (int)Yii::$app->request->post("ticket_id");
         $num = (int)Yii::$app->request->post("buy_num");
         $num = $num > 0? $num : 1;
 

@@ -27,6 +27,17 @@ class TicketController extends Controller {
 
         $this->asJson(widgets\Response::sucess($list));
     }
+    
+    public function actionList() {
+
+        $uid = widgets\User::getUid();
+        $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition` from user_ticket a
+                INNER JOIN comm_ticket b on a.ticket_id = b.id
+                where a.user_id = {$uid} and b.`status` = 1";
+        $list = \common\models\user\UserTicket::findBySql($sql)->asArray()->all();
+
+        $this->asJson(widgets\Response::sucess($list));
+    }
 
     public function actionAdd() {
 
@@ -54,8 +65,8 @@ class TicketController extends Controller {
 
         $uid = widgets\User::getUid();
         if (\common\models\user\UserTicket::find()->Where(['user_id' => $uid])->andWhere(['ticket_id' => $ticketId])->one()) {
-            //$this->asJson(widgets\Response::error("不能重复领取"));
-            //return;
+            $this->asJson(widgets\Response::error("不能重复领取"));
+            return;
         }
 
         $userTicketModel = new \common\models\user\UserTicket();
