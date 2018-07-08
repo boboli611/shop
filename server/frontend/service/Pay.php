@@ -31,6 +31,7 @@ class Pay {
             $product->title = "Lipze:{{$userInfo->username}}";
             $product->order_id = $orderId;
             $product->price = $countPrice;
+            
             $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
             if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
                 throw new Exception("下单失败");

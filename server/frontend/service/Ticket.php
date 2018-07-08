@@ -6,7 +6,7 @@ use \yii\db\Exception as Exception;
 class Ticket {
     
     public function getIndex($uid){
-        $list = \common\models\comm\CommTicket::find()->where(['index_show' => 1])->andWhere(['status' => 1])->orderBy("id desc")->all();
+        $list = \common\models\comm\CommTicket::find()->where(['index_show' => 1])->andWhere(['status' => 1])->orderBy("id desc")->limit(2)->all();
         if (!$list){
             return [];
         }
@@ -34,24 +34,22 @@ class Ticket {
         return array_values($out);
     }
     
-    public function subTicket($userId, $ticketId, $products, $orderId){
+    public function getUserTicketId($uid, $id){
+        
+        $endTime = date("Y-m-d H:i:s");
+        $sql = "select a.id, a.ticket_id,a.money, b.title, b.condition from user_ticket a
+                inner JOIN comm_ticket b on a.ticket_id = b.id
+                where a.id = {$id} and a.user_id = {$uid} and b.status=1 and a.end_time >= '$endTime'";
+                
+        $info = \common\models\user\UserTicket::findBySql($sql)->asArray()->one(); 
+        if (!$info){
+            return [];
+        }
        
-        $tieket = \common\models\comm\CommTicket::findOne($ticketId);
-        if (!$tieket){
-            return 0;
-        }
-        
-        $status = 0;
-        foreach ($products as $val){
-            $status = $this->checkTicket($ticket, $val);
-            if ($status){
-                break;
-            }
-        }
-        
-        if ($status){
-            return 0;
-        }
+        return $info;
+    }
+    
+    public function subTicket($userId, $ticketId, $price, $orderId){
         
         $uTicket = \common\models\user\UserTicket::getByUser($userId, $ticketId);
         if (!$uTicket){
@@ -59,6 +57,20 @@ class Ticket {
         }
         
         if (!$uTicket->status){
+            return 0;
+        }
+       
+        $tieket = \common\models\comm\CommTicket::findOne($uTicket->ticket_id);
+        if (!$tieket){
+            return 0;
+        }
+        
+        if ($tieket->duration < date("Y-m-d H:i:s")){
+            return 0;
+        }
+        
+        $status = $this->checkTicket($tieket, $price);
+        if ($status){
             return 0;
         }
         
@@ -85,9 +97,9 @@ class Ticket {
      * @param type $ticketId
      * @param array $product
      */
-    public function checkTicket($ticket, $product){
+    public function checkTicket($ticket, $price){
         
-        if ($ticket['condition'] >= $product['price']){
+        if ($ticket['condition'] >= $price){
             return true;
         }
         

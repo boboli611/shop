@@ -27,14 +27,38 @@ class TicketController extends Controller {
 
         $this->asJson(widgets\Response::sucess($list));
     }
-    
+
     public function actionList() {
 
+        $page = (int) Yii::$app->request->get("p");
+        $status = (int) Yii::$app->request->get("status");
+        $limit = 20;
+        $endTime = date("Y-m-d H:i:s");
+        
+        $start = ($page - 1) > 0 ? ($page - 1) : 0;
         $uid = widgets\User::getUid();
-        $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition` from user_ticket a
+        if ($status == 1){
+            $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
-                where a.user_id = {$uid} and b.`status` = 1";
+                where a.user_id = {$uid} and b.`status` = {$status} and a.`end_time` >= '{$endTime}' order by id desc limit {$start}, {$limit}" ;
+        }elseif($status == 2){
+            $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
+                INNER JOIN comm_ticket b on a.ticket_id = b.id
+                where a.user_id = {$uid} and b.`status` = {$status} order by id desc limit {$start}, {$limit}" ;
+        }else{
+            $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
+                INNER JOIN comm_ticket b on a.ticket_id = b.id
+                where a.user_id = {$uid} and a.`end_time` <= '{$endTime}' order by id desc limit {$start}, {$limit}";
+        }
+        
+
         $list = \common\models\user\UserTicket::findBySql($sql)->asArray()->all();
+
+        foreach ($list as &$item) {
+            $item['money'] = $item['money'] / 100;
+            $item['condition'] = $item['condition'] / 100;
+            $item['duration'] = substr($item['duration'], 0, 10);
+        }
 
         $this->asJson(widgets\Response::sucess($list));
     }
@@ -74,7 +98,7 @@ class TicketController extends Controller {
         $userTicketModel->ticket_id = $ticketId;
         $userTicketModel->money = $ticket->money;
         $userTicketModel->status = 1;
-        $userTicketModel->end_time =  $ticket->duration;
+        $userTicketModel->end_time = $ticket->duration;
 
 
         if (!$userTicketModel->save()) {

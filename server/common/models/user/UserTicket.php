@@ -60,7 +60,7 @@ class UserTicket extends \common\models\BaseModel
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function getByUser($userId, $ticketId){
-        return self::find()->where(['user_id' => $userId])->andWhere(["ticket_id" => $ticketId])->one();
+        return self::find()->where(['user_id' => $userId])->andWhere(["id" => $ticketId])->one();
     }
     
      /**

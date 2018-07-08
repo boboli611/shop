@@ -15,7 +15,7 @@ use Yii;
  * @property string $updated_at
  * @property string $created_at
  */
-class UserTicketLog extends \yii\db\ActiveRecord
+class UserTicketLog extends \common\models\BaseModel
 {
     /**
      * @inheritdoc

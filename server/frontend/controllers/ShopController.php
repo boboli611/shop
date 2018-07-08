@@ -121,6 +121,7 @@ class ShopController extends Controller {
     public function actionIdList() {
 
         $ids = Yii::$app->request->post("ids");
+        $ticket_id = Yii::$app->request->post("ticket_id");
         $uid = widgets\User::getUid();
         if (!$ids){
             $this->asJson(widgets\Response::error("请选择商品"));
@@ -153,13 +154,25 @@ class ShopController extends Controller {
             $cover = json_decode($val['cover'], true);
             $val['cover'] = $cover[0];
         }
-         $carriage = \frontend\service\ExpressFee::sumPrice($address['province'], $num);
+        $carriage = \frontend\service\ExpressFee::sumPrice($address['province'], $num);
+        
+        $price = $price + $carriage;
+        $ticketInfo = (object)[];
+        if ($ticket_id){
+            $ticketInfo = (new \frontend\service\Ticket())->getUserTicketId($uid, $ticket_id);
+            $price = $price - (int)$ticketInfo['money'];
+            $ticketInfo['money'] = $ticketInfo['money'] / 100;
+            $ticketInfo['condition'] = $ticketInfo['condition'] / 100;
+        }
+
+        $address['address'] = sprintf("%s,%s,%s %s", $address['province'], $address['city'], $address['county'], $address['address']);
         $out["info"] = $info;
+        $out['ticket'] = $ticketInfo;
         $out["order"]["price"] = $price / 100;
         $out["order"]["carriage"] = $carriage / 100;
         $out["order"]["discount"] = 0;
-        $out["address"]['id'] = $address['id'];
-        $out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'], $address['city'], $address['county'], $address['address']);
+        $out["address"] = $address;
+        //$out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'], $address['city'], $address['county'], $address['address']);
 
         return $this->asJson(widgets\Response::sucess($out));
     }

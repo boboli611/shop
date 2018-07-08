@@ -8,6 +8,10 @@ class ExpressFee {
 
     public static function sumPrice($address, $num) {
         
+        if (!$address){
+            return 0;
+        }
+        
         $price = self::getFirstPrice($address) + self::getRenewPrice($address, $num - 1);
         return $price;
     }

@@ -30,7 +30,7 @@ class WxController extends Controller {
         $code = $_SERVER['HTTP_X_WX_CODE'];
         $encryptedData = $_SERVER["HTTP_X_WX_ENCRYPTED_DATA"];
         $iv = $_SERVER["HTTP_X_WX_IV"];
-        
+
         $code = \yii::$app->request->post('code');
         $encryptedData = \yii::$app->request->post('encrypted_data');
         $iv = \yii::$app->request->post('iv');
@@ -76,6 +76,8 @@ class WxController extends Controller {
                 $userModel = new \common\models\user\User();
             }
 
+            $data['nickName'] = $this->filterNickname($data['nickName']);
+            $data['nickName'] = !$data['nickName'] ? "新用户" : $data['nickName'];
             $userModel->id = $model->user_id;
             $userModel->username = $data['nickName'];
             $userModel->gender = $data['gender'];
@@ -108,9 +110,9 @@ class WxController extends Controller {
         $pids = Yii::$app->request->post("id");
         $addressId = Yii::$app->request->post("address_id");
         $content = Yii::$app->request->post("content");
-        $ticketId = (int)Yii::$app->request->post("ticket_id");
-        $num = (int)Yii::$app->request->post("buy_num");
-        $num = $num > 0? $num : 1;
+        $ticketId = (int) Yii::$app->request->post("ticket_id");
+        $num = (int) Yii::$app->request->post("buy_num");
+        $num = $num > 0 ? $num : 1;
 
         if (!$pids) {
             $this->asJson(widgets\Response::error("商品id错误"));
@@ -128,7 +130,7 @@ class WxController extends Controller {
             $this->asJson(widgets\Response::error("非法参数"));
             return;
         }
-        
+
         $trans = \common\models\comm\CommOrder::getDb()->beginTransaction();
         try {
             $pids = [$pids => $num];
@@ -147,19 +149,18 @@ class WxController extends Controller {
         $out["timeStamp"] = (string) time();
         $this->asJson(widgets\Response::sucess($out));
     }
-    
-    public function actionOrderPay(){
-        
+
+    public function actionOrderPay() {
+
         $orderId = Yii::$app->request->post("id");
-        if ($orderId){
+        if ($orderId) {
             $this->asJson(widgets\Response::error("非法参数"));
             return;
         }
-        
+
         $info = \common\models\comm\CommOrder::find()->where(['order_id' => $orderId])->one();
     }
 
-    
     /**
      * 付款通知
      */
@@ -172,6 +173,23 @@ class WxController extends Controller {
             \frontend\service\Error::addLog($userId, $exc->getMessage(), json_encode($exc->errorInfo));
             exit;
         }
+    }
+
+    private function filterNickname($nickname) {
+        
+        $nickname = preg_replace('/[\x{1F600}-\x{1F64F}]/u', '', $nickname);
+
+        $nickname = preg_replace('/[\x{1F300}-\x{1F5FF}]/u', '', $nickname);
+
+        $nickname = preg_replace('/[\x{1F680}-\x{1F6FF}]/u', '', $nickname);
+
+        $nickname = preg_replace('/[\x{2600}-\x{26FF}]/u', '', $nickname);
+
+        $nickname = preg_replace('/[\x{2700}-\x{27BF}]/u', '', $nickname);
+
+        $nickname = str_replace(array('"', '\''), '', $nickname);
+
+        return addslashes(trim($nickname));
     }
 
 }
