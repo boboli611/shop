@@ -40,7 +40,7 @@ class TicketController extends Controller {
         if ($status == 1){
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
-                where a.user_id = {$uid} and b.`status` = {$status} and a.`end_time` >= '{$endTime}' order by id desc limit {$start}, {$limit}" ;
+                where a.user_id = {$uid} and b.`status` = {$status} and b.`duration` >= '{$endTime}' order by id desc limit {$start}, {$limit}" ;
         }elseif($status == 2){
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
@@ -48,12 +48,11 @@ class TicketController extends Controller {
         }else{
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
-                where a.user_id = {$uid} and a.`end_time` <= '{$endTime}' order by id desc limit {$start}, {$limit}";
+                where a.user_id = {$uid} and b.`duration` <= '{$endTime}' order by id desc limit {$start}, {$limit}";
         }
         
 
         $list = \common\models\user\UserTicket::findBySql($sql)->asArray()->all();
-
         foreach ($list as &$item) {
             $item['money'] = $item['money'] / 100;
             $item['condition'] = $item['condition'] / 100;
