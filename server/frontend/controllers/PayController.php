@@ -51,7 +51,7 @@ class PayController extends Controller {
         }
 
         $trans = \common\models\comm\CommOrder::getDb()->beginTransaction();
-        
+
         try {
             $order = (new \frontend\service\Pay())->add($uid, $pIds, $addressId, $ticketId, $content);
             $ret = \common\models\user\UserShop::deleteAll(['in', "id", $ids]);

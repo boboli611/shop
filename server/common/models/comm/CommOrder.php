@@ -32,7 +32,7 @@ class CommOrder extends \common\models\BaseModel {
     const status_refund_no = 1; // '未申请',
     const status_refund_checking = 2; // '审核中',
     const status_refund_waiting = 3; // '退货中',
-    const status_refund_ok = 4; // '同意退货',
+    //const status_refund_ok = 4; // '同意退货',
     const status_refund_sucess = 5; //'退货完成',
     const status_refund_fail = 9; // '退货未批准',
 
@@ -47,7 +47,7 @@ class CommOrder extends \common\models\BaseModel {
         //self::status_refund_no => '未申请',
         self::status_refund_checking => '审核中',
         self::status_refund_waiting => '退货中',
-        self::status_refund_ok => '同意退货',
+       // self::status_refund_ok => '同意退货',
         self::status_refund_sucess => '退货完成',
         self::status_refund_fail => '退货未批准',
     ];
@@ -150,8 +150,10 @@ class CommOrder extends \common\models\BaseModel {
         $model = self::find();
         $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total","freight", "address", "status","refund", "expressage","content", "comm_order_product.*"]);
         $model->where("comm_order.status != ". CommOrder::status_pay_fail);
-        if ($type){
+        if (in_array($type, [1,2,3])){
             $model->andWhere(['comm_order.status' => $type]);
+        }elseif ($type == 4){
+            $model->andWhere(['in','comm_order.status' , [4,5]]);
         }
         $model->join("inner join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id");
         

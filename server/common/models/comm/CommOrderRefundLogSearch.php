@@ -42,7 +42,7 @@ class CommOrderRefundLogSearch extends CommOrderRefundLog
     public function search($params)
     {
         $query = CommOrderRefundLog::find();
-
+        $query->orderBy("id desc");
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

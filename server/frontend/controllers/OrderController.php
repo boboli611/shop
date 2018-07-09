@@ -104,6 +104,7 @@ class OrderController extends Controller {
         $ids = array_keys($pids);
         $pList = \frontend\service\Product::getByStorageid($ids);
 
+        $products = [];
         foreach ($pList as &$val) {
             $id = $val['storage_id'];
             $val['cover'] = json_decode($val['cover'], true);

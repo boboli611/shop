@@ -95,7 +95,7 @@ $params = Yii::$app->request->queryParams['CommOrderRefundLogSearch'];
                     if ($model->refound != \common\models\comm\CommOrder::status_refund_checking){
                         return ;
                     }
-                    return "<a href='/comm-order-refund/refund?id={$model->id}'>同意</a>&nbsp;&nbsp;<a href=''>不同意</a>" ;
+                    return "<a href='/comm-order-refund/refund?id={$model->id}&status=1'>退款</a>&nbsp;&nbsp;<a href='/comm-order-refund/refund?id={$model->id}&status=2'>不退款</a>" ;
                 },
             ],
 

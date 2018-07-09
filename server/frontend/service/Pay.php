@@ -36,11 +36,11 @@ class Pay {
             if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
                 throw new Exception("下单失败");
             }
-
+      
             $orderModel = new \common\models\comm\CommOrder();
             $orderModel->user_id = $uid;
             $orderModel->order_id = $orderId;
-            $orderModel->num = $pInfo["price"];
+            $orderModel->num = $pInfo["countProduct"];
             $orderModel->freight = $freight;
             $orderModel->ticket = $ticketPrice;
             $orderModel->content = $content;

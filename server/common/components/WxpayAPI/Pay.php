@@ -60,7 +60,7 @@ class Pay {
         $input->SetRefund_fee($refund_fee);
         $input->SetOut_refund_no($mchId . date("YmdHis").  mt_rand(1000, 9999));
         $input->SetOp_user_id($mchId);
-        var_dump($mchId,\WxPayApi::refund($input));
+        return \WxPayApi::refund($input);
     }
 
 }

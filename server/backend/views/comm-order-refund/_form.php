@@ -6,28 +6,29 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommOrderRefundLog */
 /* @var $form yii\widgets\ActiveForm */
+$model->price = $model->price / 100;
 ?>
 
 <div class="comm-order-refund-log-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'order_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'order_id')->textInput(['readonly' => "readonly"]) ?>
 
-    <?= $form->field($model, 'refound')->textInput() ?>
+    <?php //echo $form->field($model, 'refound')->textInput() ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
 
-    <?= $form->field($model, 'admin_id')->textInput() ?>
+    <?php //$form->field($model, 'admin_id')->textInput() ?>
 
-    <?= $form->field($model, 'admin_nickname')->textInput() ?>
+    <?php //$form->field($model, 'admin_nickname')->textInput() ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+    <?php //$form->field($model, 'updated_at')->textInput() ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?php //$form->field($model, 'created_at')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
