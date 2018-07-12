@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\components\express\ShipperCode;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\CommOrder */
@@ -46,10 +47,13 @@ $model->total = $model->total / 100;
     ?> 
 
     <?php
-    if ($status == \common\models\comm\CommOrder::status_goods_waiting_send){
+   
         echo $form->field($model, 'expressage')->textInput(['maxlength' => true]);
-    }
+        echo $form->field($model, 'ShipperCode')->dropDownList(ShipperCode::$list, ['style' => 'width:120px', "value" => $model->ShipperCode]);
+   
      ?>
+    
+    <?php //$form->field($model, 'carriage')->dropDownList($carriageList, ['style' => 'width:120px', "value" => $modelStorage->carriage]) ?> 
 
     <?= $form->field($model, 'content')->textarea(['maxlength' => true, "readonly" => true]) ?>
 

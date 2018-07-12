@@ -1,12 +1,14 @@
 <?php
 namespace common\components\express;
-class ShooperCode {
+class ShipperCode {
 
     public static $list = [
+        0 => "选择快递",
+        "STO" => "申通快递",
         "SF" => "顺丰速运",
         "HTKY" => "百世快递",
         "ZTO" => "中通快递",
-        "STO" => "申通快递",
+        
         "YTO" => "圆通速递",
         "YD" => "韵达速递",
         "YZPY" => "邮政快递包裹",

@@ -85,7 +85,7 @@ class CommOrderController extends Controller {
         if (Yii::$app->request->post()) {
             $patams = Yii::$app->request->post();
             $data['expressage'] = $patams['CommOrder']['expressage'];
-
+            $data['ShipperCode'] = $patams['CommOrder']['ShipperCode'];
 
             if ($model->status == CommOrder::status_goods_waiting_send && $data['expressage']) {
                 $data['status'] = CommOrder::status_goods_waiting_receve;
@@ -105,11 +105,6 @@ class CommOrderController extends Controller {
         }
     }
     
-    public function actionTest(){
-        $ret = \common\components\WxpayAPI\Pay::refund('20180505152551255128614', 12, 1);
-        var_dump($ret);
-    }
-
     public function actionRefund($id) {
 
         return;
@@ -200,11 +195,18 @@ class CommOrderController extends Controller {
     }
 
     public function actionExport() {
-
+        
+        if(!$_GET){
+             return $this->render('expert', [
+                        'model' => [],
+            ]);
+             
+             return;
+        }
 
         require dirname(dirname(__DIR__)) . '/common/components/PHPExcel/Classes/PHPExcel.php';
-        $start = "2018-07-01";
-        $end = "2018-07-10";
+        //$start = "2018-07-01";
+        //$end = "2018-07-10";
         $headerArr = [ 'order_id' => '业务单号','name' => '收件人姓名', 'mobile'=> '收件人手机','province'=>'收件省', 'city' => '收件市', 'county' => '收件区/县', 'address'=> '收件人地址', 'product_name'=> '品名', 'num' => '数量', 'username' => '备注'];
 
         $fileName = "order.xls";
@@ -218,8 +220,10 @@ class CommOrderController extends Controller {
             $key += 1;
         }
 
-        $orderList = CommOrder::find()->select("comm_order.*, user.*")->join("left join", "user", "comm_order.user_id = user.id ")->where(['>=', 'comm_order.created_at', $start])
-                ->andWhere(['<=', 'comm_order.created_at', $end])->andWhere(['comm_order.status' => 2])->asArray()->all();
+        $orderList = CommOrder::find()->select("comm_order.*, user.*")->join("left join", "user", "comm_order.user_id = user.id ")
+                //->where(['>=', 'comm_order.created_at', $start])
+                //->andWhere(['<=', 'comm_order.created_at', $end])
+                ->where(['comm_order.status' => 2])->asArray()->all();
 
         $objPHPExcel->getActiveSheet()->setTitle('order');
         
