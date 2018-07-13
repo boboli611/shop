@@ -16,6 +16,7 @@ class kdNiao {
 
     public function run($No,$ShipperCode) {
         $logisticResult = $this->getOrderTracesByJson($No, $ShipperCode);
+        var_dump($No, $ShipperCode,$logisticResult);
         $data = json_decode($logisticResult, true);
         if (!$data || $data['Success'] != 'true'){
                 return [];

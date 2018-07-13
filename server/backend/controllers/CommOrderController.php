@@ -207,7 +207,7 @@ class CommOrderController extends Controller {
         $end = "2018-07-10";
         $headerArr = [ 'order_id' => '业务单号','name' => '收件人姓名', 'mobile'=> '收件人手机','province'=>'收件省', 'city' => '收件市', 'county' => '收件区/县', 'address'=> '收件人地址', 'product_name'=> '品名', 'num' => '数量', 'username' => '备注'];
 
-        $fileName = "order.xls";
+        $fileName = "order.csv";
         $objPHPExcel = new \PHPExcel();
         $objProps = $objPHPExcel->getProperties();
 
@@ -244,8 +244,16 @@ class CommOrderController extends Controller {
         header("Content-Disposition: attachment; filename=\"$fileName\"");
         header('Cache-Control: max-age=0');
 
-        $writer = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $writer = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
         $writer->save('php://output');
+    }
+    
+    public function actionLoad(){
+        $objReader = PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
+                                                    ->setEnclosure('"')
+                                                    ->setLineEnding("\r\n")
+                                                    ->setSheetIndex(0);
+$objPHPExcelFromCSV = $objReader->load(str_replace('.php', '.csv', __FILE__));
     }
 
     private function refund($out_trade_no, $total_fee, $refund_fee) {

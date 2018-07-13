@@ -511,6 +511,50 @@ class OrderController extends Controller {
     }
     
     
+     //关闭订单
+    public function actionClose(){
+        
+        $orderId = Yii::$app->request->post("orderId");
+        if (!$orderId){
+            $this->asJson(widgets\Response::error("订单不能为空"));
+            return;
+        }
+        
+        $uid = widgets\User::getUid();
+        $order = \common\models\comm\CommOrder::getByOrderId($orderId);
+        if ($order->user_id != $uid){
+            $this->asJson(widgets\Response::error("不是自己的订单"));
+            return;
+        }
+        
+        if ($order->status == CommOrder::status_waiting_pay){
+            $this->asJson(widgets\Response::error("请付款先"));
+            return;
+        }
+        
+        if ($order->status == CommOrder::status_goods_waiting_send){
+            $this->asJson(widgets\Response::error("还未发货"));
+            return;
+        }
+        
+        try {
+            
+            $order->status = CommOrder::status_goods_close;
+            if (!$order->save()){
+                $this->asJson(widgets\Response::error("操作失败"));
+                return;
+            }
+
+        } catch (\Exception $exc) {
+    
+            $this->asJson(widgets\Response::error($exc->getMessage()));
+            return;
+        }
+    
+        $this->asJson(widgets\Response::sucess([]));
+    }
+    
+    
     //退单快递号
     public function actionRetunExpressage(){
         
