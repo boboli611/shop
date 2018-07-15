@@ -63,7 +63,7 @@ class ExpressController extends Controller {
         $out['product']['cover'] = $product['cover'][0];
         $out['product']['address'] = json_decode($order->address, true);
         $out['express']['content'] = $info['content'];
-        $out['express']['company_name'] = \common\models\comm\CommExpressLog::$company[$info['company']];
+        $out['express']['company_name'] = \common\models\comm\CommExpressLog::$company[$order->ShipperCode];
         $out['express']['no'] = $info['no'];
         $this->asJson(widgets\Response::sucess($out));
     }

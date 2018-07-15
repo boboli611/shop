@@ -25,5 +25,6 @@ class ShipperCode {
 //    FEDEX联邦(国内件）	FEDEX
 //    FEDEX联邦(国际件）	FEDEX_GJ
     ];
+    
 
 }

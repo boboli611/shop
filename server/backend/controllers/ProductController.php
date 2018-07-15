@@ -187,7 +187,6 @@ class ProductController extends Controller {
                 $result = $modelStorage->save();
 
                 if (!$result) {
-                    var_dump($modelStorage->getErrors());exit;
                     throw new \yii\db\Exception("error:" . $modelStorage->getErrors());
                 }
             }
@@ -196,7 +195,6 @@ class ProductController extends Controller {
             $transaction->commit();
             return $this->redirect(['update', 'id' => $model->id]);
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());exit;
             return $this->render('update', [
                         'model' => $model,
                         'modelStorage' => $modelStorageList,
