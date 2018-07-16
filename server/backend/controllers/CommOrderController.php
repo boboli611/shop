@@ -104,8 +104,8 @@ class CommOrderController extends Controller {
             ]);
         }
     }
-    
-    public function actionTest(){
+
+    public function actionTest() {
         $ret = \common\components\WxpayAPI\Pay::refund('20180505152551255128614', 12, 1);
         var_dump($ret);
     }
@@ -201,34 +201,37 @@ class CommOrderController extends Controller {
 
     public function actionExport() {
 
+        if (!$_GET) {
+            return $this->render('expert', [
+                        'model' => [],
+            ]);
 
+            return;
+        }
         require dirname(dirname(__DIR__)) . '/common/components/PHPExcel/Classes/PHPExcel.php';
-        $start = "2018-07-01";
-        $end = "2018-07-10";
-        $headerArr = [ 'order_id' => '业务单号','name' => '收件人姓名', 'mobile'=> '收件人手机','province'=>'收件省', 'city' => '收件市', 'county' => '收件区/县', 'address'=> '收件人地址', 'product_name'=> '品名', 'num' => '数量', 'username' => '备注'];
-
+        //$start = "2018-07-01";
+        //$end = "2018-07-10";
+        $headerArr = [ 'order_id' => '业务单号', 'name' => '收件人姓名', 'mobile' => '收件人手机', 'province' => '收件省', 'city' => '收件市', 'county' => '收件区/县', 'address' => '收件人地址', 'product_name' => '品名', 'num' => '数量', 'username' => '备注'];
         $fileName = "order.csv";
         $objPHPExcel = new \PHPExcel();
         $objProps = $objPHPExcel->getProperties();
-
         $key = ord('A');
         foreach ($headerArr as $v) {
             $colum = chr($key);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum . '1', $v);
             $key += 1;
         }
-
-        $orderList = CommOrder::find()->select("comm_order.*, user.*")->join("left join", "user", "comm_order.user_id = user.id ")->where(['>=', 'comm_order.created_at', $start])
-                ->andWhere(['<=', 'comm_order.created_at', $end])->andWhere(['comm_order.status' => 2])->asArray()->all();
-
+        $orderList = CommOrder::find()->select("comm_order.*, user.*")->join("left join", "user", "comm_order.user_id = user.id ")
+                        //->where(['>=', 'comm_order.created_at', $start])
+                        //->andWhere(['<=', 'comm_order.created_at', $end])
+                        ->where(['comm_order.status' => 2])->asArray()->all();
         $objPHPExcel->getActiveSheet()->setTitle('order');
-        
+
         $i = 2;
         foreach ($orderList as $order) {
             $address = json_decode($order['address'], true);
             $order = is_array($address) ? array_merge($order, $address) : $order;
             $order['product_name'] = "商品";
-
             $key = ord('A');
             foreach ($headerArr as $k => $v) {
                 //var_dump($order,$order[$k],$k);exit;
@@ -238,22 +241,70 @@ class CommOrderController extends Controller {
             }
             $i++;
         }
-
-
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header("Content-Disposition: attachment; filename=\"$fileName\"");
         header('Cache-Control: max-age=0');
-
         $writer = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
         $writer->save('php://output');
     }
-    
-    public function actionLoad(){
-        $objReader = PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
-                                                    ->setEnclosure('"')
-                                                    ->setLineEnding("\r\n")
-                                                    ->setSheetIndex(0);
-$objPHPExcelFromCSV = $objReader->load(str_replace('.php', '.csv', __FILE__));
+
+    public function actionLoad() {
+        require dirname(dirname(__DIR__)) . '/common/components/PHPExcel/Classes/PHPExcel.php';
+        $data = $_FILES;
+        $model = new CommOrder();
+        if (!$data) {
+            return $this->render('load', [
+                        'model' => $model,
+            ]);
+        }
+
+
+        $ShipperCode = \common\components\express\ShipperCode::$list;
+        $ShipperCode = array_flip($ShipperCode);
+        $dir = $data['CommOrder']['tmp_name']['id'];
+        $objReader = \PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
+                ->setEnclosure('"')
+                //->setLineEnding("\r\n")
+                ->setSheetIndex(0);
+        $objReader->setInputEncoding('GBK');
+        $file_encoding = mb_detect_encoding($dir); 
+        //var_dump($file_encoding);exit;
+        $objPHPExcel = $objReader->load($dir);
+
+        $data = $objPHPExcel->getSheet()->toArray();
+        $out = [];
+  
+        foreach ($data as $val){
+            
+            $id = trim($val[0]);
+            $name = $val[1];
+
+            if (!is_numeric($id)){
+                continue;
+            }
+            
+            $out[$id]['id'] = $id;
+            $orderModel = CommOrder::find()->where(['order_id' => $id])->one();
+            if (!$orderModel){
+                $out[$id]['msg'] = "订单号不存在";
+                continue;
+            }
+            
+            $orderModel->expressage = $id;
+            $orderModel->ShipperCode = $ShipperCode[$name];
+            if (!$ShipperCode[$name]){
+                $out[$id]['msg'] = "快递公司匹配失败";
+                continue;
+            }
+            if (!$orderModel->save()){
+                $out[$id]['msg'] = "保存失败";
+                continue;
+            }
+            
+            $out[$id]['msg'] = "保存成功";
+        }
+        
+        var_dump($out);
     }
 
     private function refund($out_trade_no, $total_fee, $refund_fee) {

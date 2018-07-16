@@ -6,9 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\CommOrder */
 
 $this->title = '订单详情';
-$this->params['breadcrumbs'][] = ['label' => 'Comm Orders', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = ['label' => '订单列表', 'url' => ['index']];
 ?>
 <div class="comm-order-update">
 

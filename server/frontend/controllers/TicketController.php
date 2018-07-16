@@ -40,11 +40,11 @@ class TicketController extends Controller {
         if ($status == 1){
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
-                where a.user_id = {$uid} and b.`status` = {$status} and b.`duration` >= '{$endTime}' order by id desc limit {$start}, {$limit}" ;
+                where a.user_id = {$uid} and b.`status` = 1 and a.status = 1 and b.`duration` >= '{$endTime}' order by id desc limit {$start}, {$limit}" ;
         }elseif($status == 2){
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id
-                where a.user_id = {$uid} and b.`status` = {$status} order by id desc limit {$start}, {$limit}" ;
+                where a.user_id = {$uid} and a.`status` = 0  order by id desc limit {$start}, {$limit}" ;
         }else{
             $sql = "select a.id,a.money,a.ticket_id,a.user_id,b.title,b.`condition`,b.duration from user_ticket a
                 INNER JOIN comm_ticket b on a.ticket_id = b.id

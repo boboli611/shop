@@ -113,18 +113,28 @@ $params = Yii::$app->request->queryParams['CommOrderSearch'];
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} ',
-                'buttons' => [],
+                'buttons' => [
+                    'update' => function ($url, $model, $key) {
+                        $url = "/comm-order/update?id=" . $model->id;
+                        $options = [
+                            'title' => Yii::t('yii', 'Update'),
+                            'aria-label' => Yii::t('yii', 'Update'),
+                            'target' => "_blank",
+                            //'data-pjax' => '0',
+                        ];
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, $options);
+                    },
+                ],
                 'header' => '操作',
+                "options" => ["target" => "_blank"],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     switch ($action) {
                         case 'view':
                             return '/comm-order/view?id=' . $model->id;
                             break;
-                        case 'update':
-                            return '/comm-order/update?id=' . $model->id;
-                            break;
                     }
                 },
+                        
             ],
         ],
     ]);

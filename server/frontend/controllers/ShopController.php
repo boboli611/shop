@@ -169,7 +169,7 @@ class ShopController extends Controller {
         $out["info"] = $info;
         $out['ticket'] = $ticketInfo;
         $out["order"]["price"] = $price / 100;
-        $out["order"]["carriage"] = $carriage / 100;
+        $out["order"]["carriage"] =  $carriage / 100;
         $out["order"]["discount"] = 0;
         $out["address"] = $address;
         //$out["address"]['address'] = sprintf("%s,%s,%s %s", $address['province'], $address['city'], $address['county'], $address['address']);

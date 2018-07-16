@@ -190,6 +190,7 @@ class ProductionController extends Controller {
 
         $id = (int) Yii::$app->request->get("id");
         $buyNum = (int) Yii::$app->request->get("buy_num");
+        $ticket_id = (int) Yii::$app->request->get("ticket_id");
         if (!$id) {
             $this->asJson(widgets\Response::error("参数错误1"));
             return;
@@ -223,12 +224,23 @@ class ProductionController extends Controller {
       
         $address = isset($address) ? $address->toArray() : [];
         $address["full_addres"] = sprintf("%s,%s,%s %s", $address['province'],$address['city'],$address['county'],$address['address']);
+        
+        $ticket = [];
+        if ($ticket_id){
+            $ticketInfo = (new \frontend\service\Ticket())->getUserTicketId($uid, $ticket_id);
+            $price = $price - (int)$ticketInfo['money'];
+            $ticket['money'] = $ticketInfo['money'] / 100;
+            $ticket['condition'] = $ticketInfo['condition'] / 100;
+        }
+        
+        $carriage = \frontend\service\ExpressFee::sumPrice($address['province'], $buyNum);
         //postage
         $out["info"] = $info;
-        $out["order"]["price"] = $storage->price * $buyNum / 100;
-        $out["order"]["carriage"] = \frontend\service\ExpressFee::sumPrice($address['province'], $buyNum) / 100;
+        $out["order"]["price"] = ($storage->price * $buyNum + (int) $carriage -(int)$ticketInfo['money']) / 100;
+        $out["order"]["carriage"] = $carriage / 100;
+        $out['ticket'] = $ticket;
         //$out["order"]["discount"] = 50;
-        $out["address"] = $address;
+        $out["address"] = $address; 
         return $this->asJson(widgets\Response::sucess($out));
     }
 

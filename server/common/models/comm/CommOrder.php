@@ -91,6 +91,7 @@ class CommOrder extends \common\models\BaseModel {
             'refund' => '退货',
             'content' => '用户留言',
             'expressage' => '快递单号',
+            'ShipperCode' => "快递公司",
             'updated_at' => '更新时间',
             'created_at' => '创建时间',
         ];

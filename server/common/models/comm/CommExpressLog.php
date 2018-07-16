@@ -19,6 +19,12 @@ class CommExpressLog extends \common\models\BaseModel
     
     static $company = ['shunfeng' => '顺丰','yuantong' => "圆通", 'shentong' => '申通', 'zhongtong'=>'中通'];
     
+    function __construct($config = array()) {
+        parent::__construct($config);
+        
+        self::$company = \common\components\express\ShipperCode::$list;
+    }
+    
     /**
      * @inheritdoc
      */

@@ -323,7 +323,7 @@ table td {
                             data["size"] = {};
                         }
                         if (!data["num"]) {
-                            data["num"] = [];
+                            data["num"] = {};
                         }
                         if (!data["status"]) {
                             data["status"] = {};
@@ -334,17 +334,20 @@ table td {
                             data["size"][val.size] = [];
                         }
 
-
+                        
                         table += "<input type='hidden' name='storage_id[]' value='" + val.id + "'>";
                         data["style"][val.style] = 1;
                         data["size"][val.size].push(val.style);
-                        data["num"].push(val.num);
+                        if(!data["num"][val.size]){
+                            data["num"][val.size] = {};
+                        }
+                        data["num"][val.size][val.style]= val.num;
                         num = val.num
                         price = val.price
                         //data["status"].push(val.status);
 
                     })
-
+console.log(data);
                     table += "<tr><td>&nbsp;</td>";
                     for (var val in data['style'])
                     {
@@ -352,14 +355,15 @@ table td {
                         table += "<td>" + val + "</td>";
                     }
                     table += "</tr>";
-
+                    console.log(data["num"])
                     for (var k in data['size'])
                     {
                         var size = data['size'][k]
+                        var numList = data["num"][k];
                         table += "<tr><td>" + k + "</td>";
                         size.forEach(function (item, index) {
 
-                            table += "<td><input name='storage_num[]' value='" + num + "'></td>";
+                            table += "<td><input name='storage_num[]' value='" + numList[item] + "'></td>";
                             table += "<input type='hidden' name='storage_style[]' value='" + item + "'>";
                             table += "<input type='hidden' name='storage_size[]' value='" + k + "'>";
                             table += "<input type='hidden' name='storage_price[]' value='" + price + "'>";
