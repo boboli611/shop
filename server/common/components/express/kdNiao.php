@@ -16,7 +16,6 @@ class kdNiao {
 
     public function run($No,$ShipperCode) {
         $logisticResult = $this->getOrderTracesByJson($No, $ShipperCode);
-        var_dump($No, $ShipperCode,$logisticResult);
         $data = json_decode($logisticResult, true);
         if (!$data || $data['Success'] != 'true'){
                 return [];
@@ -35,6 +34,14 @@ class kdNiao {
         krsort($data['Traces']);
         $data['Traces'] = array_values($data['Traces']);
         
+         if (!$data || $data['Success'] != 'true') {
+                return [];
+            }
+            
+        if (!$data['Traces']){
+            return [];
+        }    
+            
         return $data;
 
     }

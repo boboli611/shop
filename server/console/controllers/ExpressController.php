@@ -11,22 +11,10 @@ namespace console\controllers;
 use yii\console\Controller;
 use common\models\comm\CommOrder;
 
-/**
- * This command echoes the first argument that you have entered.
- *
- * This command is provided as an example for you to learn how to create console commands.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
+
 class ExpressController extends Controller {
 
-    //官网地址 https://www.kuaidi100.com/
-    //快递公司名称 参数 num
-    private static $companyUrl = "https://m.kuaidi100.com/autonumber/auto";
-    //订单记录 --参数 type=zhongtong&postid=472347597886
-    private static $expressLogUrl = "https://m.kuaidi100.com/query";
-
+    
     /**
      * 保存快递记录
      * @param string $message the message to be echoed.
@@ -37,28 +25,37 @@ class ExpressController extends Controller {
         if (!$list) {
             return;
         }
-
+        
+        
         $kdniao = new \common\components\express\kdNiao();
+        $kd100 = new \common\components\express\kd100();
         foreach ($list as $val) {
-
-            $data = $kdniao->run($val->expressage, $val->ShipperCode);
+            if (!$val->expressage){
+                continue;
+            }
+            
+            echo "{$val->expressage} 开始查询 \n";
+            if ($val->ShipperCode == "STO"){
+                $data = $kd100->get($val);
+            }else{
+                $data = $kdniao->run($val->expressage, $val->ShipperCode);
+            }
+            
+            //var_dump($val->expressage, $data);
             if (!$data) {
                 continue;
             }
-
-            if (!$data || $data['Success'] != 'true') {
-                continue;
-            }
-
+            
             $express = \common\models\comm\CommExpressLog::find()->where(['no' => $val->expressage])->one();
             if (!$express) {
                 $express = new \common\models\comm\CommExpressLog();
             }
 
+            
             $express->no = $val->expressage;
             $express->content = json_encode($data['Traces']);
             $express->state = $data['State'];
-            $express->company = $data['ShipperCode'];
+            $express->company = $val->ShipperCode;
             $express->save();
 
             echo $val->expressage . "保存成功\n";
@@ -71,7 +68,7 @@ class ExpressController extends Controller {
      * 保存快递记录
      * @param string $message the message to be echoed.
      */
-    public function actionIndex_bak($message = '') {
+    public function actionKuaidi($message = '') {
         $list = \common\models\comm\CommOrder::find()->where(['status' => CommOrder::status_goods_waiting_receve])->groupBy("order_id")->all();
         if (!$list) {
             return;

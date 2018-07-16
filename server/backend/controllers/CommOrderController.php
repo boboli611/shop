@@ -252,59 +252,66 @@ class CommOrderController extends Controller {
         require dirname(dirname(__DIR__)) . '/common/components/PHPExcel/Classes/PHPExcel.php';
         $data = $_FILES;
         $model = new CommOrder();
-        if (!$data) {
-            return $this->render('load', [
-                        'model' => $model,
-            ]);
-        }
-
-
-        $ShipperCode = \common\components\express\ShipperCode::$list;
-        $ShipperCode = array_flip($ShipperCode);
-        $dir = $data['CommOrder']['tmp_name']['id'];
-        $objReader = \PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
-                ->setEnclosure('"')
-                //->setLineEnding("\r\n")
-                ->setSheetIndex(0);
-        $objReader->setInputEncoding('GBK');
-        $file_encoding = mb_detect_encoding($dir); 
-        //var_dump($file_encoding);exit;
-        $objPHPExcel = $objReader->load($dir);
-
-        $data = $objPHPExcel->getSheet()->toArray();
         $out = [];
-  
-        foreach ($data as $val){
-            
-            $id = trim($val[0]);
-            $name = $val[1];
+        if ($data) {
+            $ShipperCode = \common\components\express\ShipperCode::$list;
+            $ShipperCode = array_flip($ShipperCode);
+            $dir = $data['CommOrder']['tmp_name']['id'];
+            $objReader = \PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
+                    ->setEnclosure('"')
+                    //->setLineEnding("\r\n")
+                    ->setSheetIndex(0);
+            $objReader->setInputEncoding('GBK');
+            $file_encoding = mb_detect_encoding($dir);
+            //var_dump($file_encoding);exit;
+            $objPHPExcel = $objReader->load($dir);
 
-            if (!is_numeric($id)){
-                continue;
+            $data = $objPHPExcel->getSheet()->toArray();
+            $out = [];
+            $outFail = [];
+            foreach ($data as $val) {
+
+                $id = trim($val[0]);
+                $name = $val[1];
+
+                if (!is_numeric($id)) {
+                    continue;
+                }
+
+               
+                $orderModel = CommOrder::find()->where(['order_id' => $id])->one();
+                if (!$orderModel) {
+                    $outFail[$id]['id'] = $id;
+                    $outFail[$id]['msg'] = "订单号不存在";
+                    continue;
+                }
+
+                $orderModel->expressage = $id;
+                $orderModel->ShipperCode = $ShipperCode[$name];
+                if (!$ShipperCode[$name]) {
+                    $outFail[$id]['id'] = $id;
+                    $outFail[$id]['msg'] = "快递公司匹配失败";
+                    continue;
+                }
+                if (!$orderModel->save()) {
+                    $outFail[$id]['id'] = $id;
+                    $outFail[$id]['msg'] = "保存失败";
+                    continue;
+                }
+                
+                $out[$id]['id'] = $id;
+                $out[$id]['msg'] = "保存成功";
             }
-            
-            $out[$id]['id'] = $id;
-            $orderModel = CommOrder::find()->where(['order_id' => $id])->one();
-            if (!$orderModel){
-                $out[$id]['msg'] = "订单号不存在";
-                continue;
-            }
-            
-            $orderModel->expressage = $id;
-            $orderModel->ShipperCode = $ShipperCode[$name];
-            if (!$ShipperCode[$name]){
-                $out[$id]['msg'] = "快递公司匹配失败";
-                continue;
-            }
-            if (!$orderModel->save()){
-                $out[$id]['msg'] = "保存失败";
-                continue;
-            }
-            
-            $out[$id]['msg'] = "保存成功";
         }
         
-        var_dump($out);
+
+
+        return $this->render('load', [
+                    'model' => $model,
+                    'data' => $out,
+                    'outFail' =>$outFail,
+        ]);
+        
     }
 
     private function refund($out_trade_no, $total_fee, $refund_fee) {
