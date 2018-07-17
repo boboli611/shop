@@ -3,7 +3,7 @@ namespace common\components\express;
 class ShipperCode {
 
     public static $list = [
-        0 => "选择快递",
+        "" => "选择快递",
         "STO" => "申通快递",
         "SF" => "顺丰速运",
         "HTKY" => "百世快递",

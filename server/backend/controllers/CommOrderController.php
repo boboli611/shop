@@ -85,6 +85,7 @@ class CommOrderController extends Controller {
         if (Yii::$app->request->post()) {
             $patams = Yii::$app->request->post();
             $data['expressage'] = $patams['CommOrder']['expressage'];
+            $data['ShipperCode'] = $patams['CommOrder']['ShipperCode'];
 
 
             if ($model->status == CommOrder::status_goods_waiting_send && $data['expressage']) {

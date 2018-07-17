@@ -41,7 +41,7 @@ class CommOrder extends \common\models\BaseModel {
         self::status_goods_waiting_send => "待发货",
         self::status_goods_waiting_receve => "待收货",
         self::status_goods_receve => "已收货",
-        self::status_goods_close => "已关闭",
+        self::status_goods_close => "交易成功",
     ];
     public static $refund = [
         //self::status_refund_no => '未申请',
@@ -67,8 +67,9 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
+            [['expressage', 'ShipperCode'], 'required'],
             [['user_id', 'product_id', 'num'], 'integer'],
-            [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
+            [['order_id', 'updated_at', 'created_at', 'expressage', 'ShipperCode'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 256],
             [['address'], 'string', 'max' => 512],
         ];
