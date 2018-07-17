@@ -110,95 +110,6 @@ class CommOrderController extends Controller {
         var_dump($ret);
     }
 
-    public function actionRefund($id) {
-
-        return;
-        $model = $this->findModel($id);
-
-        /*
-          if (!Yii::$app->request->post()) {
-          return $this->render('update', [
-          'model' => $model,
-          ]);
-          }
-         */
-        $patams = Yii::$app->request->post();
-        $refund = $patams['refund'];
-        $price = $patams['price'];
-
-        $refund = 4;
-        if ($model->status == CommOrder::status_waiting_pay) {
-            throw new Exception("订单未付款");
-        }
-
-        if ($model->refund != CommOrder::status_refund_waiting) {
-            throw new Exception("订单未申请退款");
-        }
-
-        if (!in_array($refund, [CommOrder::status_refund_fail, CommOrder::status_refund_ok])) {
-            throw new Exception("退单状态错误");
-        }
-
-        if ($model->total < $price) {
-            throw new Exception("退款金额超出订单金额");
-        }
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-
-            $data['refund'] = $patams['CommOrder']['refund'];
-            if (!CommOrder::updateAll($data, ['order_id' => $id])) {
-                throw new Exception("操作失败");
-            }
-
-            $RefundLogModel = new \common\models\comm\CommOrderRefundLog();
-            $RefundLogModel->order_id = $model->order_id;
-            $RefundLogModel->refound = $refund;
-
-            $RefundLogModel->admin_id = yii::$app->user->identity->id;
-            $RefundLogModel->admin_nickname = yii::$app->user->identity->username;
-            if (!$RefundLogModel->save()) {
-                throw new Exception("操作失败");
-            }
-
-            $ret = \common\components\WxpayAPI\Pay::refund($out_trade_no, $total_fee, $refund_fee);
-            if (!$ret) {
-                //throw new Exception("退款失败");
-            }
-            $transaction->commit();
-        } catch (Exception $exc) {
-            $transaction->rollBack();
-            echo $exc->getTraceAsString();
-        }
-
-
-        if (CommOrder::updateAll($data, ['order_id' => $id])) {
-            return $this->redirect(['view', 'id' => $id]);
-        } else {
-            return $this->render('update', [
-                        'model' => $model,
-            ]);
-        }
-
-
-        if (Yii::$app->request->post()) {
-            $patams = Yii::$app->request->post();
-            $out_trade_no = "20180405152289680546119";
-            $total_fee = 2;
-            $refund_fee = 1;
-
-
-            $openid = \common\models\user\UserWxSession::findOne(7);
-            $product = (object) [];
-            $product->title = "Lipze";
-            $product->order_id = $out_trade_no;
-            $product->price = $total_fee;
-            //$order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
-            //var_dump($order);exit;
-
-            \common\components\WxpayAPI\Pay::refund($out_trade_no, $total_fee, $refund_fee);
-        }
-    }
-
     public function actionExport() {
 
         if (!$_GET) {
@@ -208,44 +119,71 @@ class CommOrderController extends Controller {
 
             return;
         }
-        require dirname(dirname(__DIR__)) . '/common/components/PHPExcel/Classes/PHPExcel.php';
-        //$start = "2018-07-01";
-        //$end = "2018-07-10";
-        $headerArr = [ 'order_id' => '业务单号', 'name' => '收件人姓名', 'mobile' => '收件人手机', 'province' => '收件省', 'city' => '收件市', 'county' => '收件区/县', 'address' => '收件人地址', 'product_name' => '品名', 'num' => '数量', 'username' => '备注'];
-        $fileName = "order.csv";
-        $objPHPExcel = new \PHPExcel();
-        $objProps = $objPHPExcel->getProperties();
-        $key = ord('A');
-        foreach ($headerArr as $v) {
-            $colum = chr($key);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum . '1', $v);
-            $key += 1;
-        }
-        $orderList = CommOrder::find()->select("comm_order.*, user.*")->join("left join", "user", "comm_order.user_id = user.id ")
+        $filename = "order.csv";
+        header('Content-Encoding: UTF-8');
+        header("Content-Type: text/csv; charset=UTF-8");
+        header("Content-Disposition: attachment; filename={$filename}");
+
+
+        $headerArr = [ 'order_id' => '业务单号', 'name' => '收件人姓名', 'mobile' => '收件人手机', 'province' => '收件省', 'city' => '收件市', 'county' => '收件区/县', 'address' => '收件人地址', 'product_name' => '品名', 'num' => '数量', 'sell_remark' => '备注'];
+        // 获取句柄
+        $output = fopen('php://output', 'w') or die("can't open php://output");
+
+        // 输出头部标题
+        $this->fputcsv2($output, $headerArr);
+        $orderList = CommOrder::find()->select("comm_order.*,user.username, comm_order_product.num,comm_production_storage.style,comm_production_storage.size,comm_product.title,comm_product.info")
+                     ->join("left join", "user", "comm_order.user_id = user.id ")
+                     ->join("left join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id ")
+                     ->join("left join", "comm_production_storage", "comm_production_storage.id = comm_order_product.product_id ")
+                     ->join("left join", "comm_product", "comm_product.id = comm_production_storage.product_id ")
                         //->where(['>=', 'comm_order.created_at', $start])
                         //->andWhere(['<=', 'comm_order.created_at', $end])
-                        ->where(['comm_order.status' => 2])->asArray()->all();
-        $objPHPExcel->getActiveSheet()->setTitle('order');
+                    ->where(['comm_order.status' => 2])->asArray()->all();
 
-        $i = 2;
         foreach ($orderList as $order) {
             $address = json_decode($order['address'], true);
             $order = is_array($address) ? array_merge($order, $address) : $order;
-            $order['product_name'] = "商品";
-            $key = ord('A');
-            foreach ($headerArr as $k => $v) {
-                //var_dump($order,$order[$k],$k);exit;
-                $colum = chr($key);
-                $objPHPExcel->getActiveSheet()->setCellValue($colum . $i, $order[$k]);
-                $key += 1;
+            $info = json_decode($order['info'], true);
+            $shop_id = "";
+            foreach ($info as $val){
+                if ($val['name'] == "货号"){
+                    $shop_id = $val['value'];
+                    break;
+                }
             }
-            $i++;
+            $order['product_name'] = $shop_id . " ". $order['style'] . " " . $order['size'] . " ". $order['num']."［买家昵称］".$order['username'];
+            $data = [];
+            foreach ($headerArr as $k => $v) {
+                //$objPHPExcel->getActiveSheet()->setCellValue($colum . $i, $order[$k]);
+                $data[] = $order[$k];
+            }
+
+            // 输出头部标题
+            $this->fputcsv2($output, $data);
         }
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename=\"$fileName\"");
-        header('Cache-Control: max-age=0');
-        $writer = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
-        $writer->save('php://output');
+
+        $list = array();
+        foreach ($list as $item) {
+            fputcsv2($output, array_values($item));
+        }
+
+        // 关闭句柄
+        fclose($output) or die("can't close php://output");
+    }
+
+    /**
+     * 重写fputcsv方法，添加转码功能
+     * @param $handle
+     * @param array $fields
+     * @param string $delimiter
+     * @param string $enclosure
+     * @param string $escape_char
+     */
+    function fputcsv2($handle, array $fields, $delimiter = ",", $enclosure = '"', $escape_char = "\\") {
+        foreach ($fields as $k => $v) {
+            $fields[$k] = iconv("UTF-8", "GB2312//IGNORE", $v);  // 这里将UTF-8转为GB2312编码
+        }
+        fputcsv($handle, $fields, $delimiter, $enclosure, $escape_char);
     }
 
     public function actionLoad() {
@@ -272,13 +210,14 @@ class CommOrderController extends Controller {
             foreach ($data as $val) {
 
                 $id = trim($val[0]);
+                $expressageId = trim($val[2]);
                 $name = $val[1];
 
                 if (!is_numeric($id)) {
                     continue;
                 }
 
-               
+
                 $orderModel = CommOrder::find()->where(['order_id' => $id])->one();
                 if (!$orderModel) {
                     $outFail[$id]['id'] = $id;
@@ -286,8 +225,9 @@ class CommOrderController extends Controller {
                     continue;
                 }
 
-                $orderModel->expressage = $id;
+                $orderModel->expressage = $expressageId;
                 $orderModel->ShipperCode = $ShipperCode[$name];
+                $orderModel->status = CommOrder::status_goods_waiting_receve;
                 if (!$ShipperCode[$name]) {
                     $outFail[$id]['id'] = $id;
                     $outFail[$id]['msg'] = "快递公司匹配失败";
@@ -298,20 +238,19 @@ class CommOrderController extends Controller {
                     $outFail[$id]['msg'] = "保存失败";
                     continue;
                 }
-                
+
                 $out[$id]['id'] = $id;
                 $out[$id]['msg'] = "保存成功";
             }
         }
-        
+
 
 
         return $this->render('load', [
                     'model' => $model,
                     'data' => $out,
-                    'outFail' =>$outFail,
+                    'outFail' => $outFail,
         ]);
-        
     }
 
     private function refund($out_trade_no, $total_fee, $refund_fee) {
