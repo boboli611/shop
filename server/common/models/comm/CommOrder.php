@@ -67,12 +67,13 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
-            [['user_id', 'product_id', 'num'], 'integer'],
+            [['user_id', 'product_id', 'num'], 'integer', 'on' => 'update'],
             [['order_id', 'updated_at', 'created_at', 'expressage'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 256],
             [['address'], 'string', 'max' => 512],
         ];
     }
+    
 
     /**
      * @inheritdoc
@@ -184,7 +185,7 @@ class CommOrder extends \common\models\BaseModel {
 
     public static function createOrderId($userId) {
 
-        return date("Ymd") . time() . mt_rand(10000, 99999);
+        return 'lz'.date("YmdHis") . mt_rand(10000, 99999);
         //return md5($userId.time().mt_rand(1,50000));
     }
 

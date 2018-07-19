@@ -34,7 +34,8 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning','info'],
+                    'levels' => ['error'],
+                    'logFile' => '@app/runtime/logs/app_'.date('Y-m-d').'.log',
                 ],
             ],
         ],
