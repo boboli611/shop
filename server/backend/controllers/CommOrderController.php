@@ -139,7 +139,7 @@ class CommOrderController extends Controller {
                 left join `comm_product` ON comm_product.id = comm_production_storage.product_id WHERE `comm_order`.`status`=2";
         $orderList = CommOrder::findBySql($sql)->asArray()->all();
 
-        foreach ($orderList as $order) {
+       foreach ($orderList as $order) {
             $order_id = $order['order_id'];
             $address = json_decode($order['address'], true);
             $order = is_array($address) ? array_merge($order, $address) : $order;
@@ -152,8 +152,10 @@ class CommOrderController extends Controller {
                 }
             }
             $order['product_name'] = $shop_id . " ". $order['style'] . " " . $order['size'] . " ". $order['num'];
+
             if ($data[$order_id]){
-                $data[$order_id]['product_name'] .= " ".$data[$order_id]['product_name'];
+                $data[$order_id]['product_name'] .= " ".$order['product_name'];
+                $data[$order_id]['num'] += $order['num'];
             }else{
                  foreach ($headerArr as $k => $v) {
                 //$objPHPExcel->getActiveSheet()->setCellValue($colum . $i, $order[$k]);
@@ -170,7 +172,6 @@ class CommOrderController extends Controller {
              // 输出头部标题
             $this->fputcsv2($output, $item);
         }
-
         // 关闭句柄
         fclose($output) or die("can't close php://output");
     }
