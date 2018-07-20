@@ -34,7 +34,7 @@ class Pay {
             
             $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
             if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
-                throw new Exception("下单失败");
+                throw new Exception("微信下单失败");
             }
       
             $orderModel = new \common\models\comm\CommOrder();
@@ -53,7 +53,7 @@ class Pay {
             $orderModel->prepay_id = $order['prepay_id'];
 
             if (!$orderModel->save()) {
-                throw new Exception("下单失败");
+                throw new Exception("保存数据失败");   
             }
 
             //$model->commit();

@@ -56,10 +56,11 @@ class PayController extends Controller {
             $order = (new \frontend\service\Pay())->add($uid, $pIds, $addressId, $ticketId, $content);
             $ret = \common\models\user\UserShop::deleteAll(['in', "id", $ids]);
             if (!$ret){
-                throw new Exception("下单失败");
+                var_dump($ret, $order, $ids);  exit;
+                throw new Exception("下单失败");       
             }
             $trans->commit();
-        } catch (Exception $ex) {
+        } catch (Exception $ex) {  
             $trans->rollBack();
             $this->asJson(widgets\Response::error($ex->getMessage()));
             return;

@@ -82,6 +82,7 @@ class CommOrderController extends Controller {
     public function actionUpdate($id) {
 
         $model = $this->findModel($id);
+        $model->scenario = "update";
         if (Yii::$app->request->post()) {
             $patams = Yii::$app->request->post();
             $data['expressage'] = $patams['CommOrder']['expressage'];

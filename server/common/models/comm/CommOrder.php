@@ -28,7 +28,6 @@ class CommOrder extends \common\models\BaseModel {
     const status_goods_receve = 4; //已收货
     const status_goods_close = 5; //订单关闭
     const status_pay_fail = 9; //支付失败
-    
     const status_refund_no = 1; // '未申请',
     const status_refund_checking = 2; // '审核中',
     const status_refund_waiting = 3; // '退货中',
@@ -47,11 +46,10 @@ class CommOrder extends \common\models\BaseModel {
         //self::status_refund_no => '未申请',
         self::status_refund_checking => '审核中',
         self::status_refund_waiting => '退货中',
-       // self::status_refund_ok => '同意退货',
+        // self::status_refund_ok => '同意退货',
         self::status_refund_sucess => '退货完成',
         self::status_refund_fail => '退货未批准',
     ];
-
     public $username;
     public $title;
 
@@ -67,11 +65,18 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
-            [['expressage', 'ShipperCode'], 'required'],
+            [['expressage', 'ShipperCode'], 'required', 'on' => 'update'],
             [['user_id', 'product_id', 'num'], 'integer'],
             [['order_id', 'updated_at', 'created_at', 'expressage', 'ShipperCode'], 'string', 'max' => 32],
             [['content'], 'string', 'max' => 256],
             [['address'], 'string', 'max' => 512],
+        ];
+    }
+
+    public function scenarios() {
+        return [
+            'update' => ['expressage', 'ShipperCode'], //在该场景下的属性进行验证，其他场景和没有on的都不会验证
+            'default' => [],  
         ];
     }
 
@@ -129,18 +134,17 @@ class CommOrder extends \common\models\BaseModel {
 
         $page = $page > 0 ? $page - 1 : $page;
         $offset = $page * $limit;
-        
+
         $model = self::find();
-        if ($type){
+        if ($type) {
             $model->where(['status' => $type]);
         }
-        
+
 
         return $model->andWhere(["user_id" => $userId])->groupBy("order_id")->orderBy("id desc")->offset($offset)->limit($limit)->all();
-
     }
-    
-     /**
+
+    /**
      * @inheritdoc
      * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
      */
@@ -148,23 +152,22 @@ class CommOrder extends \common\models\BaseModel {
 
         $page = $page > 0 ? $page - 1 : $page;
         $offset = $page * $limit;
-        
+
         $model = self::find();
-        $model->select(["comm_order.id","comm_order.order_id", "comm_order.user_id", "total","freight", "address", "status","refund", "expressage","content", "comm_order_product.*"]);
-        $model->where("comm_order.status != ". CommOrder::status_pay_fail);
-        if (in_array($type, [1,2,3])){
+        $model->select(["comm_order.id", "comm_order.order_id", "comm_order.user_id", "total", "freight", "address", "status", "refund", "expressage", "content", "comm_order_product.*"]);
+        $model->where("comm_order.status != " . CommOrder::status_pay_fail);
+        if (in_array($type, [1, 2, 3])) {
             $model->andWhere(['comm_order.status' => $type]);
-        }elseif ($type == 4){
-            $model->andWhere(['in','comm_order.status' , [4,5]]);
+        } elseif ($type == 4) {
+            $model->andWhere(['in', 'comm_order.status', [4, 5]]);
         }
         $model->join("inner join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id");
-        
+
 
         return $model->andWhere(["comm_order.user_id" => $userId])->orderBy("comm_order.id desc")->offset($offset)->limit($limit)->all();
-
     }
-    
-     /**
+
+    /**
      * @inheritdoc
      * @return static|null ActiveRecord instance matching the condition, or `null` if nothing matches.
      */
@@ -178,10 +181,7 @@ class CommOrder extends \common\models\BaseModel {
             order by comm_order.id desc    
             ";
         return self::findBySql($sql)->asArray()->all();
-       
-
     }
-    
 
     public static function createOrderId($userId) {
 
