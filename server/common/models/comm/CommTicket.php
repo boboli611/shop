@@ -46,7 +46,10 @@ class CommTicket extends \common\models\BaseModel
       
         $data['CommTicket']['money'] = $data['CommTicket']['money'] * 100;
         $data['CommTicket']['condition'] = $data['CommTicket']['condition'] * 100;
-        $data['CommTicket']['duration'] = $data['CommTicket']['duration'] ." 23:59:59";
+        if ($data['CommTicket']['duration']){
+            $data['CommTicket']['duration'] = substr($data['CommTicket']['duration'], 0, 10) ." 23:59:59";
+        }
+        
         return parent::load($data);
     }
 

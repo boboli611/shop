@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\db\Exception as Exception;
+use yii\data\Pagination;
 
 //use PHPExcel;
 /**
@@ -34,15 +35,48 @@ class CommOrderController extends Controller {
      * Lists all CommOrder models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex_bak() {
 
         $searchModel = new CommOrderSearch();
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $page = new Pagination(['totalCount' => 20,'pageSize'=>'5']);
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+     /**
+     * Lists all CommOrder models.
+     * @return mixed
+     */
+    public function actionIndex() {
+
+        //$dataProvider = CommOrder::find()->where("status != 9")->andWhere("status >= 2")->orderBy("id desc")->toArray()->offset(0)->limit(10)->all();
+        $page = (int)\Yii::$app->request->get("page");
+        $order_id = \Yii::$app->request->get("order_id");
+        $page = $page > 1 ? $page - 1 : 0;
+        $limit = 10;
+        $page = $page * $limit;
+        $where = "";
+        if ($order_id){
+            $where = " and a.order_id = '{$order_id}'";
+        }
+        
+        $sql = "select a.*,b.username,b.id as user_id from comm_order a "
+                . " left join user b on a.user_id = b.id"
+                . " left join comm_order_product c on c.order_id = a.order_id"
+                . " left join comm_product d on d.id = c.product_id"
+                . " where a.status >= 2 and a.status != 9 {$where} order by a.id desc limit {$page}, {$limit}";
+        $dataProvider = CommOrder::findBySql($sql)->asArray()->all();
+        $count = CommOrder::find()->where("status != 9")->andWhere("status >= 2")->count();
+
+        $page = new Pagination(['totalCount' => $count,'pageSize'=> $limit]);
+        return $this->render('new', [
+                    'pages' => $page,
+                    'dataProvider' => $dataProvider,
+                    'order_id' => $order_id,
         ]);
     }
 
@@ -127,22 +161,22 @@ class CommOrderController extends Controller {
         header("Content-Disposition: attachment; filename={$filename}");
 
 
-        $headerArr = [ 'order_id' => '业务单号', 'name' => '收件人姓名', 'mobile' => '收件人手机', 'province' => '收件省', 'city' => '收件市', 'county' => '收件区/县', 'address' => '收件人地址', 'product_name' => '品名', 'num' => '数量', 'sell_remark' => '备注'];
+        $headerArr = [ 'order_id' => '业务单号', 'name' => '收件人姓名', 'mobile' => '收件人手机', 'province' => '收件省', 'city' => '收件市', 'county' => '收件区/县', 'address' => '收件人地址', 'product_name' => '品名', 'num' => '数量', 'sell_remark' => '备注', 'username'=> "买家昵称"];
         // 获取句柄
         $output = fopen('php://output', 'w') or die("can't open php://output");
 
         // 输出头部标题
         $this->fputcsv2($output, $headerArr);
-        $orderList = CommOrder::find()->select("comm_order.*,user.username, comm_order_product.num,comm_production_storage.style,comm_production_storage.size,comm_product.title,comm_product.info")
-                     ->join("left join", "user", "comm_order.user_id = user.id ")
-                     ->join("left join", "comm_order_product", "comm_order.order_id = comm_order_product.order_id ")
-                     ->join("left join", "comm_production_storage", "comm_production_storage.id = comm_order_product.product_id ")
-                     ->join("left join", "comm_product", "comm_product.id = comm_production_storage.product_id ")
-                        //->where(['>=', 'comm_order.created_at', $start])
-                        //->andWhere(['<=', 'comm_order.created_at', $end])
-                    ->where(['comm_order.status' => 2])->asArray()->all();
+        $sql = "SELECT `comm_order`.*, `user`.`username`, `comm_order_product`.`num`, `comm_production_storage`.`style`, `comm_production_storage`.`size`, `comm_product`.`title`, `comm_product`.`info` 
+                FROM `comm_order` 
+                left join `user` ON comm_order.user_id = user.id 
+                left join `comm_order_product` ON comm_order.order_id = comm_order_product.order_id 
+                left join `comm_production_storage` ON comm_production_storage.id = comm_order_product.product_id 
+                left join `comm_product` ON comm_product.id = comm_production_storage.product_id WHERE `comm_order`.`status`=2";
+        $orderList = CommOrder::findBySql($sql)->asArray()->all();
 
-        foreach ($orderList as $order) {
+       foreach ($orderList as $order) {
+            $order_id = $order['order_id'];
             $address = json_decode($order['address'], true);
             $order = is_array($address) ? array_merge($order, $address) : $order;
             $info = json_decode($order['info'], true);
@@ -153,22 +187,27 @@ class CommOrderController extends Controller {
                     break;
                 }
             }
-            $order['product_name'] = $shop_id . " ". $order['style'] . " " . $order['size'] . " ". $order['num']."［买家昵称］".$order['username'];
-            $data = [];
-            foreach ($headerArr as $k => $v) {
+            $order['product_name'] = $shop_id . " ". $order['style'] . " " . $order['size'] . " ". $order['num'];
+
+            if ($data[$order_id]){
+                $data[$order_id]['product_name'] .= " ".$order['product_name'];
+                $data[$order_id]['num'] += $order['num'];
+            }else{
+                 foreach ($headerArr as $k => $v) {
                 //$objPHPExcel->getActiveSheet()->setCellValue($colum . $i, $order[$k]);
-                $data[] = $order[$k];
+                    $data[$order_id][$k] = $order[$k];
+                }
             }
-
-            // 输出头部标题
-            $this->fputcsv2($output, $data);
+            //$data = [];
+          
         }
 
-        $list = array();
-        foreach ($list as $item) {
-            fputcsv2($output, array_values($item));
+        foreach ($data as $item) {
+            
+            $item['product_name'] .= "［买家昵称］".$order['username'];
+             // 输出头部标题
+            $this->fputcsv2($output, $item);
         }
-
         // 关闭句柄
         fclose($output) or die("can't close php://output");
     }

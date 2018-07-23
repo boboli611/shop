@@ -51,7 +51,6 @@ class TicketController extends Controller {
                 where a.user_id = {$uid} and b.`duration` <= '{$endTime}' order by id desc limit {$start}, {$limit}";
         }
         
-
         $list = \common\models\user\UserTicket::findBySql($sql)->asArray()->all();
         foreach ($list as &$item) {
             $item['money'] = $item['money'] / 100;

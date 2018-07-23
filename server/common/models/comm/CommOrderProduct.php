@@ -32,7 +32,8 @@ class CommOrderProduct extends \common\models\BaseModel
     public function rules()
     {
         return [
-            [['order_id', 'product_id', 'price', 'pay_price', 'num'], 'integer'],
+            [['order_id'], 'string'],
+            [['product_id', 'price', 'pay_price', 'num'], 'integer'],
             [['update_time', 'create_time'], 'safe'],
         ];
     }

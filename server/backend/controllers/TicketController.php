@@ -64,10 +64,11 @@ class TicketController extends Controller
     public function actionCreate()
     {
         $model = new CommTicket();
-
+       
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
+             var_dump($model->duration);
             return $this->render('create', [
                 'model' => $model,
             ]);

@@ -65,6 +65,7 @@ class CommOrder extends \common\models\BaseModel {
      */
     public function rules() {
         return [
+
             [['expressage', 'ShipperCode'], 'required', 'on' => 'update'],
             [['user_id', 'product_id', 'num'], 'integer'],
             [['order_id', 'updated_at', 'created_at', 'expressage', 'ShipperCode'], 'string', 'max' => 32],
@@ -72,6 +73,7 @@ class CommOrder extends \common\models\BaseModel {
             [['address'], 'string', 'max' => 512],
         ];
     }
+    
 
     public function scenarios() {
         return [
@@ -185,7 +187,7 @@ class CommOrder extends \common\models\BaseModel {
 
     public static function createOrderId($userId) {
 
-        return date("Ymd") . time() . mt_rand(10000, 99999);
+        return date("YmdHis") . mt_rand(10000, 99999);
         //return md5($userId.time().mt_rand(1,50000));
     }
 

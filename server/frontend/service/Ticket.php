@@ -6,7 +6,12 @@ use \yii\db\Exception as Exception;
 class Ticket {
     
     public function getIndex($uid){
-        $list = \common\models\comm\CommTicket::find()->where(['index_show' => 1])->andWhere(['status' => 1])->orderBy("id desc")->limit(2)->all();
+        $date = date("Y-m-d H:i:s");
+        $list = \common\models\comm\CommTicket::find()
+                ->where(['index_show' => 1])
+                ->andWhere(['status' => 1])
+                ->andWhere("duration >= '{$date}'")
+                ->orderBy("id desc")->limit(2)->all();
         if (!$list){
             return [];
         }

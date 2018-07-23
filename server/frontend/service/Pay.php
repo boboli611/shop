@@ -8,7 +8,7 @@ class Pay {
 
     public function add($uid, $pIds, $addressId, $ticketId, $content) {
 
-        //$model = \common\models\comm\CommOrder::getDb()->beginTransaction();
+
         try {
             $openid = \common\models\user\UserWxSession::findOne($uid);
             if (!$openid) {
@@ -31,8 +31,9 @@ class Pay {
             $product->title = "Lipze:{{$userInfo->username}}";
             $product->order_id = $orderId;
             $product->price = $countPrice;
-            
+
             $order = \common\components\WxpayAPI\Pay::pay($openid['open_id'], $product);
+
             if (!$order['prepay_id'] || $order['return_code'] == "FAIL") {
                 throw new Exception("微信下单失败");
             }
@@ -53,12 +54,10 @@ class Pay {
             $orderModel->prepay_id = $order['prepay_id'];
 
             if (!$orderModel->save()) {
-                throw new Exception("保存数据失败");   
+                throw new Exception("保存数据失败");    
             }
 
-            //$model->commit();
         } catch (Exception $ex) {
-            //$model->rollBack();
             throw new Exception($ex->getMessage());
         }
 
@@ -181,7 +180,7 @@ class Pay {
             $model->pay_price = $item->price;
 
             if (!$model->save()) {
-                throw new Exception("下单失败");
+                throw new Exception("创建单失败");
             }
 
             $countProduct += (int) $pIds[$item->id];

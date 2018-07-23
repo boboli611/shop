@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\comm\CommTicket */
 /* @var $form yii\widgets\ActiveForm */
+var_dump($model->duration);
 ?>
 
 <div class="comm-ticket-form">

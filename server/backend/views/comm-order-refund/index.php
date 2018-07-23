@@ -21,7 +21,6 @@ $params = Yii::$app->request->queryParams['CommOrderRefundLogSearch'];
             [
                 'attribute' => 'order_id',
                 'format' => 'raw',
-                'filter' => false,
                 'value' =>
                 function($model) {
                     return "<a href='/comm-order/view?order_id=". $model->order_id ."' target='_blank'> ".$model->order_id."</a>";

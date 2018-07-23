@@ -122,6 +122,7 @@ class ProductionController extends Controller {
         foreach ($products as &$val){
             $val['cover'] = json_decode($val['cover'], true);
             $val['cover'] = $val['cover'][0];
+            $val['price'] = $val['price']/100;
         }
       
 
