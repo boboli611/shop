@@ -11,9 +11,10 @@ class Pay {
     private static $notifyUrl = "https://www.ttyouhiu.com/wx/notice";
 
     public static function pay($openId, $product) {
-
+        
         $appid = \yii::$app->params["wx"]['appId'];
         $mchId = \yii::$app->params["wx"]['mchId'];
+        $notifyUrl = \yii::$app->params["wx"]['notifyUrl'];
         $input = new \WxPayUnifiedOrder();
         $input->SetAppid($appid);
         $input->SetMch_id($mchId);
